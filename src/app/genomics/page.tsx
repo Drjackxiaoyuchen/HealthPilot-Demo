@@ -334,7 +334,7 @@ export default function GenomicsPage() {
                 <XAxis type="number" domain={[0, 50]} tick={{ fill: "#9B958E", fontSize: 11 }} axisLine={false} tickLine={false} />
                 <YAxis dataKey="pathway" type="category" tick={{ fill: "#5E5A55", fontSize: 10 }} axisLine={false} tickLine={false} width={140} />
                 <Tooltip contentStyle={tooltipStyle} formatter={(val: number) => [`${val.toFixed(1)}`, "Risk Score"]} />
-                <Bar dataKey="score" radius={[0, 6, 6, 0]} barSize={14}>
+                <Bar isAnimationActive={false} dataKey="score" radius={[0, 6, 6, 0]} barSize={14}>
                   {COMPOSITE_SCORES.map((s, i) => (
                     <Cell key={i} fill={s.label === "Moderate" ? "#C4956A" : "#6B8F71"} opacity={s.score === 0 ? 0.2 : 0.7} />
                   ))}

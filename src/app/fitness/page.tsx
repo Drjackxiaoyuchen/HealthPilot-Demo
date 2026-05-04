@@ -129,7 +129,7 @@ export default function FitnessPage() {
               <YAxis domain={[70, 150]} tick={{ fill: "#9B958E", fontSize: 10 }} axisLine={false} tickLine={false} />
               <Tooltip contentStyle={tooltipStyle} formatter={(v: number) => [`${v} mg/dL`, "Glucose"]} />
               {/* Target range band */}
-              <Area type="monotone" dataKey="value" stroke="#B8906F" fill="url(#glucGrad)" strokeWidth={2}
+              <Area isAnimationActive={false} type="monotone" dataKey="value" stroke="#B8906F" fill="url(#glucGrad)" strokeWidth={2}
                 dot={{ fill: "#B8906F", r: 2, strokeWidth: 1.5, stroke: "white" }} />
             </AreaChart>
           </ResponsiveContainer>
@@ -175,7 +175,7 @@ export default function FitnessPage() {
             <XAxis dataKey="day_of_week" tick={{ fill: "#7A756F", fontSize: 11 }} tickFormatter={d => d.slice(0, 3)} axisLine={false} tickLine={false} />
             <YAxis tick={{ fill: "#9B958E", fontSize: 11 }} axisLine={false} tickLine={false} />
             <Tooltip contentStyle={tooltipStyle} />
-            <Bar dataKey="calories" name="Calories" radius={[6, 6, 0, 0]}>
+            <Bar isAnimationActive={false} dataKey="calories" name="Calories" radius={[6, 6, 0, 0]}>
               {workouts.map((w, i) => <Cell key={i} fill={w.completed ? "#6B8F71" : "#E8E0D4"} />)}
             </Bar>
           </BarChart>

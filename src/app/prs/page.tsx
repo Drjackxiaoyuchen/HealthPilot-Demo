@@ -445,7 +445,7 @@ export default function PRSPage() {
                 boxShadow: "0 4px 16px rgba(0,0,0,0.06)",
               }}
             />
-            <Bar dataKey="score" fill="#B8906F" radius={[0, 6, 6, 0]}>
+            <Bar isAnimationActive={false} dataKey="score" fill="#B8906F" radius={[0, 6, 6, 0]}>
               {distributionData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={getBarColor(entry.category)} />
               ))}

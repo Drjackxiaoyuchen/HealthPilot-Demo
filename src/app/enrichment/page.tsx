@@ -179,7 +179,7 @@ function KEGGPathwayChart() {
             width={240}
           />
           <Tooltip content={<CustomTooltip />} />
-          <Bar dataKey="combined_score" radius={[0, 6, 6, 0]} barSize={16}>
+          <Bar isAnimationActive={false} dataKey="combined_score" radius={[0, 6, 6, 0]} barSize={16}>
             {data.map((entry, i) => (
               <Cell
                 key={i}
@@ -252,7 +252,7 @@ function ReactomePathwayChart() {
             width={210}
           />
           <Tooltip content={<CustomTooltip />} />
-          <Bar dataKey="combined_score" radius={[0, 6, 6, 0]} barSize={14}>
+          <Bar isAnimationActive={false} dataKey="combined_score" radius={[0, 6, 6, 0]} barSize={14}>
             {data.map((entry, i) => (
               <Cell
                 key={i}
@@ -327,7 +327,7 @@ function GOBiologicalProcessChart() {
             width={190}
           />
           <Tooltip content={<CustomTooltip />} />
-          <Bar dataKey="combined_score" radius={[0, 6, 6, 0]} barSize={12}>
+          <Bar isAnimationActive={false} dataKey="combined_score" radius={[0, 6, 6, 0]} barSize={12}>
             {data.map((entry, i) => (
               <Cell
                 key={i}

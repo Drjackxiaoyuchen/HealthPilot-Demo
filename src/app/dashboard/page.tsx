@@ -68,8 +68,8 @@ export default function DashboardPage() {
               <XAxis dataKey="day" tick={{ fill: "#7A756F", fontSize: 12 }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fill: "#9B958E", fontSize: 11 }} axisLine={false} tickLine={false} />
               <Tooltip contentStyle={tooltipStyle} />
-              <Bar dataKey="calories" fill="#C4956A" radius={[6, 6, 0, 0]} name="Calories" opacity={0.75} />
-              <Bar dataKey="protein" fill="#7B8FA4" radius={[6, 6, 0, 0]} name="Protein (g)" opacity={0.75} />
+              <Bar isAnimationActive={false} dataKey="calories" fill="#C4956A" radius={[6, 6, 0, 0]} name="Calories" opacity={0.75} />
+              <Bar isAnimationActive={false} dataKey="protein" fill="#7B8FA4" radius={[6, 6, 0, 0]} name="Protein (g)" opacity={0.75} />
             </BarChart>
           </ResponsiveContainer>
         </Card>
@@ -80,7 +80,7 @@ export default function DashboardPage() {
               <PolarGrid stroke="#E8E0D4" />
               <PolarAngleAxis dataKey="subject" tick={{ fill: "#7A756F", fontSize: 10 }} />
               <PolarRadiusAxis tick={false} axisLine={false} domain={[0, 100]} />
-              <Radar dataKey="value" stroke="#B8906F" fill="#B8906F" fillOpacity={0.1} strokeWidth={1.5} />
+              <Radar isAnimationActive={false} dataKey="value" stroke="#B8906F" fill="#B8906F" fillOpacity={0.1} strokeWidth={1.5} />
             </RadarChart>
           </ResponsiveContainer>
         </Card>
@@ -101,7 +101,7 @@ export default function DashboardPage() {
             <XAxis dataKey="day" tick={{ fill: "#7A756F", fontSize: 12 }} axisLine={false} tickLine={false} />
             <YAxis domain={[60, 100]} tick={{ fill: "#9B958E", fontSize: 11 }} axisLine={false} tickLine={false} />
             <Tooltip contentStyle={tooltipStyle} />
-            <Area type="monotone" dataKey="score" stroke="#6B8F71" fill="url(#scoreGrad)" strokeWidth={2} dot={{ fill: "#6B8F71", r: 3, strokeWidth: 2, stroke: "white" }} name="Score" />
+            <Area isAnimationActive={false} type="monotone" dataKey="score" stroke="#6B8F71" fill="url(#scoreGrad)" strokeWidth={2} dot={{ fill: "#6B8F71", r: 3, strokeWidth: 2, stroke: "white" }} name="Score" />
           </AreaChart>
         </ResponsiveContainer>
       </Card>

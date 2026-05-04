@@ -287,7 +287,7 @@ export default function ComparisonPage() {
               <XAxis dataKey="category" tick={{ fontSize: 12 }} />
               <YAxis tick={{ fontSize: 12 }} />
               <Tooltip contentStyle={tooltipStyle} />
-              <Bar dataKey="count" fill="#A68A64" radius={[8, 8, 0, 0]} />
+              <Bar isAnimationActive={false} dataKey="count" fill="#A68A64" radius={[8, 8, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </Card>
@@ -310,8 +310,8 @@ export default function ComparisonPage() {
               <YAxis label={{ value: "Risk Score (0–100)", angle: -90, position: "insideLeft" }} tick={{ fontSize: 12 }} />
               <Tooltip contentStyle={tooltipStyle} />
               <Legend wrapperStyle={{ fontSize: 12 }} />
-              <Bar dataKey="alex" fill="#A68A64" radius={[6, 6, 0, 0]} />
-              <Bar dataKey="sarah" fill="#B8A0C4" radius={[6, 6, 0, 0]} />
+              <Bar isAnimationActive={false} dataKey="alex" fill="#A68A64" radius={[6, 6, 0, 0]} />
+              <Bar isAnimationActive={false} dataKey="sarah" fill="#B8A0C4" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </Card>

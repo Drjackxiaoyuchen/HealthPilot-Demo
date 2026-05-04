@@ -68,7 +68,7 @@ export default function DietPage() {
             <XAxis dataKey="day" tick={{ fill: "#7A756F", fontSize: 12 }} axisLine={false} tickLine={false} />
             <YAxis tick={{ fill: "#9B958E", fontSize: 11 }} axisLine={false} tickLine={false} domain={[1500, 2500]} />
             <Tooltip contentStyle={tooltipStyle} />
-            <Area type="monotone" dataKey="calories" stroke="#C4956A" fill="url(#calGrad)" strokeWidth={2} dot={{ fill: "#C4956A", r: 3, strokeWidth: 2, stroke: "white" }} name="Calories" />
+            <Area isAnimationActive={false} type="monotone" dataKey="calories" stroke="#C4956A" fill="url(#calGrad)" strokeWidth={2} dot={{ fill: "#C4956A", r: 3, strokeWidth: 2, stroke: "white" }} name="Calories" />
           </AreaChart>
         </ResponsiveContainer>
       </Card>

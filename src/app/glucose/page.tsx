@@ -207,7 +207,7 @@ export default function GlucosePage() {
                 label={{ value: m.emoji, position: "top", fontSize: 13 }}
               />
             ))}
-            <Area type="monotone" dataKey="v" stroke="#B8906F" fill="url(#gluGrad)" strokeWidth={2}
+            <Area isAnimationActive={false} type="monotone" dataKey="v" stroke="#B8906F" fill="url(#gluGrad)" strokeWidth={2}
               dot={false} activeDot={{ r: 4, stroke: "white", strokeWidth: 2, fill: "#B8906F" }}
               name="Glucose"
             />
@@ -250,7 +250,7 @@ export default function GlucosePage() {
               <YAxis domain={[60, 100]} tick={{ fill: "#9B958E", fontSize: 11 }} axisLine={false} tickLine={false} width={32} />
               <Tooltip contentStyle={tooltipStyle} formatter={(v: number) => [`${v}%`, "TIR"]} />
               <ReferenceLine y={70} stroke="#B8906F" strokeDasharray="4 4" strokeOpacity={0.5} label={{ value: "Target 70%", fontSize: 10, fill: "#9A7458", position: "right" }} />
-              <Bar dataKey="tir" radius={[6, 6, 0, 0]}>
+              <Bar isAnimationActive={false} dataKey="tir" radius={[6, 6, 0, 0]}>
                 {WEEK_SUMMARY.map((d, i) => (
                   <Cell key={i} fill={d.tir >= 95 ? "#6B8F71" : d.tir >= 80 ? "#C4956A" : "#B07070"} opacity={0.85} />
                 ))}

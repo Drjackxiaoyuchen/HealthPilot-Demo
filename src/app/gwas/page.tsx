@@ -386,9 +386,9 @@ export default function GWASPage() {
                 contentStyle={tooltipStyle}
                 formatter={(val: number) => val.toString()}
               />
-              <Bar dataKey="curated" stackId="a" fill="#6B8F71" radius={[0, 6, 6, 0]} />
-              <Bar dataKey="literature" stackId="a" fill="#C4956A" />
-              <Bar dataKey="animal_model" stackId="a" fill="#E8989E" />
+              <Bar isAnimationActive={false} dataKey="curated" stackId="a" fill="#6B8F71" radius={[0, 6, 6, 0]} />
+              <Bar isAnimationActive={false} dataKey="literature" stackId="a" fill="#C4956A" />
+              <Bar isAnimationActive={false} dataKey="animal_model" stackId="a" fill="#E8989E" />
             </BarChart>
           </ResponsiveContainer>
         </div>

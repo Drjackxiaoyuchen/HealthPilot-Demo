@@ -85,7 +85,7 @@ export default function AnnotationsPage() {
                         const d = currentTrend.data.find(x => x.year === label);
                         return d ? `${label} — ${d.topic}` : `${label}`;
                       }} />
-                    <Area type="monotone" dataKey="pubs" stroke="#B8906F" fill="url(#pubGrad)" strokeWidth={2}
+                    <Area isAnimationActive={false} type="monotone" dataKey="pubs" stroke="#B8906F" fill="url(#pubGrad)" strokeWidth={2}
                       dot={{ fill: "#B8906F", r: 3, strokeWidth: 2, stroke: "white" }} />
                   </AreaChart>
                 </ResponsiveContainer>
@@ -150,7 +150,7 @@ export default function AnnotationsPage() {
             <XAxis type="number" domain={[0, 50]} tick={{ fill: "#9B958E", fontSize: 11 }} axisLine={false} tickLine={false} />
             <YAxis dataKey="pathway" type="category" tick={{ fill: "#5E5A55", fontSize: 11 }} axisLine={false} tickLine={false} width={150} />
             <Tooltip contentStyle={tooltipStyle} formatter={(val: number) => [`${val.toFixed(1)}`, "Risk Score"]} />
-            <Bar dataKey="score" radius={[0, 6, 6, 0]} barSize={16}>
+            <Bar isAnimationActive={false} dataKey="score" radius={[0, 6, 6, 0]} barSize={16}>
               {COMPOSITE_SCORES.map((s, i) => (
                 <Cell key={i} fill={s.label === "Moderate" ? "#C4956A" : "#6B8F71"} opacity={s.score === 0 ? 0.25 : 0.7} />
               ))}
