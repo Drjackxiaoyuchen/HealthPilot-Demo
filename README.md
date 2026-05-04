@@ -98,7 +98,7 @@ The roadmap is about **bringing every digital health tool you already own into o
 
 This repository contains only fictional demo data. Before sharing, every identifying signal was anonymized:
 
-- All names → the fictional Morgan family (Alex, Jordan, Robert, Linda).
+- All names → the fictional Morgan family (Alex, Sarah, Robert, Linda).
 - All real rsIDs → placeholder rs90000xxx identifiers.
 - A handful of genotypes were shifted so the demo profile matches no real individual.
 - Real facility, lab, and city names → generic placeholders ("Sample Medical Center", "DemoGene").

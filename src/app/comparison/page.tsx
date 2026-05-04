@@ -51,7 +51,7 @@ export default function ComparisonPage() {
   const familyLegendCards = FAMILY_MEMBERS.map((member) => {
     let color = "text-copper";
     let bgColor = "bg-copper-100";
-    if (member.id === "fm-4") { // Jordan
+    if (member.id === "fm-4") { // Sarah
       color = "text-plum";
       bgColor = "bg-plum-100";
     } else if (member.id === "fm-3") { // Mom
@@ -62,7 +62,7 @@ export default function ComparisonPage() {
       bgColor = "bg-slate-100";
     }
 
-    const shortName = member.relation === "Self" ? "Alex" : member.relation === "Wife" ? "Jordan" : member.relation === "Mother" ? "Mom" : "Dad";
+    const shortName = member.relation === "Self" ? "Alex" : member.relation === "Wife" ? "Sarah" : member.relation === "Mother" ? "Mom" : "Dad";
     const noGenoNote = member.id === "fm-2" ? "(No data)" : "";
 
     return (
@@ -81,7 +81,7 @@ export default function ComparisonPage() {
   // ===== 2. VARIANT HEATMAP =====
   // Use Alex's 18 variants as the primary set
   const heatmapRows = GENOMIC_VARIANTS.slice(0, 18).map((jackVar) => {
-    const jordan = PARTNER_GENOMIC_VARIANTS.find(v => v.rsid === jackVar.rsid);
+    const sarah = PARTNER_GENOMIC_VARIANTS.find(v => v.rsid === jackVar.rsid);
     const mom = { genotype: "N/A" };
     const dad = { genotype: "N/A" };
 
@@ -89,7 +89,7 @@ export default function ComparisonPage() {
       gene: jackVar.gene,
       rsid: jackVar.rsid,
       alex: { genotype: jackVar.genotype, risk_level: jackVar.risk_level },
-      jordan: { genotype: jordan?.genotype || "N/A", risk_level: jordan?.risk_level || "unknown" },
+      sarah: { genotype: sarah?.genotype || "N/A", risk_level: sarah?.risk_level || "unknown" },
       mom,
       dad,
     };
@@ -97,17 +97,17 @@ export default function ComparisonPage() {
 
   // ===== 3. RISK DISTRIBUTION RADAR =====
   const radarData = [
-    { category: "Methylation", alex: 11.1, jordan: 8.3 },
-    { category: "Cardiovascular", alex: 0.0, jordan: 5.5 },
-    { category: "Neurotransmitter", alex: 8.3, jordan: 5.5 },
-    { category: "Vitamin D", alex: 11.1, jordan: 11.1 },
-    { category: "Metabolic", alex: 33.3, jordan: 20.0 },
-    { category: "Inflammation", alex: 16.7, jordan: 16.7 },
-    { category: "Detoxification", alex: 33.3, jordan: 16.7 },
-    { category: "Pharmacogenomics", alex: 0.0, jordan: 16.7 },
-    { category: "Neuroplasticity", alex: 33.3, jordan: 33.3 },
-    { category: "Sleep", alex: 33.3, jordan: 33.3 },
-    { category: "Pain", alex: 33.3, jordan: 33.3 },
+    { category: "Methylation", alex: 11.1, sarah: 8.3 },
+    { category: "Cardiovascular", alex: 0.0, sarah: 5.5 },
+    { category: "Neurotransmitter", alex: 8.3, sarah: 5.5 },
+    { category: "Vitamin D", alex: 11.1, sarah: 11.1 },
+    { category: "Metabolic", alex: 33.3, sarah: 20.0 },
+    { category: "Inflammation", alex: 16.7, sarah: 16.7 },
+    { category: "Detoxification", alex: 33.3, sarah: 16.7 },
+    { category: "Pharmacogenomics", alex: 0.0, sarah: 16.7 },
+    { category: "Neuroplasticity", alex: 33.3, sarah: 33.3 },
+    { category: "Sleep", alex: 33.3, sarah: 33.3 },
+    { category: "Pain", alex: 33.3, sarah: 33.3 },
   ];
 
   // ===== 4. CONCORDANCE ANALYSIS =====
@@ -117,8 +117,8 @@ export default function ComparisonPage() {
   let partial = 0;
 
   heatmapRows.forEach((row) => {
-    if (row.alex.genotype === "N/A" || row.jordan.genotype === "N/A") return;
-    if (row.alex.genotype === row.jordan.genotype) {
+    if (row.alex.genotype === "N/A" || row.sarah.genotype === "N/A") return;
+    if (row.alex.genotype === row.sarah.genotype) {
       coupleSame++;
     } else {
       coupleSame--;
@@ -137,7 +137,7 @@ export default function ComparisonPage() {
   const categoryRiskData = COMPOSITE_SCORES.slice(0, 8).map((score) => ({
     category: categoryMap[score.pathway] || score.pathway.split(" ")[0],
     alex: score.score,
-    jordan: score.score * 0.8, // Jordan slightly lower risk across categories
+    sarah: score.score * 0.8, // Sarah slightly lower risk across categories
   }));
 
   // ===== 6. COUPLE COMPATIBILITY CARDS =====
@@ -217,7 +217,7 @@ export default function ComparisonPage() {
               <tr className="border-b border-cream-300 bg-cream-50">
                 <th className="px-4 py-3 text-left font-serif font-semibold">Gene</th>
                 <th className="px-4 py-3 text-center font-serif font-semibold">Alex</th>
-                <th className="px-4 py-3 text-center font-serif font-semibold">Jordan</th>
+                <th className="px-4 py-3 text-center font-serif font-semibold">Sarah</th>
                 <th className="px-4 py-3 text-center font-serif font-semibold">Mom</th>
                 <th className="px-4 py-3 text-center font-serif font-semibold">Dad</th>
               </tr>
@@ -233,10 +233,10 @@ export default function ComparisonPage() {
                     {row.alex.genotype}
                   </td>
                   <td
-                    className={`px-4 py-3 text-center text-xs font-medium rounded ${riskBgColors[row.jordan.risk_level] || "bg-gray-50"}`}
-                    style={{ borderLeft: `4px solid ${riskColors[row.jordan.risk_level] || "#999"}` }}
+                    className={`px-4 py-3 text-center text-xs font-medium rounded ${riskBgColors[row.sarah.risk_level] || "bg-gray-50"}`}
+                    style={{ borderLeft: `4px solid ${riskColors[row.sarah.risk_level] || "#999"}` }}
                   >
-                    {row.jordan.genotype}
+                    {row.sarah.genotype}
                   </td>
                   <td className="px-4 py-3 text-center text-xs text-stone-400">—</td>
                   <td className="px-4 py-3 text-center text-xs text-stone-400">—</td>
@@ -249,7 +249,7 @@ export default function ComparisonPage() {
 
       {/* Section 3: Risk Distribution Radar */}
       <section className="flex flex-col gap-4">
-        <SectionTitle title="Risk Distribution Radar (Alex vs Jordan)" />
+        <SectionTitle title="Risk Distribution Radar (Alex vs Sarah)" />
         <Card accent className="h-96 flex items-center justify-center">
           <ResponsiveContainer width="100%" height="100%">
             <RadarChart data={radarData} margin={{ top: 20, right: 30, bottom: 20, left: 30 }}>
@@ -264,8 +264,8 @@ export default function ComparisonPage() {
                 fillOpacity={0.4}
               />
               <Radar
-                name="Jordan"
-                dataKey="jordan"
+                name="Sarah"
+                dataKey="sarah"
                 stroke="#B8A0C4"
                 fill="#B8A0C4"
                 fillOpacity={0.35}
@@ -295,7 +295,7 @@ export default function ComparisonPage() {
 
       {/* Section 5: Category Risk Comparison */}
       <section className="flex flex-col gap-4">
-        <SectionTitle title="Risk Score by Category (Alex vs Jordan)" />
+        <SectionTitle title="Risk Score by Category (Alex vs Sarah)" />
         <Card accent className="h-80 flex items-center justify-center">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={categoryRiskData} margin={{ top: 20, right: 30, bottom: 60, left: 30 }}>
@@ -311,7 +311,7 @@ export default function ComparisonPage() {
               <Tooltip contentStyle={tooltipStyle} />
               <Legend wrapperStyle={{ fontSize: 12 }} />
               <Bar dataKey="alex" fill="#A68A64" radius={[6, 6, 0, 0]} />
-              <Bar dataKey="jordan" fill="#B8A0C4" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="sarah" fill="#B8A0C4" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </Card>
@@ -349,7 +349,7 @@ export default function ComparisonPage() {
                       <span className="font-mono font-medium">{card.self_geno}</span>
                     </div>
                     <div className="flex-1">
-                      <span className="text-stone-500">Jordan: </span>
+                      <span className="text-stone-500">Sarah: </span>
                       <span className="font-mono font-medium">{card.partner_geno}</span>
                     </div>
                   </div>

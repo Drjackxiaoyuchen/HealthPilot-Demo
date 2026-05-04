@@ -30,10 +30,10 @@ const CATEGORY_ICONS: Record<string, any> = {
   "DNA Repair": Dna,
 };
 
-function PunnettSquare({ alex, jordan, gene }: { alex: string; jordan: string; gene: string }) {
+function PunnettSquare({ alex, sarah, gene }: { alex: string; sarah: string; gene: string }) {
   // Parse genotypes into alleles
   const selfAlleles = alex.length === 2 ? [alex[0], alex[1]] : ["?", "?"];
-  const partnerAlleles = jordan.length === 2 ? [jordan[0], jordan[1]] : ["?", "?"];
+  const partnerAlleles = sarah.length === 2 ? [sarah[0], sarah[1]] : ["?", "?"];
 
   const outcomes = [
     selfAlleles[0] + partnerAlleles[0],
@@ -117,7 +117,7 @@ function RiskCard({ risk, expanded, onToggle }: { risk: typeof OFFSPRING_RISK_AN
             </div>
             <span className="text-stone-300">×</span>
             <div className="flex items-center gap-1.5">
-              <span className="text-micro font-medium text-rose uppercase tracking-wide">Jordan</span>
+              <span className="text-micro font-medium text-rose uppercase tracking-wide">Sarah</span>
               <span className="font-mono text-body text-stone-700 bg-white/60 px-2 py-0.5 rounded">{risk.partner_genotype}</span>
             </div>
           </div>
@@ -140,9 +140,9 @@ function RiskCard({ risk, expanded, onToggle }: { risk: typeof OFFSPRING_RISK_AN
               <div className="flex items-start gap-6">
                 <div>
                   <div className="text-micro text-stone-400 mb-1">
-                    <span className="text-slate font-medium">↓ Alex</span> / <span className="text-rose font-medium">Jordan →</span>
+                    <span className="text-slate font-medium">↓ Alex</span> / <span className="text-rose font-medium">Sarah →</span>
                   </div>
-                  <PunnettSquare alex={selfRaw} jordan={partnerRaw} gene={risk.gene} />
+                  <PunnettSquare alex={selfRaw} sarah={partnerRaw} gene={risk.gene} />
                 </div>
                 <div className="flex-1">
                   <div className="text-micro font-medium text-stone-400 uppercase tracking-wide mb-1">Inheritance Pattern</div>
@@ -345,7 +345,7 @@ export default function OffspringPage() {
           <div className="flex-1">
             <h1 className="font-serif text-heading text-stone-800">Offspring Genomic Risk Analysis</h1>
             <p className="text-body text-stone-500 mt-1">
-              Mendelian inheritance predictions for <strong className="text-stone-700">Alex Morgan × Jordan Morgan</strong> —
+              Mendelian inheritance predictions for <strong className="text-stone-700">Alex Morgan × Sarah Morgan</strong> —
               analyzing {OFFSPRING_RISK_ANALYSIS.length} gene loci for harmful mutation potential
             </p>
           </div>
@@ -466,7 +466,7 @@ export default function OffspringPage() {
 
       {/* Preconception action plan */}
       <Card>
-        <SectionTitle icon={Shield} title="Preconception Action Plan" subtitle="Evidence-based recommendations for Alex × Jordan" />
+        <SectionTitle icon={Shield} title="Preconception Action Plan" subtitle="Evidence-based recommendations for Alex × Sarah" />
         <div className="space-y-4">
           <div className="p-5 bg-rose-light rounded-xl border border-rose/15">
             <div className="flex items-center gap-2 mb-2">
@@ -498,7 +498,7 @@ export default function OffspringPage() {
             </div>
             <div className="space-y-2 text-body text-stone-600 leading-relaxed">
               <p>• <strong className="text-stone-800">APOE:</strong> No e4 allele from either parent. 50% chance of protective e2. Best possible outcome for Alzheimer's risk.</p>
-              <p>• <strong className="text-stone-800">MTHFR:</strong> Jordan's wildtype protects — no TT homozygous risk. Standard prenatal folate sufficient.</p>
+              <p>• <strong className="text-stone-800">MTHFR:</strong> Sarah's wildtype protects — no TT homozygous risk. Standard prenatal folate sufficient.</p>
               <p>• <strong className="text-stone-800">COMT:</strong> No Met/Met (worrier) offspring possible. Either warrior or balanced — both favorable.</p>
               <p>• <strong className="text-stone-800">SOD2:</strong> Both parents Ala/Ala — 100% efficient antioxidant defense in offspring.</p>
             </div>

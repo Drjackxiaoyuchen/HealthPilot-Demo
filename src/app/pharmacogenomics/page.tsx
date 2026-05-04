@@ -192,7 +192,7 @@ function MetabolizerPhenotypeOverview() {
             (p) => p.gene === gp.gene
           );
           const selfProfile = allProfiles.find((p) => p.person === "Alex");
-          const partnerProfile = allProfiles.find((p) => p.person === "Jordan");
+          const partnerProfile = allProfiles.find((p) => p.person === "Sarah");
 
           return (
             <div key={gp.gene} className="border-b border-cream-300 pb-6 last:border-0 last:pb-0">
@@ -205,7 +205,7 @@ function MetabolizerPhenotypeOverview() {
                   </div>
                   <div className="flex items-center gap-1">
                     <div className="w-3 h-3 rounded-full bg-plum"></div>
-                    <span className="text-stone-600">Jordan</span>
+                    <span className="text-stone-600">Sarah</span>
                   </div>
                 </div>
               </div>
@@ -221,7 +221,7 @@ function MetabolizerPhenotypeOverview() {
                   )}
                   {partnerProfile && (
                     <ActivityMeterBar
-                      person="Jordan"
+                      person="Sarah"
                       phenotype={partnerProfile.phenotype}
                       personColor="bg-plum"
                     />
@@ -482,7 +482,7 @@ function EvidenceLevelDistribution() {
 
 function ComparisonView() {
   const selfProfiles = PHARMACOGENOMIC_PROFILE.filter((p) => p.person === "Alex");
-  const partnerProfiles = PHARMACOGENOMIC_PROFILE.filter((p) => p.person === "Jordan");
+  const partnerProfiles = PHARMACOGENOMIC_PROFILE.filter((p) => p.person === "Sarah");
 
   const sharedGenes = Array.from(
     new Set(
@@ -494,7 +494,7 @@ function ComparisonView() {
 
   return (
     <Card className="mb-8 p-8">
-      <SectionTitle icon={Users} title="Alex vs Jordan Comparison" />
+      <SectionTitle icon={Users} title="Alex vs Sarah Comparison" />
       <p className="text-body text-stone-600 mb-8">Pharmacogenomic profile comparison</p>
 
       <div className="grid grid-cols-2 gap-8 mb-8">
@@ -523,13 +523,13 @@ function ComparisonView() {
           </div>
         </div>
 
-        {/* Jordan's Profile */}
+        {/* Sarah's Profile */}
         <div>
-          <h4 className="text-title font-serif text-stone-800 mb-4">Jordan Morgan</h4>
+          <h4 className="text-title font-serif text-stone-800 mb-4">Sarah Morgan</h4>
           <div className="space-y-3">
             {partnerProfiles.map((profile) => (
               <div
-                key={`jordan-${profile.gene}`}
+                key={`sarah-${profile.gene}`}
                 className="p-4 bg-cream-50 rounded-lg border border-cream-300"
               >
                 <div className="flex items-start justify-between mb-2">
@@ -569,7 +569,7 @@ function ComparisonView() {
                         <div className="text-stone-500">Alex: {selfProfile?.phenotype}</div>
                       </div>
                       <div>
-                        <div className="text-stone-500">Jordan: {partnerProfile?.phenotype}</div>
+                        <div className="text-stone-500">Sarah: {partnerProfile?.phenotype}</div>
                       </div>
                     </div>
                   </div>
@@ -744,7 +744,7 @@ function ClinicalActionCards() {
 
 function PharmacogenomicIDCard() {
   const selfProfiles = PHARMACOGENOMIC_PROFILE.filter((p) => p.person === "Alex").slice(0, 3);
-  const partnerProfiles = PHARMACOGENOMIC_PROFILE.filter((p) => p.person === "Jordan").slice(0, 3);
+  const partnerProfiles = PHARMACOGENOMIC_PROFILE.filter((p) => p.person === "Sarah").slice(0, 3);
 
   const IDCardMini = ({
     name,
@@ -801,7 +801,7 @@ function PharmacogenomicIDCard() {
           bgGradient="linear-gradient(135deg, #C4956A 0%, #A0754D 100%)"
         />
         <IDCardMini
-          name="Jordan Morgan"
+          name="Sarah Morgan"
           profiles={partnerProfiles}
           bgGradient="linear-gradient(135deg, #9B7DB8 0%, #7A5F99 100%)"
         />

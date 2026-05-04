@@ -114,12 +114,12 @@ export const MEDICAL_RECORDS = [
 
 export const FAMILY_MEMBERS = [
   { id: "fm-1", name: "Alex Morgan", relation: "Self", age: 29, avatar_emoji: "AM", health_score: 86, alerts: 0, conditions: JSON.stringify(["APOE e2/e3 (protective)","BDNF Met/Met","COMT Val/Val","MTHFR C677T het","FTO AT carrier"]), last_checkup: "2026-04-01", sex: "M", generation: 2 },
-  { id: "fm-4", name: "Jordan Morgan", relation: "Wife", age: 28, avatar_emoji: "JM", health_score: 88, alerts: 0, conditions: JSON.stringify(["APOE e3/e3","BDNF Met/Met","COMT Val/Met (het)","MTHFR wildtype","FTO AT carrier","CYP2C19 intermediate","GSTP1 het","PPARG Pro12Ala (protective)"]), last_checkup: "2026-04-11", sex: "F", generation: 2 },
+  { id: "fm-4", name: "Sarah Morgan", relation: "Wife", age: 28, avatar_emoji: "SM", health_score: 88, alerts: 0, conditions: JSON.stringify(["APOE e3/e3","BDNF Met/Met","COMT Val/Met (het)","MTHFR wildtype","FTO AT carrier","CYP2C19 intermediate","GSTP1 het","PPARG Pro12Ala (protective)"]), last_checkup: "2026-04-11", sex: "F", generation: 2 },
   { id: "fm-2", name: "Robert Morgan", relation: "Father", age: 58, avatar_emoji: "RM", health_score: 74, alerts: 2, conditions: JSON.stringify(["APOE e3/e4","Statin therapy","Hypertension stage 1"]), last_checkup: "2026-03-15", sex: "M", generation: 1 },
   { id: "fm-3", name: "Linda Morgan", relation: "Mother", age: 55, avatar_emoji: "LM", health_score: 78, alerts: 1, conditions: JSON.stringify(["HFE H63D het","VDR BsmI BB","Mild osteopenia"]), last_checkup: "2026-03-15", sex: "F", generation: 1 },
 ];
 
-// Jordan Morgan's full genomic variant set (DemoGene 2026-04-11)
+// Sarah Morgan's full genomic variant set (DemoGene 2026-04-11)
 export const PARTNER_GENOMIC_VARIANTS = [
   { rsid: "rs90000001", gene: "MTHFR", variant: "C677T", genotype: "GG", enzyme_activity: "100%", risk_level: "low", category: "Methylation & Folate", impact: "Wildtype. Normal folate metabolism — no elevated homocysteine risk.", chr: "1", pos: "11856378" },
   { rsid: "rs90000002", gene: "MTHFR", variant: "A1298C", genotype: "TT", enzyme_activity: "100%", risk_level: "low", category: "Methylation & Folate", impact: "Wildtype. Normal BH4 recycling.", chr: "1", pos: "11854476" },
@@ -141,7 +141,7 @@ export const PARTNER_GENOMIC_VARIANTS = [
   { rsid: "rs90000023", gene: "XRCC1", variant: "Arg399Gln", genotype: "CT", enzyme_activity: "Mildly reduced", risk_level: "low", category: "DNA Repair", impact: "Heterozygous — slightly reduced base excision repair capacity.", chr: "19", pos: "44055726" },
 ];
 
-// Offspring risk analysis — comparing Alex × Jordan genotypes
+// Offspring risk analysis — comparing Alex × Sarah genotypes
 export const OFFSPRING_RISK_ANALYSIS = [
   {
     gene: "BDNF", variant: "Val66Met", rsid: "rs90000005",
@@ -209,9 +209,9 @@ export const OFFSPRING_RISK_ANALYSIS = [
     offspring_prediction: "50% AG (het), 50% GG (wildtype)",
     risk_level: "low",
     category: "Methylation & Folate",
-    impact: "No offspring will be TT homozygous. 50% chance of heterozygous like Alex (mild reduction). Jordan's wildtype allele is protective.",
+    impact: "No offspring will be TT homozygous. 50% chance of heterozygous like Alex (mild reduction). Sarah's wildtype allele is protective.",
     action: "Standard prenatal folate supplementation sufficient. No heightened methylation risk for offspring.",
-    inheritance: "Jordan's wildtype protects — worst case is heterozygous",
+    inheritance: "Sarah's wildtype protects — worst case is heterozygous",
   },
   {
     gene: "APOE", variant: "ε alleles", rsid: "rs90000007/rs90000019",
@@ -249,9 +249,9 @@ export const OFFSPRING_RISK_ANALYSIS = [
     offspring_prediction: "50% AG (het), 50% GG (wildtype)",
     risk_level: "low",
     category: "Detoxification",
-    impact: "No homozygous risk allele possible. Jordan's wildtype protects. Worst case is heterozygous like Alex.",
+    impact: "No homozygous risk allele possible. Sarah's wildtype protects. Worst case is heterozygous like Alex.",
     action: "If het: consider CoQ10 supplementation in adulthood. Standard diet otherwise.",
-    inheritance: "Jordan's wildtype is protective",
+    inheritance: "Sarah's wildtype is protective",
   },
   {
     gene: "GSTP1", variant: "Ile105Val", rsid: "rs90000018",
@@ -269,7 +269,7 @@ export const OFFSPRING_RISK_ANALYSIS = [
     offspring_prediction: "50% CC (normal), 50% AG (intermediate)",
     risk_level: "low",
     category: "Pharmacogenomics",
-    impact: "No poor metabolizer offspring. Jordan's *2 allele may pass to 50% of children — affects clopidogrel, PPIs.",
+    impact: "No poor metabolizer offspring. Sarah's *2 allele may pass to 50% of children — affects clopidogrel, PPIs.",
     action: "Pharmacogenomic card for offspring if AG. Standard dosing adjustments.",
     inheritance: "Alex's normal alleles protective",
   },

@@ -4,7 +4,7 @@
  * Enrichment analysis results and genomic variant data for HealthPilot precision health platform.
  * Contains KEGG, Reactome, GWAS, DisGeNET, and GO enrichment data along with family variant comparisons.
  *
- * Data reflects analysis from Alex Morgan (29M), Jordan Morgan (28F, wife), Linda Morgan (55F, mother),
+ * Data reflects analysis from Alex Morgan (29M), Sarah Morgan (28F, wife), Linda Morgan (55F, mother),
  * and Robert Morgan (58M, father) genomic profiles.
  */
 
@@ -66,7 +66,7 @@ export interface FamilyVariant {
   gene: string;
   rsid: string;
   alex: string;
-  jordan: string;
+  sarah: string;
   mom: string;
   dad: string;
   risk_level: "low" | "moderate" | "high";
@@ -93,7 +93,7 @@ export interface PharmacogenomicProfile {
   clinical_action: string;
   evidence_level: "1A" | "1B" | "2A" | "2B" | "3";
   source: "CPIC" | "DPWG" | "PharmGKB";
-  person: "Alex" | "Jordan" | "Both";
+  person: "Alex" | "Sarah" | "Both";
 }
 
 export interface EnrichmentSummary {
@@ -1039,7 +1039,7 @@ export const FAMILY_VARIANT_COMPARISON: FamilyVariant[] = [
     gene: "MTHFR",
     rsid: "rs90000001",
     alex: "CT",
-    jordan: "CC",
+    sarah: "CC",
     mom: "CT",
     dad: "N/A",
     risk_level: "moderate",
@@ -1050,7 +1050,7 @@ export const FAMILY_VARIANT_COMPARISON: FamilyVariant[] = [
     gene: "COMT",
     rsid: "rs90000004",
     alex: "GG",
-    jordan: "AG",
+    sarah: "AG",
     mom: "AG",
     dad: "N/A",
     risk_level: "moderate",
@@ -1061,7 +1061,7 @@ export const FAMILY_VARIANT_COMPARISON: FamilyVariant[] = [
     gene: "BDNF",
     rsid: "rs90000005",
     alex: "AA",
-    jordan: "AG",
+    sarah: "AG",
     mom: "AG",
     dad: "N/A",
     risk_level: "high",
@@ -1072,7 +1072,7 @@ export const FAMILY_VARIANT_COMPARISON: FamilyVariant[] = [
     gene: "FTO",
     rsid: "rs90000006",
     alex: "AA",
-    jordan: "AT",
+    sarah: "AT",
     mom: "AT",
     dad: "N/A",
     risk_level: "moderate",
@@ -1083,7 +1083,7 @@ export const FAMILY_VARIANT_COMPARISON: FamilyVariant[] = [
     gene: "APOE",
     rsid: "rs90000007/rs90000019",
     alex: "e3/e3",
-    jordan: "e3/e4",
+    sarah: "e3/e4",
     mom: "e3/e3",
     dad: "N/A",
     risk_level: "low",
@@ -1094,7 +1094,7 @@ export const FAMILY_VARIANT_COMPARISON: FamilyVariant[] = [
     gene: "IL6",
     rsid: "rs90000008",
     alex: "GG",
-    jordan: "GC",
+    sarah: "GC",
     mom: "GG",
     dad: "N/A",
     risk_level: "high",
@@ -1105,7 +1105,7 @@ export const FAMILY_VARIANT_COMPARISON: FamilyVariant[] = [
     gene: "VDR",
     rsid: "rs90000010",
     alex: "Bb",
-    jordan: "BB",
+    sarah: "BB",
     mom: "BB",
     dad: "N/A",
     risk_level: "low",
@@ -1116,7 +1116,7 @@ export const FAMILY_VARIANT_COMPARISON: FamilyVariant[] = [
     gene: "MTNR1B",
     rsid: "rs90000011",
     alex: "GC",
-    jordan: "CC",
+    sarah: "CC",
     mom: "GC",
     dad: "N/A",
     risk_level: "moderate",
@@ -1127,7 +1127,7 @@ export const FAMILY_VARIANT_COMPARISON: FamilyVariant[] = [
     gene: "NQO1",
     rsid: "rs90000012",
     alex: "CC",
-    jordan: "TC",
+    sarah: "TC",
     mom: "TC",
     dad: "N/A",
     risk_level: "low",
@@ -1138,7 +1138,7 @@ export const FAMILY_VARIANT_COMPARISON: FamilyVariant[] = [
     gene: "OPRM1",
     rsid: "rs90000013",
     alex: "AA",
-    jordan: "AG",
+    sarah: "AG",
     mom: "AA",
     dad: "N/A",
     risk_level: "moderate",
@@ -1149,7 +1149,7 @@ export const FAMILY_VARIANT_COMPARISON: FamilyVariant[] = [
     gene: "HFE",
     rsid: "rs90000015",
     alex: "AA",
-    jordan: "AA",
+    sarah: "AA",
     mom: "AG",
     dad: "N/A",
     risk_level: "low",
@@ -1160,7 +1160,7 @@ export const FAMILY_VARIANT_COMPARISON: FamilyVariant[] = [
     gene: "SOD2",
     rsid: "rs90000016",
     alex: "TT",
-    jordan: "CT",
+    sarah: "CT",
     mom: "CT",
     dad: "N/A",
     risk_level: "low",
@@ -1171,7 +1171,7 @@ export const FAMILY_VARIANT_COMPARISON: FamilyVariant[] = [
     gene: "CYP2D6",
     rsid: "rs90000030",
     alex: "GG",
-    jordan: "AG",
+    sarah: "AG",
     mom: "AG",
     dad: "N/A",
     risk_level: "low",
@@ -1182,7 +1182,7 @@ export const FAMILY_VARIANT_COMPARISON: FamilyVariant[] = [
     gene: "GSTP1",
     rsid: "rs90000018",
     alex: "AA",
-    jordan: "AG",
+    sarah: "AG",
     mom: "AA",
     dad: "N/A",
     risk_level: "low",
@@ -1193,7 +1193,7 @@ export const FAMILY_VARIANT_COMPARISON: FamilyVariant[] = [
     gene: "CYP2C19",
     rsid: "rs90000020",
     alex: "GG",
-    jordan: "AG",
+    sarah: "AG",
     mom: "GG",
     dad: "N/A",
     risk_level: "low",
@@ -1204,7 +1204,7 @@ export const FAMILY_VARIANT_COMPARISON: FamilyVariant[] = [
     gene: "CYP1A2",
     rsid: "rs90000021",
     alex: "AA",
-    jordan: "AC",
+    sarah: "AC",
     mom: "AC",
     dad: "N/A",
     risk_level: "low",
@@ -1215,7 +1215,7 @@ export const FAMILY_VARIANT_COMPARISON: FamilyVariant[] = [
     gene: "PPARG",
     rsid: "rs90000022",
     alex: "CC",
-    jordan: "CG",
+    sarah: "CG",
     mom: "CC",
     dad: "N/A",
     risk_level: "moderate",
@@ -1226,7 +1226,7 @@ export const FAMILY_VARIANT_COMPARISON: FamilyVariant[] = [
     gene: "XRCC1",
     rsid: "rs90000023",
     alex: "GG",
-    jordan: "GA",
+    sarah: "GA",
     mom: "GG",
     dad: "N/A",
     risk_level: "low",
@@ -1423,7 +1423,7 @@ export const PHARMACOGENOMIC_PROFILE: PharmacogenomicProfile[] = [
     clinical_action: "Standard to slightly higher dosing. Monitor SSRI response; may need dose adjustment.",
     evidence_level: "1A",
     source: "CPIC",
-    person: "Jordan",
+    person: "Sarah",
   },
   {
     gene: "CYP1A2",
@@ -1434,7 +1434,7 @@ export const PHARMACOGENOMIC_PROFILE: PharmacogenomicProfile[] = [
     clinical_action: "Moderate caffeine sensitivity. Standard theophylline dosing; monitor levels if needed.",
     evidence_level: "1B",
     source: "PharmGKB",
-    person: "Jordan",
+    person: "Sarah",
   },
 ];
 

@@ -14,7 +14,7 @@ const TREE_NODES = [
   { id: "fm-2", x: 130, y: 40, label: "Father" },     // Robert Morgan
   { id: "fm-3", x: 330, y: 40, label: "Mother" },      // Linda Morgan
   { id: "fm-1", x: 180, y: 200, label: "Self" },       // Alex Morgan
-  { id: "fm-4", x: 380, y: 200, label: "Wife" },       // Jordan Morgan
+  { id: "fm-4", x: 380, y: 200, label: "Wife" },       // Sarah Morgan
 ];
 
 // Shared genomic traits analysis (updated with wife)
@@ -22,42 +22,42 @@ const SHARED_TRAITS = [
   {
     title: "BDNF Met/Met — Both Partners Carry",
     type: "couple",
-    members: ["Alex Morgan", "Jordan Morgan"],
-    detail: "Both Alex and Jordan are BDNF Val66Met TT (Met/Met). This means 100% of offspring will be Met/Met with significantly reduced activity-dependent BDNF secretion. Aerobic exercise is the single most effective upregulator. Early enriched environments and omega-3 from infancy are critical.",
+    members: ["Alex Morgan", "Sarah Morgan"],
+    detail: "Both Alex and Sarah are BDNF Val66Met TT (Met/Met). This means 100% of offspring will be Met/Met with significantly reduced activity-dependent BDNF secretion. Aerobic exercise is the single most effective upregulator. Early enriched environments and omega-3 from infancy are critical.",
     risk: "high",
   },
   {
     title: "FTO AT × AT — 25% Chance of AA Offspring",
     type: "couple",
-    members: ["Alex Morgan", "Jordan Morgan"],
+    members: ["Alex Morgan", "Sarah Morgan"],
     detail: "Both partners carry one FTO risk allele (AT heterozygous). Offspring outcomes: 25% AA (highest obesity risk, 1.7x), 50% AT (moderate), 25% TT (no risk). Early screening and nutritional intervention if AA.",
     risk: "high",
   },
   {
     title: "IL-6 GG × GG — Pro-inflammatory Offspring",
     type: "couple",
-    members: ["Alex Morgan", "Jordan Morgan"],
+    members: ["Alex Morgan", "Sarah Morgan"],
     detail: "Both parents are IL-6 -174 GG (high expression). All offspring will be GG — guaranteed pro-inflammatory baseline. Mediterranean diet pattern, omega-3, and anti-inflammatory lifestyle essential from early life.",
     risk: "high",
   },
   {
     title: "APOE — Excellent Outlook",
     type: "couple",
-    members: ["Alex Morgan", "Jordan Morgan"],
-    detail: "Alex is APOE e2/e3 (protective), Jordan is e3/e3. No e4 allele from either parent. 50% of offspring inherit the protective e2 from Alex. Zero APOE-mediated Alzheimer's risk — the best possible outcome.",
+    members: ["Alex Morgan", "Sarah Morgan"],
+    detail: "Alex is APOE e2/e3 (protective), Sarah is e3/e3. No e4 allele from either parent. 50% of offspring inherit the protective e2 from Alex. Zero APOE-mediated Alzheimer's risk — the best possible outcome.",
     risk: "low",
   },
   {
-    title: "MTHFR — Jordan Wildtype Protects",
+    title: "MTHFR — Sarah Wildtype Protects",
     type: "couple",
-    members: ["Alex Morgan", "Jordan Morgan"],
-    detail: "Alex is MTHFR C677T heterozygous but Jordan is wildtype (GG). No TT homozygous offspring possible. Worst case is 50% chance of mild heterozygosity like Alex. Standard prenatal folate sufficient.",
+    members: ["Alex Morgan", "Sarah Morgan"],
+    detail: "Alex is MTHFR C677T heterozygous but Sarah is wildtype (GG). No TT homozygous offspring possible. Worst case is 50% chance of mild heterozygosity like Alex. Standard prenatal folate sufficient.",
     risk: "low",
   },
   {
     title: "VDR BsmI BB — Shared by Both",
     type: "shared",
-    members: ["Alex Morgan", "Jordan Morgan", "Linda Morgan"],
+    members: ["Alex Morgan", "Sarah Morgan", "Linda Morgan"],
     detail: "Both partners and Alex's mother carry VDR BsmI CC (BB genotype) — reduced VDR expression. All offspring will be BB. Family-wide vitamin D3 supplementation recommended. Monitor 25-OH-D every 6 months.",
     risk: "moderate",
   },
@@ -72,7 +72,7 @@ const SHARED_TRAITS = [
     title: "HFE H63D — Maternal Iron Variant",
     type: "maternal",
     members: ["Linda Morgan"],
-    detail: "Alex's mother is HFE H63D heterozygous — mild increase in iron absorption. Combined with osteopenia, calcium/iron timing is critical. Alex's HFE is normal, so this allele was not passed to Alex. Jordan's HFE is also normal.",
+    detail: "Alex's mother is HFE H63D heterozygous — mild increase in iron absorption. Combined with osteopenia, calcium/iron timing is critical. Alex's HFE is normal, so this allele was not passed to Alex. Sarah's HFE is also normal.",
     risk: "low",
   },
 ];
@@ -101,7 +101,7 @@ function FamilyTree() {
           </g>
         ))}
 
-        {/* Couple horizontal connector (Alex to Jordan) */}
+        {/* Couple horizontal connector (Alex to Sarah) */}
         <line x1={220} y1={220} x2={380} y2={220} stroke="#D4CFC7" strokeWidth={1.5} />
         {/* Couple marriage symbol with heart */}
         <circle cx={280} cy={220} r={5} fill="#B07070" stroke="white" strokeWidth={1.5} />
@@ -301,7 +301,7 @@ export default function FamilyPage() {
             <div className="flex-1">
               <div className="font-serif text-title text-stone-800">Offspring Genomic Risk Analysis</div>
               <div className="text-body text-stone-500 mt-0.5">
-                Detailed mutation potential analysis for Alex × Jordan offspring — Mendelian inheritance predictions, harmful variant risks, and preconception recommendations.
+                Detailed mutation potential analysis for Alex × Sarah offspring — Mendelian inheritance predictions, harmful variant risks, and preconception recommendations.
               </div>
             </div>
             <div className="text-copper text-[20px]">→</div>
@@ -311,7 +311,7 @@ export default function FamilyPage() {
 
       {/* Updated inheritance summary */}
       <Card>
-        <SectionTitle icon={Shield} title="Couple Genomic Compatibility" subtitle="Alex Morgan × Jordan Morgan — preconception summary" />
+        <SectionTitle icon={Shield} title="Couple Genomic Compatibility" subtitle="Alex Morgan × Sarah Morgan — preconception summary" />
         <div className="p-5 bg-copper-50 rounded-xl border border-copper/15">
           <div className="flex items-center gap-2 mb-3">
             <Heart size={15} strokeWidth={1.5} className="text-copper" />
@@ -319,10 +319,10 @@ export default function FamilyPage() {
           </div>
           <div className="space-y-3 text-body text-stone-600 leading-relaxed">
             <p>
-              <strong className="text-stone-800">APOE:</strong> Excellent — Alex e2/e3 × Jordan e3/e3 = no e4 possible. 50% of children get protective e2.
+              <strong className="text-stone-800">APOE:</strong> Excellent — Alex e2/e3 × Sarah e3/e3 = no e4 possible. 50% of children get protective e2.
             </p>
             <p>
-              <strong className="text-stone-800">MTHFR:</strong> Good — Jordan is wildtype GG, protecting offspring from TT homozygous risk. Standard prenatal folate sufficient.
+              <strong className="text-stone-800">MTHFR:</strong> Good — Sarah is wildtype GG, protecting offspring from TT homozygous risk. Standard prenatal folate sufficient.
             </p>
             <p>
               <strong className="text-stone-800">BDNF:</strong> <span className="text-rose font-medium">Alert</span> — Both Met/Met. All offspring will have reduced BDNF secretion. Prioritize aerobic exercise, omega-3, enriched environments.
