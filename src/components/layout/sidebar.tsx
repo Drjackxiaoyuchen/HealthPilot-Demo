@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import {
   Home, Dna, Pill, Apple, Dumbbell, FileText,
   BookOpen, Stethoscope, FlaskConical, Users, Baby,
-  HeartPulse, UserCircle, ChevronRight,
+  HeartPulse, UserCircle, ChevronRight, Compass,
   Network, BarChart3, GitCompareArrows, Gauge, Syringe,
   Activity,
 } from "lucide-react";
@@ -40,11 +40,11 @@ export default function Sidebar() {
       <div className="px-6 py-7 border-b border-cream-300">
         <Link href="/dashboard" className="flex items-center gap-3 no-underline">
           <div className="w-9 h-9 rounded-xl bg-copper flex items-center justify-center">
-            <HeartPulse size={18} className="text-white" strokeWidth={1.8} />
+            <Compass size={18} className="text-white" strokeWidth={1.8} />
           </div>
           <div>
-            <div className="font-serif text-[17px] font-semibold text-stone-800 tracking-tight">HealthPilot</div>
-            <div className="text-[10px] text-stone-400 tracking-[0.08em] uppercase font-medium">Precision Health</div>
+            <div className="font-serif text-[17px] font-semibold text-stone-800 tracking-tight">HealthCompass</div>
+            <div className="text-[10px] text-stone-400 tracking-[0.08em] uppercase font-medium">Pre-emptive Health</div>
           </div>
         </Link>
       </div>

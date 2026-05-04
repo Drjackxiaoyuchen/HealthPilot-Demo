@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { SectionTitle } from "@/components/ui/section-title";
@@ -14,6 +14,8 @@ import {
   AreaChart, Area, BarChart, Bar, ReferenceArea, ReferenceLine,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell,
 } from "recharts";
+import Link from "next/link";
+import { KEYS, buildDailyTrace, readJSON, type CgmStored } from "@/lib/user-data";
 import {
   CGM_TODAY, WEEK_SUMMARY, MEAL_LOG, FOOD_DB, GLUCOSE_INSIGHTS,
   NUTRIENT_TARGETS, GLUCOSE_REF, type FoodItem, type MealLog,
@@ -43,9 +45,21 @@ export default function GlucosePage() {
   const [foodFilter, setFoodFilter] = useState("");
   const [foodCategory, setFoodCategory] = useState<string>("All");
 
+  // ── User data: if the visitor has uploaded their own CGM, use that ──
+  const [userTrace, setUserTrace] = useState<{ t: string; v: number }[] | null>(null);
+  useEffect(() => {
+    const stored = readJSON<CgmStored>(KEYS.cgm);
+    if (stored && stored.readings?.length) {
+      const trace = buildDailyTrace(stored);
+      if (trace.length >= 24) setUserTrace(trace);
+    }
+  }, []);
+  const cgmData = userTrace || CGM_TODAY;
+  const usingUserData = userTrace !== null;
+
   // ── Derived stats ─────────────────────────────────────────
   const tirStats = useMemo(() => {
-    const vals = CGM_TODAY.map(d => d.v);
+    const vals = cgmData.map(d => d.v);
     const inR = vals.filter(v => v >= GLUCOSE_REF.low && v <= GLUCOSE_REF.high).length;
     const high = vals.filter(v => v > GLUCOSE_REF.high && v <= GLUCOSE_REF.veryHigh).length;
     const veryHigh = vals.filter(v => v > GLUCOSE_REF.veryHigh).length;
@@ -65,8 +79,8 @@ export default function GlucosePage() {
   }, []);
 
   // Latest reading + delta
-  const current = CGM_TODAY[CGM_TODAY.length - 1];
-  const prev = CGM_TODAY[CGM_TODAY.length - 2];
+  const current = cgmData[cgmData.length - 1];
+  const prev = cgmData[cgmData.length - 2];
   const delta = current.v - prev.v;
 
   // Daily macro totals
@@ -92,6 +106,16 @@ export default function GlucosePage() {
 
   return (
     <div className="flex flex-col gap-7">
+      {/* Data source banner */}
+      <div className={`flex items-center justify-between rounded-2xl px-4 py-2.5 text-caption border ${usingUserData ? "bg-sage-light/40 text-sage-dark border-sage/20" : "bg-cream-100 text-stone-500 border-cream-300"}`}>
+        <span className="flex items-center gap-2">
+          {usingUserData
+            ? <><CheckCircle2 size={13} className="text-sage" /> Using your uploaded CGM data ({cgmData.length} readings, sampled to 15-min intervals).</>
+            : <><AlertCircle size={13} className="text-stone-400" /> Showing demo data — upload your own to see your real glucose here.</>
+          }
+        </span>
+        <Link href="/import" className="text-micro text-copper-700 hover:text-copper-dark underline-offset-4 hover:underline font-medium">{usingUserData ? "Manage" : "Import →"}</Link>
+      </div>
       {/* ─────────────────  HERO  ───────────────── */}
       <Card className="p-7">
         <div className="flex items-start justify-between mb-6">
@@ -99,7 +123,7 @@ export default function GlucosePage() {
             <div className="text-micro text-stone-400 uppercase tracking-[0.12em] font-medium mb-1">Continuous Glucose Monitoring</div>
             <h2 className="font-serif text-[26px] font-semibold text-stone-800 tracking-tight">Glucose &amp; Diet</h2>
             <p className="text-body text-stone-500 mt-1">
-              Today: April 25, 2026 · Sibionics CGM · {CGM_TODAY.length} readings · Real-time food coaching
+              Today: April 25, 2026 · Sibionics CGM · {cgmData.length} readings · Real-time food coaching
             </p>
           </div>
           <button
@@ -168,7 +192,7 @@ export default function GlucosePage() {
           }
         />
         <ResponsiveContainer width="100%" height={300}>
-          <AreaChart data={CGM_TODAY} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+          <AreaChart data={cgmData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
             <defs>
               <linearGradient id="gluGrad" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#B8906F" stopOpacity={0.18} />

@@ -1,23 +1,25 @@
-# HealthPilot
+# Health Compass
 
-**Take control of your own health.** HealthPilot brings every signal you already produce — genome, continuous glucose, blood work, daily food, fitness, family history — into one calm, beautiful interface that runs on your own computer.
+**Find your bearings before the symptoms speak.**
 
-The bet is simple: every wearable, every lab, every report you collect *is already saying something specific about your body*. They just don't talk to each other. HealthPilot is the place where they finally do.
+Health Compass is a pre-emptive personal-health platform. It brings every signal you already produce — your genome, continuous glucose, blood work, daily food, fitness, family history — into one calm, beautiful interface that runs on your own computer. It reads them like an attentive physician would: looking for the early signs, citing the specific source, recommending only what's grounded in your biology.
 
-> Demo build. All data here is fictional (the "Alex Morgan" family). rsIDs, lab values, and medical records are placeholders. Not for clinical use.
+The bet is simple. Every wearable, every lab, every report you collect *is already saying something specific about your body*. They just don't talk to each other. Health Compass is the place where they finally do.
+
+> Demo build. The shipped data is fictional (the "Alex Morgan" family). rsIDs, lab values, and medical records are placeholders. Not for clinical use. **Upload your own data via the Import page** to see your real numbers in this UI — see the step-by-step guide below.
 
 ---
 
 ## How it looks
 
-![Dashboard — your daily health at a glance](docs/screenshots/dashboard.png)
-*Dashboard — health score, KPIs, weekly trends, wellness radar.*
+![Dashboard](docs/screenshots/dashboard.png)
+*Dashboard — health score, KPI tiles, weekly trends, wellness radar.*
 
-![Glucose & Diet — CGM and meals together](docs/screenshots/glucose.png)
-*Glucose &amp; Diet — every meal correlated with your continuous glucose trace, with a calorie-scan camera and a 7-day time-in-range view.*
+![Glucose & Diet](docs/screenshots/glucose.png)
+*Glucose &amp; Diet — every meal correlated with your continuous glucose trace, calorie scan, time-in-range, and a 7-day TIR view.*
 
-![Genomics — annotated SNPs](docs/screenshots/genomics.png)
-*Genomics — chromosome map of your annotated variants, with risk levels and pathway groupings.*
+![Genomics](docs/screenshots/genomics.png)
+*Genomics — chromosome map of annotated variants, with risk levels and pathway groupings.*
 
 ![Family Hub](docs/screenshots/family.png)
 *Family Hub — every member's risk profile in one place.*
@@ -28,15 +30,8 @@ The bet is simple: every wearable, every lab, every report you collect *is alrea
 ![Blood Work](docs/screenshots/bloodwork.png)
 *Blood Work — biomarkers grouped by category, with trend sparklines.*
 
----
-
-## Why this exists
-
-Most consumer health tools tell you a number on a chart, or generic advice. None of them stitch together your **genome**, your **continuous glucose**, your **blood work**, your **diet**, and your **family history** — all in one place, with every recommendation grounded in the specific signal it came from.
-
-HealthPilot's idea: **you are the integration point**. Your data lives together. Your insights cite their source. Your recommendations are personal because they're tied to *your* SNPs, *your* CGM trace, *your* labs.
-
-The goal isn't more data. The goal is the full picture, calmly arranged, on your own computer, so you can finally take control of your own health.
+![Import Data](docs/screenshots/import.png)
+*Import — upload your CGM, genome, and (soon) blood work. Stored locally in your browser, never transmitted.*
 
 ---
 
@@ -61,6 +56,7 @@ The goal isn't more data. The goal is the full picture, calmly arranged, on your
 | Family Comparison | Self vs partner side-by-side genotype view |
 | Polygenic Risk | PRS distribution plots |
 | Pharmacogenomics | Drug-metabolism profile |
+| **Import Data** | **Upload your own CGM and genome — replaces the demo data with yours, locally** |
 
 ---
 
@@ -75,16 +71,72 @@ npm run dev
 
 Open http://localhost:3000.
 
-That's it. No accounts, no cloud, no tracking. The data lives in your local clone.
+That's it. No accounts, no cloud, no tracking. Your data lives in your local clone.
+
+---
+
+## Use your own data — step by step
+
+Health Compass starts with demo data so you can see the interface immediately. To turn it into *your* dashboard, click **Import Data** in the sidebar (or open `/import`) and follow these:
+
+### 1. Continuous Glucose Monitor (CGM)
+
+Health Compass reads CSV and Excel exports from any major CGM provider — readings are auto-detected as mmol/L or mg/dL.
+
+**Sibionics**
+1. Open the Sibionics app on your phone.
+2. Settings → Data Export.
+3. Pick a date range (last 14 days is a good first import).
+4. Tap Export → save as `.xlsx` and AirDrop / email to your computer.
+5. On the Import page, drop the file. Done.
+
+**Dexcom Clarity**
+1. Sign in at https://clarity.dexcom.com.
+2. Reports → Export Data → CSV.
+3. Pick the date range, download.
+4. Drop the CSV on the Import page.
+
+**Abbott FreeStyle Libre / LibreView**
+1. Sign in to your LibreView account.
+2. Glucose History → Download data → Generic CSV.
+3. Drop on the Import page.
+
+**Stelo, Lingo, other CGMs** — any CSV with `timestamp, glucose value` columns will work.
+
+### 2. Genome (23andMe / AncestryDNA / WeGene)
+
+Health Compass matches your raw genome against 22 well-studied SNPs (FTO, MTHFR, COMT, BDNF, APOE, IL-6, VDR, MTNR1B, NQO1, OPRM1, HFE, SOD2, GSTP1, CYP2C19, CYP1A2, PPARG, TCF7L2, plus a few more) and shows you which alleles you carry.
+
+**23andMe**
+1. Sign in to 23andMe.
+2. Account Settings → Browse Raw Data → Download.
+3. Click the link in the confirmation email; download the `.zip`.
+4. Unzip — it contains a `.txt` file (~13 MB).
+5. Drop the `.txt` on the Import page.
+
+**AncestryDNA / WeGene** — same flow. Download the raw data file, unzip if needed, drop the `.txt`.
+
+### 3. What happens after upload
+
+- The Glucose page banner switches from "Showing demo data" to "Using your uploaded CGM data" and the 24-hour chart redraws from your last full day of readings.
+- The Genomics module surfaces the SNPs that matched yours.
+- Stats (Time-in-Range, GMI, average glucose, etc.) recompute from your numbers.
+- Everything is stored in your browser's localStorage. To wipe it: visit `/import` and click **Clear** on each section, or open DevTools → Application → Local Storage → delete the keys starting with `hp:`.
+
+### 4. Privacy
+
+- Your data never leaves your computer. Upload happens entirely in the browser.
+- There is no account, no server, no analytics.
+- The repository's `.gitignore` excludes `.env*` and any `data/` you might add — but please don't commit your raw genome to a public repo.
 
 ---
 
 ## Where it's going
 
-The roadmap is about **bringing every digital health tool you already own into one place** — and making it easy enough that you don't need to be a developer.
+The roadmap is about bringing every digital health tool you already own into one place — and making it easy enough that you don't need to be a developer.
 
 - **Plug in your devices.** One-click connectors for Apple Health, Google Fit, Oura, Whoop, Sibionics CGM, Dexcom, Garmin, Fitbit, and home blood-test reports.
-- **One-click local install.** A simple installer for Mac and Windows so anyone can run HealthPilot on their own laptop in five minutes, without a terminal.
+- **One-click local install.** A simple installer for Mac and Windows so anyone can run Health Compass on their own laptop in five minutes, without a terminal.
 - **Privacy by default.** Your data never leaves your computer unless you choose to share it. No accounts, no servers, no analytics.
 - **Snap a meal, see the impact.** A real food camera that tells you calories, macros, and predicted glucose response before you eat.
 - **Family-aware.** Invite the people you care about, see inherited risk together, plan as a household.
@@ -99,11 +151,11 @@ The roadmap is about **bringing every digital health tool you already own into o
 This repository contains only fictional demo data. Before sharing, every identifying signal was anonymized:
 
 - All names → the fictional Morgan family (Alex, Sarah, Robert, Linda).
-- All real rsIDs → placeholder rs90000xxx identifiers.
+- All real rsIDs in the bundled seed data → placeholder rs90000xxx identifiers. The Import page recognises real-world rsIDs (rs1801133, rs9939609, etc.) when matching uploads.
 - A handful of genotypes were shifted so the demo profile matches no real individual.
-- Real facility, lab, and city names → generic placeholders ("Sample Medical Center", "DemoGene").
+- Real facility, lab, and city names → generic placeholders.
 
-If you fork this and add your own data, *keep it local* — the `.gitignore` already excludes `.env*` and your data files should never be committed.
+If you fork this and add your own data, *keep it local* — the `.gitignore` already excludes `.env*`.
 
 ---
 

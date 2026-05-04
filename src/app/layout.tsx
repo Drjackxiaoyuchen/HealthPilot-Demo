@@ -4,8 +4,8 @@ import Sidebar from "@/components/layout/sidebar";
 import Header from "@/components/layout/header";
 
 export const metadata: Metadata = {
-  title: "HealthPilot — Precision Health",
-  description: "Science-driven personal health management platform with genomic integration",
+  title: "Health Compass — Pre-emptive Personal Health",
+  description: "A pre-emptive personal health platform — genome, CGM, blood work, diet, and family history in one local-first dashboard",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

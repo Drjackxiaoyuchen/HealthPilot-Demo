@@ -1,7 +1,7 @@
 /**
  * enrichr-data.ts
  *
- * Enrichment analysis results and genomic variant data for HealthPilot precision health platform.
+ * Enrichment analysis results and genomic variant data for Health Compass — pre-emptive personal health.
  * Contains KEGG, Reactome, GWAS, DisGeNET, and GO enrichment data along with family variant comparisons.
  *
  * Data reflects analysis from Alex Morgan (29M), Sarah Morgan (28F, wife), Linda Morgan (55F, mother),

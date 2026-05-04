@@ -1,5 +1,5 @@
 // ============================================================
-// Core Types for HealthPilot
+// Core Types for Health Compass
 // Based on FHIR R4 patterns (inspired by Medplum/Fasten)
 // ============================================================
 
