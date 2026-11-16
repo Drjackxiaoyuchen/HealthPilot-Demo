@@ -2,26 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
-
 :root {
-  --cream: #F6F1EB;
-  --surface: #FFFFFF;
-  --border: #E8E0D4;
-  --border-light: #F0E9DF;
-  --copper: #B8906F;
-  --copper-light: #D4B896;
-  --text-primary: #2D2A26;
-  --text-secondary: #5E5A55;
-  --text-muted: #9B958E;
+  --cream: #f6f1eb;
+  --surface: #ffffff;
+  --border: #e8e0d4;
+  --border-light: #f0e9df;
+  --copper: #b8906f;
+  --copper-light: #d4b896;
+  --text-primary: #2d2a26;
+  --text-secondary: #5e5a55;
+  --text-muted: #9b958e;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+}
 
 body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family:
+    "Inter",
+    system-ui,
+    -apple-system,
+    sans-serif;
   background: var(--cream);
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
@@ -31,24 +39,38 @@ body {
 }
 
 /* Elegant scrollbar */
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #D4CFC7; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #B8ADA0; }
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d4cfc7;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #b8ada0;
+}
 
 /* Typography classes */
 @layer base {
-  h1, h2, h3 {
-    font-family: 'Playfair Display', Georgia, serif;
+  h1,
+  h2,
+  h3 {
+    font-family: "Playfair Display", Georgia, serif;
     color: var(--text-primary);
     font-weight: 600;
   }
 }
 
 @layer utilities {
-  .text-balance { text-wrap: balance; }
+  .text-balance {
+    text-wrap: balance;
+  }
   .font-display {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: "Playfair Display", Georgia, serif;
   }
 }
 
@@ -61,18 +83,25 @@ body {
     transition: box-shadow 0.2s ease;
   }
   .card-base:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   }
 }
 
 /* Recharts tooltip override */
-.recharts-tooltip-wrapper { outline: none !important; }
+.recharts-tooltip-wrapper {
+  outline: none !important;
+}
 
 /* Smooth transitions */
-a, button { transition: all 0.15s ease; }
+a,
+button {
+  transition: all 0.15s ease;
+}
 
 /* Focus styles */
-input:focus, select:focus, textarea:focus {
+input:focus,
+select:focus,
+textarea:focus {
   outline: none;
   border-color: var(--copper);
   box-shadow: 0 0 0 3px rgba(184, 144, 111, 0.1);
@@ -82,4 +111,73 @@ input:focus, select:focus, textarea:focus {
 ::selection {
   background: rgba(184, 144, 111, 0.15);
   color: var(--text-primary);
+}
+
+button:focus-visible,
+a:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--copper);
+  outline-offset: 4px;
+}
+main {
+  width: 100%;
+  min-width: 0;
+}
+main > * {
+  min-width: 0;
+}
+@media (max-width: 767px) {
+  .mobile-navigation {
+    display: flex;
+  }
+  .app-sidebar {
+    transform: translateX(-100%);
+    visibility: hidden;
+    top: 56px;
+    height: calc(100dvh - 56px);
+    transition: transform 0.2s ease;
+  }
+  .app-sidebar.is-open {
+    transform: translateX(0);
+    visibility: visible;
+  }
+  .app-shell {
+    margin-left: 0;
+    padding-top: 56px;
+  }
+  .app-header {
+    top: 56px;
+    padding: 12px 16px;
+  }
+  main {
+    padding: 16px !important;
+  }
+  main .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  main .recharts-wrapper {
+    max-width: 100%;
+  }
+}
+@media print {
+  .app-sidebar,
+  .app-header,
+  .mobile-navigation,
+  .no-print {
+    display: none !important;
+  }
+  .app-shell {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  main {
+    padding: 0 !important;
+    max-width: none !important;
+  }
+  body {
+    background: white;
+  }
+  .print-card {
+    break-inside: avoid;
+  }
 }

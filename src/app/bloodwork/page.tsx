@@ -1,175 +1,247 @@
 "use client";
-
 import { useState } from "react";
+import Link from "next/link";
+import { Download, Search, FlaskConical } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { SectionTitle } from "@/components/ui/section-title";
 import { Sparkline } from "@/components/ui/sparkline";
-import { FlaskConical, CheckCircle, TrendingUp, Calendar, ChevronRight } from "lucide-react";
-import { BLOOD_MARKERS } from "@/data/seed";
+import DemoBloodwork from "@/components/bloodwork-demo";
+import { KEYS } from "@/lib/user-data";
+import { useLocalData } from "@/lib/use-local-data";
+import { labSeries, labStatus, type BloodworkStored } from "@/lib/bloodwork";
+import { downloadFile } from "@/lib/download";
+import { toCsv } from "@/lib/tabular";
+import { labCsvRows } from "@/lib/report";
 
 export default function BloodworkPage() {
-  const markers = BLOOD_MARKERS.map(m => ({ ...m, history: JSON.parse(m.history) }));
-  const categories = [...new Set(markers.map(m => m.category))];
-  const [selectedMarker, setSelectedMarker] = useState<number | null>(null);
-
-  const optimalCount = markers.filter(m => m.status === "optimal").length;
-  const avgPct = markers.reduce((s, m) => {
-    const pct = m.reference_high > 0 ? ((m.value - m.reference_low) / (m.reference_high - m.reference_low)) * 100 : 50;
-    return s + Math.min(Math.max(pct, 0), 100);
-  }, 0) / markers.length;
-
+  const stored = useLocalData<BloodworkStored>(KEYS.bloodwork);
+  const [query, setQuery] = useState(""),
+    [filter, setFilter] = useState("All results"),
+    [selected, setSelected] = useState("");
+  if (!stored?.observations?.length) return <DemoBloodwork />;
+  const series = labSeries(stored.observations);
+  const abnormal = series.filter((group) =>
+    ["Below range", "Above range"].includes(labStatus(group.latest)),
+  );
+  const visible = series.filter(
+    (group) =>
+      `${group.latest.marker} ${group.latest.category} ${group.latest.lab}`
+        .toLowerCase()
+        .includes(query.toLowerCase()) &&
+      (filter === "All results" || labStatus(group.latest) === filter),
+  );
+  const active = series.find((group) => group.key === selected);
+  const interval = (low: number | null, high: number | null, unit: string) =>
+    low === null && high === null
+      ? "Not supplied"
+      : `${low ?? "—"} – ${high ?? "—"} ${unit}`;
   return (
-    <div className="flex flex-col gap-7">
-      {/* Summary panel — all key metrics at a glance */}
-      <Card className="p-7">
-        <div className="flex items-start justify-between mb-6">
+    <div className="space-y-6">
+      <Card>
+        <div className="flex flex-wrap gap-4 justify-between">
           <div>
-            <div className="text-micro text-stone-400 uppercase tracking-[0.12em] font-medium mb-1">Biomarker Dashboard</div>
-            <h2 className="font-serif text-[26px] font-semibold text-stone-800 tracking-tight">Blood Work Overview</h2>
-            <p className="text-body text-stone-500 mt-1">Last tested: April 1, 2026 — Sample Medical Center</p>
+            <p className="text-micro uppercase tracking-widest text-copper-700">
+              A record that stays traceable
+            </p>
+            <h2 className="font-serif text-[30px] mt-1">
+              Your laboratory timeline
+            </h2>
+            <p className="text-caption text-stone-500 mt-2 break-all">
+              {stored.sourceFile} · saved{" "}
+              {new Date(stored.uploadedAt).toLocaleString()}
+            </p>
           </div>
-          <div className="flex gap-4 text-center">
-            <div className="px-4 py-3 bg-cream-100 rounded-xl border border-cream-300">
-              <div className="text-[24px] font-serif font-semibold text-stone-800">{markers.length}</div>
-              <div className="text-micro text-stone-400 font-medium mt-0.5">Tracked</div>
-            </div>
-            <div className="px-4 py-3 bg-sage-light rounded-xl border border-sage/15">
-              <div className="text-[24px] font-serif font-semibold text-sage">{optimalCount}</div>
-              <div className="text-micro text-stone-400 font-medium mt-0.5">Optimal</div>
-            </div>
-            <div className="px-4 py-3 bg-amber-light rounded-xl border border-amber/15">
-              <div className="text-[24px] font-serif font-semibold text-amber">{markers.length - optimalCount}</div>
-              <div className="text-micro text-stone-400 font-medium mt-0.5">Average</div>
-            </div>
-          </div>
+          <button
+            className="inline-flex self-start items-center gap-2 text-caption bg-copper text-white px-4 py-2.5 rounded-xl"
+            onClick={() =>
+              downloadFile(
+                "symphony-lab-results.csv",
+                toCsv(labCsvRows(stored)),
+                "text/csv",
+              )
+            }
+          >
+            <Download size={14} />
+            Export results
+          </button>
         </div>
-
-        {/* Quick summary grid */}
-        <div className="grid grid-cols-4 gap-3">
-          {markers.slice(0, 8).map((m, i) => {
-            const pct = m.reference_high > 0 ? ((m.value - m.reference_low) / (m.reference_high - m.reference_low)) * 100 : 50;
-            return (
-              <div key={i} onClick={() => setSelectedMarker(i)}
-                className={`p-3 rounded-xl border cursor-pointer transition-all hover:shadow-elevated ${
-                  selectedMarker === i ? "bg-copper-50 border-copper/20" : "bg-cream-100 border-cream-300"
-                }`}>
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-micro font-medium text-stone-600 truncate">{m.marker}</span>
-                  <div className={`w-2 h-2 rounded-full ${m.status === "optimal" ? "bg-sage" : "bg-amber"}`} />
-                </div>
-                <div className="text-[18px] font-serif font-semibold text-stone-800">
-                  {m.value} <span className="text-micro text-stone-400 font-sans font-normal">{m.unit}</span>
-                </div>
-                <div className="mt-1.5 h-1 bg-cream-300 rounded-full relative overflow-hidden">
-                  <div className={`absolute left-0 top-0 h-full rounded-full ${m.status === "optimal" ? "bg-sage" : "bg-amber"}`}
-                    style={{ width: `${Math.min(Math.max(pct, 5), 95)}%` }} />
-                </div>
-              </div>
-            );
-          })}
+        <div className="grid sm:grid-cols-3 gap-4 mt-6">
+          {[
+            ["Observations", stored.observations.length],
+            ["Marker / unit / lab series", series.length],
+            ["Latest results outside supplied range", abnormal.length],
+          ].map(([label, value]) => (
+            <div
+              className="p-4 rounded-xl border border-cream-300 bg-cream-100"
+              key={label}
+            >
+              <p className="text-micro text-stone-500">{label}</p>
+              <p className="font-serif text-[30px]">{value}</p>
+            </div>
+          ))}
         </div>
+        <p className="text-micro text-stone-500 mt-4">
+          Reference intervals come from your file. A result within an interval
+          does not establish overall health; missing intervals remain
+          unclassified. Different units and laboratories stay in separate
+          trends.
+        </p>
       </Card>
-
-      {/* Selected marker detail */}
-      {selectedMarker !== null && (
+      <div className="flex flex-wrap gap-3">
+        <label className="flex-1 min-w-[180px] bg-white rounded-xl border border-cream-300 px-3 flex gap-2 items-center">
+          <Search size={15} className="text-stone-400" />
+          <input
+            aria-label="Search biomarkers"
+            placeholder="Find a marker, category or laboratory…"
+            className="border-none bg-transparent text-caption w-full py-3"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+          />
+        </label>
+        <select
+          aria-label="Filter lab status"
+          value={filter}
+          onChange={(event) => setFilter(event.target.value)}
+          className="text-caption rounded-xl border-cream-300"
+        >
+          {[
+            "All results",
+            "Within range",
+            "Below range",
+            "Above range",
+            "No range supplied",
+          ].map((label) => (
+            <option key={label}>{label}</option>
+          ))}
+        </select>
+      </div>
+      <p role="status" className="text-caption text-stone-500">
+        {visible.length} matching series · select a marker to inspect its dated
+        history
+      </p>
+      <div className="grid lg:grid-cols-2 gap-4">
+        {visible.map((group) => {
+          const row = group.latest,
+            status = labStatus(row),
+            color =
+              status === "Within range"
+                ? "#6B8F71"
+                : status === "No range supplied"
+                  ? "#7B8FA4"
+                  : "#B07070";
+          return (
+            <button
+              key={group.key}
+              className={`text-left bg-white border rounded-2xl p-5 hover:border-copper ${selected === group.key ? "border-copper" : "border-cream-300"}`}
+              onClick={() => setSelected(group.key)}
+              aria-pressed={selected === group.key}
+            >
+              <div className="flex gap-3 justify-between items-start">
+                <div>
+                  <p className="text-micro text-stone-400">{row.category}</p>
+                  <h3 className="font-serif text-[20px]">{row.marker}</h3>
+                </div>
+                <span
+                  className="text-micro px-2 py-1 rounded-full bg-cream-100"
+                  style={{ color }}
+                >
+                  {status}
+                </span>
+              </div>
+              <div className="flex items-center justify-between mt-4 gap-3">
+                <div>
+                  <p className="font-serif text-[28px]">
+                    {row.value}{" "}
+                    <span className="font-sans text-caption text-stone-400">
+                      {row.unit}
+                    </span>
+                  </p>
+                  <p className="text-micro text-stone-500 mt-1">
+                    {row.collectedAt} · {row.lab}
+                  </p>
+                </div>
+                {group.history.length > 1 ? (
+                  <Sparkline
+                    data={group.history.map((result) => result.value)}
+                    color={color}
+                    width={100}
+                    height={40}
+                  />
+                ) : (
+                  <span className="text-micro text-stone-400">
+                    One observation
+                  </span>
+                )}
+              </div>
+              <p className="text-micro text-stone-500 mt-3">
+                Lab range:{" "}
+                {interval(row.referenceLow, row.referenceHigh, row.unit)}
+              </p>
+            </button>
+          );
+        })}
+      </div>
+      {active && (
         <Card accent>
-          <div className="flex items-start justify-between">
-            <div>
-              <h3 className="font-serif text-title text-stone-800">{markers[selectedMarker].marker}</h3>
-              <p className="text-caption text-stone-400 mt-0.5">{markers[selectedMarker].category} · Last tested {markers[selectedMarker].test_date}</p>
-            </div>
-            <Badge variant={markers[selectedMarker].status === "optimal" ? "success" : "warning"}>
-              {markers[selectedMarker].status}
-            </Badge>
+          <div className="flex gap-2 items-center">
+            <FlaskConical size={18} className="text-copper" />
+            <h3 className="font-serif text-title">
+              {active.latest.marker} · dated history
+            </h3>
           </div>
-          <div className="grid grid-cols-[1fr_1fr_auto] gap-6 mt-5">
-            <div>
-              <div className="text-micro text-stone-400 font-medium uppercase tracking-wide mb-1">Current Value</div>
-              <div className="text-[32px] font-serif font-semibold text-stone-800">
-                {markers[selectedMarker].value}
-                <span className="text-body text-stone-400 font-sans ml-1">{markers[selectedMarker].unit}</span>
-              </div>
-              <div className="text-caption text-stone-400 mt-1">
-                Reference: {markers[selectedMarker].reference_low}–{markers[selectedMarker].reference_high} {markers[selectedMarker].unit}
-              </div>
-              {/* Range bar */}
-              <div className="mt-3 relative">
-                <div className="h-2 bg-cream-300 rounded-full overflow-hidden">
-                  <div className={`h-full rounded-full ${markers[selectedMarker].status === "optimal" ? "bg-sage" : "bg-amber"}`}
-                    style={{ width: `${Math.min(Math.max(((markers[selectedMarker].value - markers[selectedMarker].reference_low) / (markers[selectedMarker].reference_high - markers[selectedMarker].reference_low)) * 100, 5), 95)}%` }} />
-                </div>
-                <div className="flex justify-between text-micro text-stone-300 mt-1">
-                  <span>{markers[selectedMarker].reference_low}</span>
-                  <span>{markers[selectedMarker].reference_high}</span>
-                </div>
-              </div>
-            </div>
-            <div>
-              <div className="text-micro text-stone-400 font-medium uppercase tracking-wide mb-1">Trend (last 5 tests)</div>
-              <div className="flex items-center gap-2">
-                <Sparkline data={markers[selectedMarker].history} color={markers[selectedMarker].status === "optimal" ? "#6B8F71" : "#C4956A"} width={180} height={60} />
-              </div>
-              <div className="flex gap-2 mt-2 text-micro text-stone-400">
-                {markers[selectedMarker].history.map((v: number, j: number) => (
-                  <span key={j} className="font-mono">{v}</span>
+          <p className="text-caption text-stone-500 mt-2">
+            {active.latest.lab} · {active.latest.unit} · source:{" "}
+            {stored.sourceFile}
+          </p>
+          <div className="overflow-x-auto mt-4">
+            <table className="w-full text-left text-caption">
+              <thead>
+                <tr>
+                  {[
+                    "Collected",
+                    "Result",
+                    "Supplied interval",
+                    "Status",
+                    "LOINC",
+                  ].map((label) => (
+                    <th className="p-3 text-stone-400 font-medium" key={label}>
+                      {label}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {active.history.map((row) => (
+                  <tr key={row.id} className="border-t border-cream-300">
+                    <td className="p-3 whitespace-nowrap">{row.collectedAt}</td>
+                    <td className="p-3 whitespace-nowrap">
+                      {row.value} {row.unit}
+                    </td>
+                    <td className="p-3 whitespace-nowrap">
+                      {interval(row.referenceLow, row.referenceHigh, row.unit)}
+                    </td>
+                    <td className="p-3">{labStatus(row)}</td>
+                    <td className="p-3">{row.loinc || "Not supplied"}</td>
+                  </tr>
                 ))}
-              </div>
-            </div>
-            <div className="flex items-center">
-              <div className={`p-3 rounded-xl ${markers[selectedMarker].status === "optimal" ? "bg-sage-light" : "bg-amber-light"}`}>
-                {markers[selectedMarker].status === "optimal"
-                  ? <CheckCircle size={32} strokeWidth={1.5} className="text-sage" />
-                  : <TrendingUp size={32} strokeWidth={1.5} className="text-amber" />}
-              </div>
-            </div>
+              </tbody>
+            </table>
           </div>
         </Card>
       )}
-
-      {/* Category-grouped detail cards */}
-      {categories.map(cat => {
-        const ms = markers.filter(m => m.category === cat);
-        return (
-          <Card key={cat}>
-            <SectionTitle icon={FlaskConical} title={cat} subtitle={`${ms.length} markers`} />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {ms.map((m, i) => {
-                const pct = m.reference_high > 0 ? ((m.value - m.reference_low) / (m.reference_high - m.reference_low)) * 100 : 50;
-                const globalIdx = markers.findIndex(x => x.id === m.id);
-                return (
-                  <div key={i}
-                    onClick={() => setSelectedMarker(globalIdx)}
-                    className={`p-4 rounded-xl border cursor-pointer transition-all hover:shadow-elevated ${
-                      selectedMarker === globalIdx ? "bg-copper-50 border-copper/20" : "bg-cream-100 border-cream-300"
-                    }`}>
-                    <div className="flex justify-between items-center mb-3">
-                      <span className="text-body font-medium text-stone-800">{m.marker}</span>
-                      <div className="flex items-center gap-2">
-                        <Badge variant={m.status === "optimal" ? "success" : "warning"}>{m.status}</Badge>
-                        <ChevronRight size={13} className="text-stone-300" />
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <div className="flex-1">
-                        <div className="text-[22px] font-serif font-semibold text-stone-800">
-                          {m.value} <span className="text-caption text-stone-400 font-sans font-normal">{m.unit}</span>
-                        </div>
-                        <div className="text-micro text-stone-400 mt-0.5">Ref: {m.reference_low}–{m.reference_high}</div>
-                        <div className="mt-2 h-1 bg-cream-300 rounded-full relative overflow-hidden">
-                          <div className={`absolute left-0 top-0 h-full rounded-full ${m.status === "optimal" ? "bg-sage" : "bg-amber"}`}
-                            style={{ width: `${Math.min(Math.max(pct, 5), 95)}%` }} />
-                        </div>
-                      </div>
-                      <Sparkline data={m.history} color={m.status === "optimal" ? "#6B8F71" : "#C4956A"} width={80} height={36} />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </Card>
-        );
-      })}
+      {!visible.length && (
+        <Card>
+          <p className="text-stone-500">No markers match these filters.</p>
+        </Card>
+      )}
+      <p className="text-caption text-stone-500">
+        <Link href="/import" className="text-copper-700 underline">
+          Manage this import
+        </Link>{" "}
+        ·{" "}
+        <Link href="/reports" className="text-copper-700 underline">
+          Download report with methods
+        </Link>
+      </p>
     </div>
   );
 }

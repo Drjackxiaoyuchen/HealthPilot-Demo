@@ -33,3 +33,10 @@ next-env.d.ts
 # editor
 .vscode/
 .idea/
+
+# Personal health inputs and local reports
+/data/
+/imports/
+/exports/
+/test-results/
+/playwright-report/

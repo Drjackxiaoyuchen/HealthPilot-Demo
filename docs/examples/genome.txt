@@ -1,0 +1,5 @@
+# Synthetic format fixture; not a person's genome
+# rsid chromosome position allele1 allele2
+rs1801133 1 11856378 A G
+rs4680 22 19951271 A A
+rs9939609 16 53820527 0 0
