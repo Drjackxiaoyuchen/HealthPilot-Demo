@@ -1,0 +1,154 @@
+{
+  "checkedAt": "2026-11-16T07:20:53.127Z",
+  "routes": [
+    {
+      "path": "/dashboard",
+      "title": "Dashboard",
+      "methodsVisible": true,
+      "methodsExpected": true
+    },
+    {
+      "path": "/genomics",
+      "title": "Genomics",
+      "methodsVisible": true,
+      "methodsExpected": true
+    },
+    {
+      "path": "/glucose",
+      "title": "Glucose & Diet",
+      "methodsVisible": true,
+      "methodsExpected": true
+    },
+    {
+      "path": "/supplements",
+      "title": "Supplements",
+      "methodsVisible": true,
+      "methodsExpected": true
+    },
+    {
+      "path": "/diet",
+      "title": "Diet & Nutrition",
+      "methodsVisible": true,
+      "methodsExpected": true
+    },
+    {
+      "path": "/fitness",
+      "title": "Fitness",
+      "methodsVisible": true,
+      "methodsExpected": true
+    },
+    {
+      "path": "/records",
+      "title": "Medical Records",
+      "methodsVisible": true,
+      "methodsExpected": true
+    },
+    {
+      "path": "/annotations",
+      "title": "Genome Tracker",
+      "methodsVisible": true,
+      "methodsExpected": true
+    },
+    {
+      "path": "/medicine",
+      "title": "Medicine Checker",
+      "methodsVisible": true,
+      "methodsExpected": true
+    },
+    {
+      "path": "/bloodwork",
+      "title": "Blood Work",
+      "methodsVisible": true,
+      "methodsExpected": true
+    },
+    {
+      "path": "/family",
+      "title": "Family Hub",
+      "methodsVisible": true,
+      "methodsExpected": true
+    },
+    {
+      "path": "/offspring",
+      "title": "Offspring Risk",
+      "methodsVisible": true,
+      "methodsExpected": true
+    },
+    {
+      "path": "/enrichment",
+      "title": "Pathway Enrichment",
+      "methodsVisible": true,
+      "methodsExpected": true
+    },
+    {
+      "path": "/gwas",
+      "title": "GWAS & Disease",
+      "methodsVisible": true,
+      "methodsExpected": true
+    },
+    {
+      "path": "/comparison",
+      "title": "Family Comparison",
+      "methodsVisible": true,
+      "methodsExpected": true
+    },
+    {
+      "path": "/prs",
+      "title": "Polygenic Risk",
+      "methodsVisible": true,
+      "methodsExpected": true
+    },
+    {
+      "path": "/pharmacogenomics",
+      "title": "Pharmacogenomics",
+      "methodsVisible": true,
+      "methodsExpected": true
+    },
+    {
+      "path": "/import",
+      "title": "Import Data",
+      "methodsVisible": true,
+      "methodsExpected": true
+    },
+    {
+      "path": "/reports",
+      "title": "Reports & Export",
+      "methodsVisible": false,
+      "methodsExpected": false
+    },
+    {
+      "path": "/research",
+      "title": "Research Library",
+      "methodsVisible": false,
+      "methodsExpected": false
+    }
+  ],
+  "mobileWidthChecks": [
+    {
+      "path": "/glucose",
+      "content": 385,
+      "viewport": 390
+    },
+    {
+      "path": "/import",
+      "content": 385,
+      "viewport": 390
+    },
+    {
+      "path": "/reports",
+      "content": 385,
+      "viewport": 390
+    }
+  ],
+  "researchSearch": "PharmCAT: 2 of 18 sections",
+  "researchGroup": "Showing 6 of 18 sections",
+  "syntheticImportChecks": {
+    "cgmMean": 5.3,
+    "cgmReadings": 3,
+    "laboratoryObservations": 3,
+    "laboratorySeries": 2,
+    "genomeMatches": 2,
+    "jsonDownloadVerified": true,
+    "testImportsCleared": true
+  },
+  "newBrowserErrors": []
+}

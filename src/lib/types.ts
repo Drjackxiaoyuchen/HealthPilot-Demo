@@ -1,5 +1,5 @@
 // ============================================================
-// Core Types for Health Compass
+// Core Types for Symphony AI
 // Based on FHIR R4 patterns (inspired by Medplum/Fasten)
 // ============================================================
 

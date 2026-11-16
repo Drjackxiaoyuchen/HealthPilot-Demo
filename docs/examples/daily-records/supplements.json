@@ -1,0 +1,43 @@
+{
+  "format": "symphony-ledger-v1",
+  "updatedAt": "2026-11-16T00:00:00Z",
+  "kind": "supplements",
+  "entries": [
+    {
+      "id": "synthetic-p1",
+      "name": "Synthetic label A",
+      "servingsPerDay": 1,
+      "timing": "Example schedule",
+      "active": true,
+      "ingredients": [
+        {
+          "name": "Vitamin D",
+          "amount": 400,
+          "unit": "IU",
+          "basis": "active nutrient"
+        }
+      ],
+      "source": "Synthetic label fixture",
+      "sourceUrl": "",
+      "notes": "Synthetic format example; not a recommendation."
+    },
+    {
+      "id": "synthetic-p2",
+      "name": "Synthetic label B",
+      "servingsPerDay": 1,
+      "timing": "Example schedule",
+      "active": true,
+      "ingredients": [
+        {
+          "name": "Vitamin D",
+          "amount": 20,
+          "unit": "mcg",
+          "basis": "active nutrient"
+        }
+      ],
+      "source": "Synthetic label fixture",
+      "sourceUrl": "",
+      "notes": "Synthetic format example; not a recommendation."
+    }
+  ]
+}

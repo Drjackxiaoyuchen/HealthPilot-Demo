@@ -1,109 +1,217 @@
 "use client";
-
-import { Card } from "@/components/ui/card";
-import { StatCard } from "@/components/ui/stat-card";
-import { ProgressRing } from "@/components/ui/progress-ring";
-import { Badge } from "@/components/ui/badge";
-import { SectionTitle } from "@/components/ui/section-title";
+import { useState } from "react";
+import Link from "next/link";
 import {
-  Activity, Flame, Moon, Footprints, Droplets, Dumbbell, BarChart3, Shield, Weight,
+  Activity,
+  Utensils,
+  Dumbbell,
+  Pill,
+  FlaskConical,
+  Dna,
+  ArrowUpRight,
 } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { KEYS, type GenomeStored } from "@/lib/user-data";
+import { useLocalData } from "@/lib/use-local-data";
+import { useLedger } from "@/lib/use-ledger";
 import {
-  BarChart, Bar, AreaChart, Area, RadarChart, Radar,
-  PolarGrid, PolarAngleAxis, PolarRadiusAxis,
-  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-} from "recharts";
-import { DAILY_LOGS, MEALS } from "@/data/seed";
-
-const tooltipStyle = { background: "white", border: "1px solid #E8E0D4", borderRadius: 12, fontSize: 12, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" };
-
+  supplementSchema,
+  mealSchema,
+  workoutSchema,
+  nutritionDays,
+  fitnessDays,
+} from "@/lib/personal-ledgers";
+import { computeStats, type CgmStored } from "@/lib/cgm";
+import { labSeries, type BloodworkStored } from "@/lib/bloodwork";
 export default function DashboardPage() {
-  const weekData = DAILY_LOGS.map(d => ({
-    day: d.day.slice(8),
-    calories: d.calories,
-    protein: d.protein_g,
-    score: d.health_score,
-    steps: d.steps,
-  }));
-  const today = DAILY_LOGS[DAILY_LOGS.length - 1];
-  const totalCals = MEALS.reduce((s, m) => s + m.calories, 0);
-  const totalProt = MEALS.reduce((s, m) => s + m.protein_g, 0);
-
-  const radarData = [
-    { subject: "Sleep", value: 88 },
-    { subject: "Nutrition", value: 82 },
-    { subject: "Exercise", value: 78 },
-    { subject: "Genomic Rx", value: 92 },
-    { subject: "Stress", value: 75 },
-    { subject: "Biomarkers", value: 90 },
+  const supplements = useLedger(
+      KEYS.supplements,
+      "supplements",
+      supplementSchema,
+    ),
+    meals = useLedger(KEYS.meals, "meals", mealSchema),
+    workouts = useLedger(KEYS.workouts, "workouts", workoutSchema),
+    cgm = useLocalData<CgmStored>(KEYS.cgm),
+    labs = useLocalData<BloodworkStored>(KEYS.bloodwork),
+    genome = useLocalData<GenomeStored>(KEYS.genome);
+  const nutrition = nutritionDays(meals.entries),
+    fitness = fitnessDays(workouts.entries),
+    dates = [
+      ...new Set([
+        ...nutrition.map((row) => row.day),
+        ...fitness.map((row) => row.day),
+      ]),
+    ].sort(),
+    [day, setDay] = useState(""),
+    selected = dates.includes(day) ? day : dates.at(-1) || "",
+    n = nutrition.find((row) => row.day === selected),
+    f = fitness.find((row) => row.day === selected),
+    stats = cgm?.readings?.length ? computeStats(cgm.readings) : null;
+  const tiles = [
+    {
+      title: "Logged meal energy",
+      value: n ? n.kcal.toFixed(1) + " kcal" : "Not recorded",
+      detail: n
+        ? `${n.meals} eaten meals · ${selected}`
+        : "Add eaten meals for the selected date",
+      href: "/diet",
+      icon: Utensils,
+    },
+    {
+      title: "Recorded training",
+      value: f ? f.duration + " min" : "Not recorded",
+      detail: f
+        ? `${f.sessions} completed sessions · ${selected}`
+        : "Plans do not count as completed activity",
+      href: "/fitness",
+      icon: Dumbbell,
+    },
+    {
+      title: "Supplement plan",
+      value:
+        String(supplements.entries.filter((row) => row.active).length) +
+        " active products",
+      detail: "Planned label amounts; not actual intake",
+      href: "/supplements",
+      icon: Pill,
+    },
+    {
+      title: "Imported mean glucose",
+      value: stats ? stats.avg.toFixed(2) + " mmol/L" : "Not imported",
+      detail: stats
+        ? `${stats.days} days represented · ${stats.coverage.toFixed(1)}% elapsed-window coverage`
+        : "Import your own CGM export",
+      href: "/glucose",
+      icon: Activity,
+    },
+    {
+      title: "Laboratory history",
+      value: labs?.observations?.length
+        ? `${labs.observations.length} observations`
+        : "Not imported",
+      detail: labs?.observations?.length
+        ? `${labSeries(labs.observations).length} marker / unit / lab series`
+        : "Source intervals and units stay with results",
+      href: "/bloodwork",
+      icon: FlaskConical,
+    },
+    {
+      title: "Genome panel calls",
+      value: genome ? `${genome.matchedSnps.length} matches` : "Not imported",
+      detail: "Raw calls; clinical significance unresolved",
+      href: "/genomics",
+      icon: Dna,
+    },
   ];
-
   return (
-    <div className="flex flex-col gap-7">
-      {/* Health Score + KPIs */}
-      <div className="flex gap-6">
-        <Card accent className="w-[200px] flex flex-col items-center justify-center gap-3 shrink-0">
-          <span className="text-micro text-stone-400 uppercase tracking-[0.1em] font-medium">Health Score</span>
-          <ProgressRing value={86} max={100} size={100} strokeWidth={7} color="#6B8F71" />
-          <Badge variant="success">Excellent</Badge>
-          <span className="text-micro text-stone-400">+4 pts this month</span>
-        </Card>
-        <div className="flex-1 grid grid-cols-3 gap-4">
-          <StatCard icon={Weight} label="Weight" value="78.0" unit="kg" trend="-0.5kg" trendUp={false} color="blue" />
-          <StatCard icon={Moon} label="Sleep" value="7.9" unit="hrs" trend="+0.4h" trendUp={true} color="purple" />
-          <StatCard icon={Footprints} label="Steps" value="7,800" trend="+12%" trendUp={true} color="green" />
-          <StatCard icon={Flame} label="Calories" value={totalCals.toLocaleString()} unit="kcal" color="yellow" />
-          <StatCard icon={Dumbbell} label="Protein" value={totalProt} unit="g" trend="97%" trendUp={true} color="red" />
-          <StatCard icon={Droplets} label="Water" value="3.1" unit="L" trend="97%" trendUp={true} color="cyan" />
-        </div>
-      </div>
-
-      {/* Charts */}
-      <div className="grid grid-cols-[2fr_1fr] gap-6">
-        <Card>
-          <SectionTitle icon={BarChart3} title="Weekly Trends" subtitle="Last 7 days" />
-          <ResponsiveContainer width="100%" height={240}>
-            <BarChart data={weekData} barGap={6}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#E8E0D4" />
-              <XAxis dataKey="day" tick={{ fill: "#7A756F", fontSize: 12 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: "#9B958E", fontSize: 11 }} axisLine={false} tickLine={false} />
-              <Tooltip contentStyle={tooltipStyle} />
-              <Bar isAnimationActive={false} dataKey="calories" fill="#C4956A" radius={[6, 6, 0, 0]} name="Calories" opacity={0.75} />
-              <Bar isAnimationActive={false} dataKey="protein" fill="#7B8FA4" radius={[6, 6, 0, 0]} name="Protein (g)" opacity={0.75} />
-            </BarChart>
-          </ResponsiveContainer>
-        </Card>
-        <Card>
-          <SectionTitle icon={Shield} title="Wellness Radar" />
-          <ResponsiveContainer width="100%" height={240}>
-            <RadarChart data={radarData}>
-              <PolarGrid stroke="#E8E0D4" />
-              <PolarAngleAxis dataKey="subject" tick={{ fill: "#7A756F", fontSize: 10 }} />
-              <PolarRadiusAxis tick={false} axisLine={false} domain={[0, 100]} />
-              <Radar isAnimationActive={false} dataKey="value" stroke="#B8906F" fill="#B8906F" fillOpacity={0.1} strokeWidth={1.5} />
-            </RadarChart>
-          </ResponsiveContainer>
-        </Card>
-      </div>
-
-      {/* Health Score trend */}
+    <div className="space-y-6">
       <Card>
-        <SectionTitle icon={Activity} title="Health Score Trend" subtitle="Daily composite score" />
-        <ResponsiveContainer width="100%" height={180}>
-          <AreaChart data={weekData}>
-            <defs>
-              <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#6B8F71" stopOpacity={0.15} />
-                <stop offset="95%" stopColor="#6B8F71" stopOpacity={0.02} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#E8E0D4" />
-            <XAxis dataKey="day" tick={{ fill: "#7A756F", fontSize: 12 }} axisLine={false} tickLine={false} />
-            <YAxis domain={[60, 100]} tick={{ fill: "#9B958E", fontSize: 11 }} axisLine={false} tickLine={false} />
-            <Tooltip contentStyle={tooltipStyle} />
-            <Area isAnimationActive={false} type="monotone" dataKey="score" stroke="#6B8F71" fill="url(#scoreGrad)" strokeWidth={2} dot={{ fill: "#6B8F71", r: 3, strokeWidth: 2, stroke: "white" }} name="Score" />
-          </AreaChart>
-        </ResponsiveContainer>
+        <p className="text-micro uppercase tracking-widest text-copper-700">
+          Symphony AI / Your signals, together
+        </p>
+        <h2 className="font-serif text-[32px] mt-1">
+          A view built from your records
+        </h2>
+        <p className="text-body text-stone-500 max-w-2xl mt-2">
+          Your logged meals, completed training, supplement plan and imported
+          measurements. Every summary keeps its time window and source; there is
+          no inferred health score.
+        </p>
+        <div className="flex flex-wrap justify-between items-center gap-3 mt-5">
+          <label className="text-caption text-stone-600">
+            Daily log date{" "}
+            <select
+              aria-label="Dashboard log date"
+              className="ml-2 rounded-xl text-caption border-cream-300"
+              value={selected}
+              onChange={(event) => setDay(event.target.value)}
+              disabled={!dates.length}
+            >
+              {dates.length ? (
+                dates.map((date) => <option key={date}>{date}</option>)
+              ) : (
+                <option value="">No daily logs yet</option>
+              )}
+            </select>
+          </label>
+          <Link
+            href="/reports"
+            className="text-caption text-copper-700 underline"
+          >
+            Open your report
+          </Link>
+        </div>
+      </Card>
+      {[supplements.error, meals.error, workouts.error]
+        .filter(Boolean)
+        .map((error, index) => (
+          <p role="alert" className="text-caption text-rose-dark" key={index}>
+            {error}
+          </p>
+        ))}
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {tiles.map((tile) => (
+          <Link key={tile.href} href={tile.href}>
+            <Card className="h-full">
+              <div className="flex justify-between gap-3 items-center">
+                <tile.icon size={20} className="text-copper" />
+                <ArrowUpRight size={15} className="text-stone-400" />
+              </div>
+              <h3 className="text-caption font-sans font-medium mt-4 text-stone-500">
+                {tile.title}
+              </h3>
+              <p className="font-serif text-[25px] mt-2">{tile.value}</p>
+              <p className="text-micro text-stone-400 mt-2">{tile.detail}</p>
+            </Card>
+          </Link>
+        ))}
+      </div>
+      <Card>
+        <h3 className="font-serif text-title mb-4">
+          Data windows & next steps
+        </h3>
+        <div className="space-y-3 text-caption text-stone-500">
+          {stats ? (
+            <p>
+              CGM: {new Date(stats.start).toLocaleString()} →{" "}
+              {new Date(stats.end).toLocaleString()} ·{" "}
+              {cgm?.sourceFile || "Previous upload"}. This upload-wide summary
+              is independent of the daily log date.
+            </p>
+          ) : (
+            <p>
+              CGM: no personal dataset.{" "}
+              <Link href="/import" className="text-copper-700 underline">
+                Import readings
+              </Link>{" "}
+              to populate the overview.
+            </p>
+          )}
+          {labs?.observations?.length ? (
+            <p>
+              Labs: {labs.sourceFile} · latest collection{" "}
+              {labs.observations
+                .map((row) => row.collectedAt)
+                .sort()
+                .at(-1)}
+              . Different units and laboratories remain separate.
+            </p>
+          ) : (
+            <p>Labs: no personal observations imported.</p>
+          )}
+          <p>
+            Daily records: {meals.entries.length} meal records and{" "}
+            {workouts.entries.length} sessions saved. Missing dates do not imply
+            zero intake, inactivity or recovery.
+          </p>
+          <p>
+            Remaining research sections show their current status in{" "}
+            <Link href="/research" className="text-copper-700 underline">
+              Research Library
+            </Link>
+            . Personal uploads do not populate unimplemented clinical estimates.
+          </p>
+        </div>
       </Card>
     </div>
   );

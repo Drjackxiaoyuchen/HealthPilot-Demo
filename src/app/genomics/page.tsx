@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import ImportedGenome from "@/components/imported-genome";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { SectionTitle } from "@/components/ui/section-title";
@@ -245,6 +246,10 @@ export default function GenomicsPage() {
 
   return (
     <div className="flex flex-col gap-7">
+      <ImportedGenome />
+      <div className="rounded-xl border border-copper/20 bg-copper-50 px-4 py-3 text-caption text-copper-700">
+        <strong>Illustrative genomics explorer.</strong> The example variants, risk labels and pathway results below use demo data.
+      </div>
       {/* Summary strip */}
       <div className="grid grid-cols-4 gap-4">
         <Card accent className="text-center py-6">
