@@ -4,9 +4,9 @@
 
 Symphony AI is a local personal health workspace for glucose, laboratory results, genomic calls, nutrition, activity and family context. It combines an exploratory demo with reviewed imports and source-linked methods. The repository URL retains its original `HealthPilot-Demo` name for link compatibility.
 
-Personal measurements and illustrative results have distinct labels. Most sections remain demonstrations; their scores, risk estimates and recommendations are not validated personal results.
+Personal measurements and illustrative results have distinct labels. The daily-record modules work with saved personal data. Remaining research sections are labeled demonstrations; their scores, risk estimates and recommendations are not validated personal results.
 
-![Symphony AI Research Library](docs/screenshots/symphony-research.jpg)
+![Symphony AI personal dashboard — synthetic test records](docs/screenshots/symphony-daily-dashboard.jpg)
 
 ## Run locally
 
@@ -27,6 +27,10 @@ Open [localhost:3000](http://localhost:3000). Node.js 20 or newer is recommended
 | Glucose & Diet | Date-selectable trace, observed-duration range statistics, elapsed-window coverage, CV, daily summaries and exploratory hourly percentile bands |
 | Blood Work | CSV import, searchable marker/unit/lab series, source reference intervals and dated histories |
 | Genomics | Display uploaded calls that match a small 22-record rsID panel; keep the original demo explorer visibly separate |
+| Supplements | Saved products and ingredients, declared label amounts, planned daily totals, overlap review, pause/resume and portable backups |
+| Diet & Nutrition | Dated meals, gram-based portions, label/database nutrient sources, planned/eaten separation and observed CGM context |
+| Fitness | Planned/completed sessions, editable sets, normalized external-load volume and dated activity summaries |
+| Dashboard | Personal daily records and imported measurements with their own windows; no fixed health score |
 | Reports & Export | Personal JSON report, normalized CGM/lab/matched-call CSVs, hourly profile CSV and printable summary |
 | Research Library | Searchable methods, public references and next improvements for all 18 original sections |
 | Other sections | Labeled, fixed illustrative data; personal uploads do not generate their scores, recommendations or family profiles |
@@ -73,17 +77,30 @@ Unzipped 23andMe-style text (`rsid chromosome position genotype`) or AncestryDNA
 
 This is rsID matching, without build/strand harmonization, phasing or clinical interpretation. It does not calculate PRS, pharmacogene diplotypes, supplement needs or offspring disease risk. Imported calls are shown above the separate demo genomics explorer.
 
+## Working daily records
+
+Supplements, Diet & Nutrition and Fitness start empty and save your records locally. Each module supports editing, removal with undo, CSV output and a versioned JSON backup. Importing a backup validates its module, values, URLs and record IDs, then shows its contents for review before replacing records. Invalid stored data blocks ordinary edits and remains available as a raw backup; a reviewed valid backup can repair the ledger. Storage failures are shown without silently reporting a successful save.
+
+- **Supplements:** enter product label amounts per serving and planned servings per day. Only active products contribute. Compatible mass units are normalized; active vitamin D alone uses the NIH conversion of 40 IU = 1 mcg. Other IU, DFE and RAE units are not converted to generic mass units. Compound/unspecified amounts remain separate by product. Overlap means the same entered ingredient occurs in multiple products, not a diagnosis of excess or an interaction check. No recommended dose is assigned.
+- **Meals:** enter each food's grams, weighed/estimated portion basis, per-100g nutrients and source. Energy and macros scale by grams / 100. Unknown fiber stays null. Planned meals do not enter logged intake totals. There is no automatic photo recognition, food-database connection or volume-to-mass assumption.
+- **Fitness:** record session time, duration, status and sets. Only completed sessions enter activity totals. External-load volume is repetitions × load in kg (1 lb = 0.45359237 kg); bodyweight mass is not inferred. Days without logs are missing. There is no calorie-burn or recovery score.
+- **Dashboard:** combine the above with imported CGM, labs and genotype calls. The daily date selector applies to logged intake/training; CGM retains its full-upload window. No composite health score is generated.
+
+Dated eaten meals appear on personal CGM traces, with a fixed exploratory context window. A numeric summary requires at least two pre-meal readings spanning five minutes (latest within 15 minutes), at least four post-meal readings starting within 15 minutes and reaching 105 minutes, at least 80% observed coverage over two hours, and no overlapping logged meal from −30 to +120 minutes. Baseline is the pre-meal sample mean, peak is the maximum observed post-meal value, and the difference is reported in mmol/L. These are our transparent quality gates, not a reproduction of a published prediction model. Sensor error, prior intake, activity and unlogged meals remain potential influences; repeated observations are needed before inferring stable food responses.
+
+The full personal report is now `symphony-report-v2` and includes these ledgers, their source notes, derived summaries and method boundaries. Use module-specific JSON backups for restoration.
+
 ## Research-informed development
 
-The [Research Library](http://localhost:3000/research) maps 19 public references to all 18 original sections. [Development notes](docs/research-informed-development.md) record the adopted patterns, remaining work and evidence boundaries. References include Nightscout, iglu, Open mHealth, Open Food Facts, wger, Medplum, ClinVar, GWAS Catalog, PGS Catalog Calculator, PharmCAT, CPIC, a Hugging Face MedGemma model card and Function's public product announcement.
+The [Research Library](http://localhost:3000/research) maps 23 public references to all 18 original sections. [Development notes](docs/research-informed-development.md) record the adopted patterns, remaining work and evidence boundaries. References include Nightscout, iglu, Open mHealth, Open Food Facts, wger, Medplum, ClinVar, GWAS Catalog, PGS Catalog Calculator, PharmCAT, CPIC, a Hugging Face MedGemma model card and Function's public product announcement.
 
 Sources inform design and method choices; their code, models, databases and proprietary algorithms are not installed or reproduced. Links open source websites without attaching uploaded datasets. References were reviewed on **2026-11-16**; there is no automatic literature refresh or background research job.
 
 ## Storage and exports
 
-Uploads are processed locally and stored in unencrypted browser `localStorage`. Existing `hp:*:v1` keys are retained for compatibility after the rename. Same-origin scripts and people using the browser profile can access the data. The app bundles its Excel reader and uses system fonts; it does not load an external AI model or send uploaded files to an analysis API.
+Uploads are processed locally and stored in unencrypted browser `localStorage`. New daily ledgers use `symphony:supplements:v1`, `symphony:meals:v1` and `symphony:workouts:v1`. Existing `hp:*:v1` keys are retained for compatibility after the rename. Same-origin scripts and people using the browser profile can access the data. The app bundles its Excel reader and uses system fonts; it does not load an external AI model or send uploaded files to an analysis API.
 
-Browser storage is not a backup and may be cleared. Keep original files. Clear individual datasets on Import Data. Reports explicitly export personal data when requested; demo values are omitted from the personal JSON report. Reports include source filename, upload time, normalization units, methods, quality notes and references.
+Browser storage is not a backup and may be cleared. Keep original files. Clear uploaded CGM/genome/lab datasets on Import Data; daily modules support record removal and reviewed backup replacement. Reports explicitly export personal data when requested; demo values are omitted from the personal JSON report. Reports include source filename, upload time, normalization units, methods, quality notes and references.
 
 Do not commit personal data. `.gitignore` excludes `data/`, `imports/`, `exports/`, private environment files and local test artifacts. Files elsewhere still need review before committing.
 
@@ -95,7 +112,7 @@ npm run typecheck
 npm run build
 ```
 
-Tests cover parsing, declared units, invalid dates, missing data, time weighting, range boundaries, GMI availability, local-day grouping, lab reference intervals, unit/lab separation, genome no-calls, CSV exports and demo/personal report boundaries. CI runs these checks against a clean install.
+Tests also cover label unit/basis handling, planned/completed separation, missing nutrient values, external-load normalization, backup validation and observed meal-window gates. Tests cover parsing, declared units, invalid dates, missing data, time weighting, range boundaries, GMI availability, local-day grouping, lab reference intervals, unit/lab separation, genome no-calls, CSV exports and demo/personal report boundaries. CI runs these checks against a clean install.
 
 ## Use and limitations
 

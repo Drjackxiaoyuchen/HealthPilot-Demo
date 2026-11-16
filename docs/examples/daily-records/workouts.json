@@ -1,0 +1,57 @@
+{
+  "format": "symphony-ledger-v1",
+  "updatedAt": "2026-11-16T00:00:00Z",
+  "kind": "workouts",
+  "entries": [
+    {
+      "id": "synthetic-w1",
+      "name": "Synthetic strength session",
+      "at": "2026-11-15T18:00:00+08:00",
+      "status": "completed",
+      "type": "Resistance",
+      "durationMin": 30,
+      "sets": [
+        {
+          "exercise": "Row",
+          "reps": 10,
+          "load": 20,
+          "unit": "kg",
+          "loadKind": "external"
+        },
+        {
+          "exercise": "Pushup",
+          "reps": 20,
+          "load": 0,
+          "unit": "kg",
+          "loadKind": "bodyweight"
+        }
+      ],
+      "notes": "Synthetic format example."
+    },
+    {
+      "id": "synthetic-w2",
+      "name": "Synthetic planned session",
+      "at": "2026-11-15T18:00:00+08:00",
+      "status": "planned",
+      "type": "Resistance",
+      "durationMin": 60,
+      "sets": [
+        {
+          "exercise": "Row",
+          "reps": 10,
+          "load": 20,
+          "unit": "kg",
+          "loadKind": "external"
+        },
+        {
+          "exercise": "Pushup",
+          "reps": 20,
+          "load": 0,
+          "unit": "kg",
+          "loadKind": "bodyweight"
+        }
+      ],
+      "notes": "Synthetic format example."
+    }
+  ]
+}

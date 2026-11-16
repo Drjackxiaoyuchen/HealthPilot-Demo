@@ -18,6 +18,7 @@ import {
   ComposedChart,
   Line,
   ReferenceArea,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -36,7 +37,10 @@ import {
 } from "@/lib/cgm";
 import { useLocalData } from "@/lib/use-local-data";
 import { downloadFile } from "@/lib/download";
-import { toCsv } from "@/lib/tabular";
+import { toCsv, localDay } from "@/lib/tabular";
+import { useLedger } from "@/lib/use-ledger";
+import { mealSchema } from "@/lib/personal-ledgers";
+import { createMealContextAnalyzer } from "@/lib/meal-context";
 
 const DEMO: CgmStored = {
   uploadedAt: "2026-04-25T00:00:00Z",
@@ -50,6 +54,11 @@ const axis = { fill: "#7A756F", fontSize: 10 };
 
 export default function GlucosePage() {
   const uploaded = useLocalData<CgmStored>(KEYS.cgm);
+  const meals = useLedger(KEYS.meals, "meals", mealSchema);
+  const analyzeMeal = useMemo(
+    () => createMealContextAnalyzer(uploaded?.readings || []),
+    [uploaded],
+  );
   const stored = uploaded?.readings?.length ? uploaded : DEMO;
   const personal = stored !== DEMO;
   const [selected, setSelected] = useState("");
@@ -57,6 +66,14 @@ export default function GlucosePage() {
   const dates = [...groups.keys()];
   const day = groups.has(selected) ? selected : dates.at(-1) || "";
   const rows = groups.get(day) || [];
+  const datedMeals = personal
+    ? meals.entries
+        .filter(
+          (meal) =>
+            meal.status === "eaten" && localDay(new Date(meal.at)) === day,
+        )
+        .sort((a, b) => a.at.localeCompare(b.at))
+    : [];
   const stats = useMemo(() => computeStats(stored.readings), [stored]);
   const dayStats = computeStats(rows);
   const daily = dates.map((date) => ({
@@ -282,6 +299,20 @@ export default function GlucosePage() {
                 connectNulls={false}
                 dot={rows.length < 10}
               />
+              {datedMeals.map((meal) => (
+                <ReferenceLine
+                  key={meal.id}
+                  x={Date.parse(meal.at)}
+                  stroke="#9A7458"
+                  strokeDasharray="3 3"
+                  label={{
+                    value: meal.name.slice(0, 18),
+                    position: "insideTopRight",
+                    fontSize: 10,
+                    fill: "#9A7458",
+                  }}
+                />
+              ))}
             </AreaChart>
           </ResponsiveContainer>
         </div>
@@ -477,19 +508,69 @@ export default function GlucosePage() {
       <Card>
         <SectionTitle
           icon={Utensils}
-          title={personal ? "Add context to your trace" : "Example meal diary"}
+          title={personal ? "Your dated meal context" : "Example meal diary"}
           subtitle={
             personal
-              ? "Meal-response analysis needs dated personal meal logs"
+              ? "Recorded eaten meals for the selected date · observed CGM context"
               : "Illustrative food records, shown independently from the trace"
           }
         />
         {personal ? (
-          <p className="text-body text-stone-500">
-            This import contains glucose readings only. Meal events, nutrition
-            totals and genetic recommendations are not inferred from it. Keep
-            meal times and portions to support a future matched analysis.
-          </p>
+          <div className="space-y-3">
+            {meals.error && (
+              <p role="alert" className="text-caption text-rose-dark">
+                {meals.error}
+              </p>
+            )}
+            {!datedMeals.length && (
+              <p className="text-body text-stone-500">
+                No eaten meals logged for {day}.{" "}
+                <Link href="/diet" className="text-copper-700 underline">
+                  Log a dated meal
+                </Link>{" "}
+                to add context to your own trace.
+              </p>
+            )}
+            {datedMeals.map((meal) => {
+              const result = analyzeMeal(meal, meals.entries);
+              return (
+                <div
+                  key={meal.id}
+                  className="rounded-xl border border-cream-300 bg-cream-100 p-4"
+                >
+                  <p className="text-caption font-medium text-stone-700">
+                    {meal.name} ·{" "}
+                    {new Date(meal.at).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </p>
+                  {result.status === "available" && (
+                    <p className="text-caption text-stone-600 mt-1">
+                      Pre-meal mean {result.baseline!.toFixed(2)} → 2-hour
+                      observed peak {result.peak!.toFixed(2)} mmol/L ·
+                      difference {result.delta! >= 0 ? "+" : ""}
+                      {result.delta!.toFixed(2)} mmol/L
+                    </p>
+                  )}
+                  <p className="text-micro text-stone-500 mt-2">
+                    {result.reason}
+                  </p>
+                  <p className="text-micro text-stone-400 mt-1">
+                    {result.beforeCount} baseline and {result.afterCount}{" "}
+                    post-meal readings · {result.coverage.toFixed(1)}% window
+                    coverage
+                  </p>
+                </div>
+              );
+            })}
+            <Link
+              className="inline-flex text-caption text-copper-700 underline"
+              href="/diet"
+            >
+              Manage your food diary
+            </Link>
+          </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-caption text-left">

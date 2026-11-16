@@ -14,6 +14,9 @@ This pass reviews all 18 original sections. It adopts interface and data-quality
 - A visible imported-genotype call table, separate from the illustrative genomics explorer; AncestryDNA two-column alleles and no-call exclusion.
 - A versioned personal JSON report, source and method notes, CSV exports and printable summary. Demo values never fill missing personal results.
 
+- Working supplement, meal and training ledgers with validated persistence, editing, removal/undo, reviewed backup restoration and CSV outputs. Ingredient totals preserve label basis and unsupported units; planned meals/sessions stay out of completed totals.
+- A personal dashboard replaces fixed health scores. Personal meals appear on CGM traces with explicit baseline, coverage and overlapping-meal gates. Report v2 includes entered ledgers and derived summaries.
+
 ## Evidence and implementation boundaries
 
 No third-party application source code, exercise media, model weights or genomic databases were copied. Public references inform our own implementation. Source/data licenses and model terms need separate review before a future integration. wger is AGPL-3.0-or-later; PhenoTips' open repository is unmaintained and is retained only as a historical interface/model reference.
@@ -25,6 +28,10 @@ Function's company announcement reports a $298 million Series B and describes un
 The CGM implementation uses a median short-interval cadence estimate and capped left-hold durations, rather than iglu's interpolation. An inferred cadence cannot identify every missing-sampling pattern. Coverage refers to the elapsed upload window, not a mandatory full-day denominator. Hourly bands use unweighted sample percentiles in the current device time zone, with sample/day counts; uneven sampling can affect them. No clinical equivalence to an AGP report is claimed.
 
 Lab values retain their original units and laboratory intervals. Missing intervals are unclassified. Genotype matching is not build/strand harmonization, PRS calculation, pharmacogene star-allele calling or disease-risk interpretation. Family data remains fictional and isolated from personal imports.
+
+Ingredient totals are derived from entered label amounts and planned servings, not actual intake or treatment needs. Vitamin D uses the specific NIH conversion of 40 IU to 1 mcg; unsupported IU and DFE/RAE stay separate. Nutrient totals scale per-100g values by entered portions. Completed external-load volume is reps times normalized kg; bodyweight mass is never inferred.
+
+Meal-context summaries use our own exploratory quality gates: two pre-meal readings spanning five minutes, latest within 15 minutes; four post-meal readings starting within 15 minutes and reaching 105 minutes; 80% observed coverage over two hours; and no overlapping logged eaten meal in the baseline/post-meal window. The output is observed peak minus pre-meal sample mean, without a causal food-effect or predictive claim. The 2025 paper informs the importance of timing and within-person variability, not validation of these gates.
 
 ## Section-by-section work
 
@@ -38,9 +45,9 @@ Route: `/dashboard`.
 
 **Output:** Domain summaries with data dates and completeness
 
-**Current:** The health score, wellness radar and activity tiles remain illustrative demo metrics.
+**Current:** Personal overview of imported measurements and saved meals, products and completed sessions. Missing records stay missing; there is no composite health score.
 
-**Next:** Build a measured-signal overview with a visible window for each domain, before adding any composite score.
+**Next:** Add explicit daily observations and device-specific adapters, retaining coverage and timestamps.
 
 **References:** [Open mHealth schemas](https://github.com/openmhealth/schemas), [Function Medical Intelligence announcement](https://www.functionhealth.com/article/function-announcement).
 
@@ -70,11 +77,11 @@ Route: `/glucose`.
 
 **Output:** Date-selectable trace, daily range summaries, hourly AGP-style profile and CSV/JSON report
 
-**Current:** Personal traces, summaries and coverage recompute locally; demo meals are kept out of personal traces.
+**Current:** Imported traces and quality metrics recompute locally. Dated personal meals appear only on personal traces, with observation quality gates.
 
-**Next:** Add dated personal meal logs and examine repeat-meal responses with coverage requirements.
+**Next:** Add explicit sensor cadence and repeated-meal comparisons with activity and medication context.
 
-**References:** [Nightscout](https://github.com/nightscout/cgm-remote-monitor), [iglu AGP documentation](https://irinagain.github.io/iglu/reference/agp.html), [International Consensus on Time in Range (2019)](https://pmc.ncbi.nlm.nih.gov/articles/PMC6973648/).
+**References:** [Nightscout](https://github.com/nightscout/cgm-remote-monitor), [iglu AGP documentation](https://irinagain.github.io/iglu/reference/agp.html), [International Consensus on Time in Range (2019)](https://pmc.ncbi.nlm.nih.gov/articles/PMC6973648/), [Predicting Postprandial Glycemic Responses With Limited Data (2025)](https://pmc.ncbi.nlm.nih.gov/articles/PMC11883769/).
 
 ### Supplements
 
@@ -86,11 +93,11 @@ Route: `/supplements`.
 
 **Output:** Ingredient ledger with evidence and review status
 
-**Current:** Protocols and interactions are demo examples, not generated from your uploads.
+**Current:** Persistent product and ingredient ledger with label sources, pause/resume, compatible-unit totals, overlap review, undo removal and reviewed JSON restore.
 
-**Next:** Add a local ingredient log with source-specific evidence; keep genotype associations separate from dose suggestions.
+**Next:** Add versioned label lookups and ingredient-form resolution; medication interactions require a separately validated source.
 
-**References:** [NIH dietary supplement fact sheets](https://ods.od.nih.gov/factsheets/list-all/), [CPIC guidelines](https://cpicpgx.org/guidelines/).
+**References:** [NIH dietary supplement fact sheets](https://ods.od.nih.gov/factsheets/list-all/), [NIH Dietary Supplement Label Database API](https://dsldapi.od.nih.gov/), [NIH Vitamin D fact sheet](https://ods.od.nih.gov/factsheets/VitaminD-HealthProfessional/).
 
 ### Diet & Nutrition
 
@@ -102,11 +109,11 @@ Route: `/diet`.
 
 **Output:** Dated meal diary with serving-based macro totals
 
-**Current:** Meal and nutrition records are demo data.
+**Current:** Persistent portion-based meal diary with nutrient sources, planned/eaten separation, dated totals, CSV/JSON outputs and quality-gated observed CGM context.
 
-**Next:** Add portion-aware manual food logging and local CSV export before a photo estimator.
+**Next:** Add reviewed food-database lookups and reusable food templates; evaluate extraction against field-level reference values.
 
-**References:** [Open Food Facts](https://github.com/openfoodfacts/openfoodfacts-server), [wger workout manager](https://github.com/wger-project/wger).
+**References:** [Open Food Facts](https://github.com/openfoodfacts/openfoodfacts-server), [wger workout manager](https://github.com/wger-project/wger), [USDA FoodData Central API guide](https://fdc.nal.usda.gov/api-guide/), [Predicting Postprandial Glycemic Responses With Limited Data (2025)](https://pmc.ncbi.nlm.nih.gov/articles/PMC11883769/).
 
 ### Fitness
 
@@ -118,9 +125,9 @@ Route: `/fitness`.
 
 **Output:** Session history, volume trend and exercise details
 
-**Current:** Workouts and progress are illustrative.
+**Current:** Persistent planned/completed sessions, editable exercise sets, kg/lb normalization, bodyweight separation, dated activity summaries and portable exports.
 
-**Next:** Persist completed sessions and derive volume from actual sets.
+**Next:** Add exercise identifiers and activity-file import, preserving sensor provenance and recorded-versus-estimated measures.
 
 **References:** [Open mHealth schemas](https://github.com/openmhealth/schemas), [wger workout manager](https://github.com/wger-project/wger).
 
@@ -470,9 +477,41 @@ Pattern: Use a longitudinal record with source context across labs, records and 
 
 Boundary: Public product positioning and company-reported funding; proprietary analysis methods were not disclosed.
 
+### NIH Dietary Supplement Label Database API
+
+[Documentation](https://dsldapi.od.nih.gov/) · reviewed 2026-11-16.
+
+Pattern: Separate product label identity, servings and ingredient amounts from efficacy claims.
+
+Boundary: Label data is a source for recorded contents; no live label lookup or efficacy scoring is installed.
+
+### NIH Vitamin D fact sheet
+
+[Documentation](https://ods.od.nih.gov/factsheets/VitaminD-HealthProfessional/) · reviewed 2026-11-16.
+
+Pattern: Vitamin D has a specific conversion of 40 IU to 1 mcg; IU is not a generic mass unit.
+
+Boundary: The app uses this conversion only for active vitamin D label amounts, without assigning a recommended dose.
+
+### USDA FoodData Central API guide
+
+[Documentation](https://fdc.nal.usda.gov/api-guide/) · reviewed 2026-11-16.
+
+Pattern: Keep food identity, nutrient units and a reference record with the portion calculation.
+
+Boundary: Users enter reviewed per-100g values; there is no automatic database lookup or assumed volume-to-mass conversion.
+
+### Predicting Postprandial Glycemic Responses With Limited Data (2025)
+
+[Paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC11883769/) · reviewed 2026-11-16.
+
+Pattern: Keep meal timing, personal observations and within-person variability visible in glucose analysis.
+
+Boundary: Our fixed-window observed summaries and quality gates are an exploratory implementation, not a reproduction of the paper's predictive model.
+
 ## Next development sequence
 
-1. Add format-specific CGM fixtures, an explicit sensor-cadence option and dated personal meal logs.
+1. Add format-specific CGM fixtures, an explicit sensor-cadence option and recorded sensor provenance.
 2. Add reviewed analyte mappings and unit conversions while preserving original values.
 3. Introduce isolated personal/family profiles before sharing or family analyses.
 4. Add source-document review and evaluate local extraction on de-identified, field-level reference datasets.

@@ -17,14 +17,37 @@ import { useLocalData } from "@/lib/use-local-data";
 import { downloadFile } from "@/lib/download";
 import { toCsv } from "@/lib/tabular";
 import { createReport, labCsvRows, REPORT_VERSION } from "@/lib/report";
+import { useLedger } from "@/lib/use-ledger";
+import {
+  supplementSchema,
+  mealSchema,
+  workoutSchema,
+} from "@/lib/personal-ledgers";
 
 export default function ReportsPage() {
   const cgm = useLocalData<CgmStored>(KEYS.cgm),
     genome = useLocalData<GenomeStored>(KEYS.genome),
     bloodwork = useLocalData<BloodworkStored>(KEYS.bloodwork);
   const [generatedAt, setGeneratedAt] = useState("");
+  const supplements = useLedger(
+      KEYS.supplements,
+      "supplements",
+      supplementSchema,
+    ),
+    meals = useLedger(KEYS.meals, "meals", mealSchema),
+    workouts = useLedger(KEYS.workouts, "workouts", workoutSchema);
   useEffect(() => setGeneratedAt(new Date().toISOString()), []);
-  const report = createReport({ cgm, genome, bloodwork }, generatedAt);
+  const report = createReport(
+    {
+      cgm,
+      genome,
+      bloodwork,
+      supplements: supplements.stored,
+      meals: meals.stored,
+      workouts: workouts.stored,
+    },
+    generatedAt,
+  );
   const button =
     "inline-flex items-center gap-2 rounded-xl px-4 py-2.5 border border-cream-300 bg-white text-caption text-stone-700 disabled:opacity-40 disabled:cursor-not-allowed";
   return (
@@ -274,6 +297,68 @@ export default function ReportsPage() {
         </Card>
       </div>
       <Card className="print-card">
+        <h3 className="font-serif text-title mb-3">
+          Daily records & label sources
+        </h3>
+        <div className="grid sm:grid-cols-3 gap-4 text-caption text-stone-600">
+          <div>
+            <strong>Supplement products</strong>
+            <p>
+              {report.supplements?.entries.length || 0} saved ·{" "}
+              {report.supplements?.plannedDailyTotals.length || 0} active
+              ingredient totals
+            </p>
+            <Link
+              href="/supplements"
+              className="text-copper-700 underline no-print"
+            >
+              Open supplement ledger
+            </Link>
+          </div>
+          <div>
+            <strong>Meal diary</strong>
+            <p>
+              {report.nutrition?.entries.length || 0} saved meals ·{" "}
+              {report.nutrition?.dailyLoggedIntake.length || 0} days with logged
+              intake
+            </p>
+            <Link href="/diet" className="text-copper-700 underline no-print">
+              Open food diary
+            </Link>
+          </div>
+          <div>
+            <strong>Training sessions</strong>
+            <p>
+              {report.fitness?.entries.length || 0} saved ·{" "}
+              {report.fitness?.completedDays.length || 0} days with completed
+              sessions
+            </p>
+            <Link
+              href="/fitness"
+              className="text-copper-700 underline no-print"
+            >
+              Open training log
+            </Link>
+          </div>
+        </div>
+        <p className="text-micro text-stone-500 mt-4">
+          The full JSON report includes these records, their sources, methods
+          and derived summaries. Use each module's JSON backup for reviewed
+          restoration. Missing records are not filled with examples.
+        </p>
+        {[supplements.error, meals.error, workouts.error]
+          .filter(Boolean)
+          .map((error, i) => (
+            <p
+              role="alert"
+              key={i}
+              className="text-caption text-rose-dark mt-2"
+            >
+              {error}
+            </p>
+          ))}
+      </Card>
+      <Card className="print-card">
         <h3 className="font-serif text-title mb-4">Methods & completeness</h3>
         <ul className="list-disc pl-5 space-y-2 text-caption text-stone-600">
           {(
@@ -288,6 +373,12 @@ export default function ReportsPage() {
           <li>
             Genome output is a small-panel rsID match. Illustrative risk,
             pathway and drug-response views are not personal results.
+          </li>
+          <li>
+            Supplement totals describe the entered daily plan; meal nutrients
+            scale source values by recorded portions. Planned meals and workouts
+            do not count as completed intake or activity. Bodyweight load and
+            unknown fiber are not invented.
           </li>
         </ul>
       </Card>

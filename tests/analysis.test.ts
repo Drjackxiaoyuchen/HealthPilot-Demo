@@ -224,7 +224,9 @@ test("report never fills personal results with demo scores or fictional relative
     report.sections.every(
       (section) =>
         section.status.includes("illustrative") ||
-        section.status === "local import workspace",
+        section.status === "local import workspace" ||
+        section.status.includes("no personal records") ||
+        section.status === "personal overview; missing values remain missing",
     ),
   );
   assert.ok(!JSON.stringify(report).includes("Morgan"));

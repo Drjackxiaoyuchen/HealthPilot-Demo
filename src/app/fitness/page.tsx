@@ -1,185 +1,628 @@
 "use client";
-
 import { useState } from "react";
+import {
+  Plus,
+  Dumbbell,
+  Pencil,
+  Trash2,
+  Download,
+  CheckCircle2,
+} from "lucide-react";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import { Card } from "@/components/ui/card";
-import { StatCard } from "@/components/ui/stat-card";
-import { Badge } from "@/components/ui/badge";
-import { SectionTitle } from "@/components/ui/section-title";
-import { Flame, Clock, CheckCircle, Dumbbell, Calendar, TrendingUp, Play, Smartphone, Activity, Search, ExternalLink } from "lucide-react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, AreaChart, Area } from "recharts";
-import { WORKOUTS, WORKOUT_DEMOS } from "@/data/seed";
-
-const tooltipStyle = { background: "white", border: "1px solid #E8E0D4", borderRadius: 12, fontSize: 12, boxShadow: "0 4px 16px rgba(0,0,0,0.06)" };
-
-// Mock glucose data (placeholder for future CGM integration)
-const GLUCOSE_DATA = [
-  { time: "06:00", value: 85 }, { time: "07:00", value: 92 }, { time: "08:00", value: 125 },
-  { time: "09:00", value: 108 }, { time: "10:00", value: 95 }, { time: "11:00", value: 88 },
-  { time: "12:00", value: 90 }, { time: "13:00", value: 132 }, { time: "14:00", value: 115 },
-  { time: "15:00", value: 98 }, { time: "16:00", value: 92 }, { time: "17:00", value: 88 },
-  { time: "18:00", value: 86 }, { time: "19:00", value: 128 }, { time: "20:00", value: 110 },
-  { time: "21:00", value: 95 }, { time: "22:00", value: 88 },
-];
-
+import { KEYS } from "@/lib/user-data";
+import { useLedger } from "@/lib/use-ledger";
+import {
+  workoutSchema,
+  workoutVolume,
+  fitnessDays,
+  inputInstant,
+  localDateTime,
+  type Workout,
+} from "@/lib/personal-ledgers";
+import {
+  LedgerTools,
+  Field,
+  fieldClass,
+  actionClass,
+  primaryClass,
+  messageOf,
+} from "@/components/ui/ledger-tools";
+import { downloadFile } from "@/lib/download";
+import { toCsv } from "@/lib/tabular";
 export default function FitnessPage() {
-  const workouts = WORKOUTS.map(w => ({ ...w, exercises: JSON.parse(w.exercises) }));
-  const weekCals = workouts.reduce((s, w) => s + w.calories, 0);
-  const weekDur = workouts.reduce((s, w) => s + w.duration_min, 0);
-  const completed = workouts.filter(w => w.completed).length;
-  const [demoFilter, setDemoFilter] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const categories = [...new Set(WORKOUT_DEMOS.map(d => d.category))];
-  const filteredDemos = WORKOUT_DEMOS.filter(d =>
-    (demoFilter === "all" || d.category === demoFilter) &&
-    (searchQuery === "" || d.exercise.toLowerCase().includes(searchQuery.toLowerCase()) || d.description.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
-
+  const ledger = useLedger(KEYS.workouts, "workouts", workoutSchema);
+  const [draft, setDraft] = useState<Workout | null>(null),
+    [at, setAt] = useState(""),
+    [status, setStatus] = useState("All sessions"),
+    [query, setQuery] = useState(""),
+    [message, setMessage] = useState(""),
+    [error, setError] = useState(""),
+    [removed, setRemoved] = useState<Workout | null>(null);
+  const completed = ledger.entries.filter((row) => row.status === "completed"),
+    daily = fitnessDays(ledger.entries),
+    visible = ledger.entries
+      .filter(
+        (row) =>
+          (status === "All sessions" || row.status === status) &&
+          `${row.name} ${row.type} ${row.sets.map((set) => set.exercise).join(" ")}`
+            .toLowerCase()
+            .includes(query.toLowerCase()),
+      )
+      .sort((a, b) => b.at.localeCompare(a.at));
+  function act(action: () => void, message: string) {
+    try {
+      action();
+      setMessage(message);
+      setError("");
+    } catch (error) {
+      setError(messageOf(error));
+    }
+  }
+  function edit(row?: Workout) {
+    setDraft(
+      row
+        ? structuredClone(row)
+        : {
+            id: crypto.randomUUID(),
+            name: "",
+            at: new Date().toISOString(),
+            status: "completed",
+            type: "Resistance",
+            durationMin: NaN,
+            sets: [],
+            notes: "",
+          },
+    );
+    setAt(row ? localDateTime(new Date(row.at)) : localDateTime(new Date()));
+    setError("");
+  }
+  function setChange(index: number, patch: Partial<Workout["sets"][number]>) {
+    if (draft)
+      setDraft({
+        ...draft,
+        sets: draft.sets.map((row, i) =>
+          i === index ? { ...row, ...patch } : row,
+        ),
+      });
+  }
   return (
-    <div className="flex flex-col gap-7">
-      <div className="grid grid-cols-4 gap-4">
-        <StatCard icon={Flame} label="Weekly Burn" value={weekCals.toLocaleString()} unit="kcal" color="red" />
-        <StatCard icon={Clock} label="Total Duration" value={weekDur} unit="min" color="blue" />
-        <StatCard icon={CheckCircle} label="Completed" value={`${completed}/7`} color="green" />
-        <StatCard icon={Dumbbell} label="Workout Days" value="5" unit="days" color="copper" />
-      </div>
-
-      {/* Weekly Program */}
+    <div className="space-y-6">
       <Card>
-        <SectionTitle icon={Calendar} title="Weekly Program" subtitle="Push/Pull/Legs + HIIT" />
-        <div className="grid grid-cols-7 gap-3">
-          {workouts.map((w, i) => (
-            <div key={i} className={`p-3.5 rounded-xl flex flex-col gap-2 border transition-all hover:shadow-elevated ${w.completed ? "bg-sage-light border-sage/15" : "bg-cream-100 border-cream-300"}`}>
-              <div className="flex justify-between items-center">
-                <span className="text-caption font-semibold text-stone-700">{w.day_of_week.slice(0, 3)}</span>
-                {w.completed ? <CheckCircle size={13} strokeWidth={1.5} className="text-sage" /> : <div className="w-3 h-3 rounded-full border-2 border-stone-200" />}
-              </div>
-              <span className="text-micro font-medium text-copper">{w.type}</span>
-              <span className="text-micro text-stone-400 leading-snug">{w.exercises.slice(0, 3).join(", ")}{w.exercises.length > 3 ? "..." : ""}</span>
-              <div className="mt-auto pt-1 flex justify-between text-micro text-stone-400 border-t border-cream-300">
-                <span>{w.duration_min}min</span><span>{w.calories}cal</span>
-              </div>
+        <div className="flex flex-wrap gap-4 justify-between">
+          <div>
+            <p className="text-micro text-copper-700 uppercase tracking-widest">
+              Plans become records
+            </p>
+            <h2 className="font-serif text-[30px] mt-1">Your training log</h2>
+            <p className="text-body text-stone-500 mt-2 max-w-2xl">
+              Record actual sessions, sets and loads. Keep planned workouts
+              visible without counting them as completed activity.
+            </p>
+          </div>
+          <button
+            className={primaryClass}
+            disabled={!ledger.ready || !!ledger.error}
+            onClick={() => edit()}
+          >
+            <Plus size={14} />
+            Log a session
+          </button>
+        </div>
+        <div className="grid sm:grid-cols-3 gap-3 mt-6">
+          {[
+            ["Completed sessions", completed.length],
+            [
+              "Recorded completed minutes",
+              completed.reduce((sum, row) => sum + row.durationMin, 0),
+            ],
+            ["Planned sessions", ledger.entries.length - completed.length],
+          ].map(([label, value]) => (
+            <div
+              className="p-4 rounded-xl bg-cream-100 border border-cream-300"
+              key={label}
+            >
+              <p className="text-micro text-stone-500">{label}</p>
+              <p className="font-serif text-[28px]">{value}</p>
             </div>
           ))}
         </div>
+        <p className="text-micro text-stone-400 mt-3">
+          All recorded history. No calorie-burn, recovery or readiness score is
+          inferred.
+        </p>
       </Card>
-
-      {/* Demo Videos */}
-      <Card>
-        <SectionTitle icon={Play} title="Exercise Demo Library" subtitle="Curated video guides from top fitness channels" />
-        <div className="flex items-center gap-3 mb-5">
-          <div className="flex items-center gap-2 px-3 py-2 bg-cream-100 rounded-xl border border-cream-300 flex-1">
-            <Search size={14} strokeWidth={1.5} className="text-stone-400" />
-            <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-              placeholder="Search exercises..."
-              className="bg-transparent text-body text-stone-800 placeholder-stone-300 outline-none flex-1" />
-          </div>
-          <div className="flex gap-1">
-            {["all", ...categories].map(c => (
-              <button key={c} onClick={() => setDemoFilter(c)}
-                className={`px-3 py-1.5 rounded-lg text-micro font-medium transition-all ${
-                  demoFilter === c ? "bg-stone-800 text-white" : "bg-cream-200 text-stone-400 hover:text-stone-600"
-                }`}>{c === "all" ? "All" : c}</button>
-            ))}
-          </div>
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          {filteredDemos.map((d, i) => (
-            <a key={i} href={`https://www.youtube.com/watch?v=${d.videoId}`} target="_blank" rel="noopener noreferrer"
-              className="group p-4 bg-cream-100 rounded-xl border border-cream-300 hover:shadow-elevated transition-all no-underline">
-              <div className="flex items-start gap-4">
-                {/* Thumbnail placeholder */}
-                <div className="w-28 h-20 rounded-lg bg-cream-300 flex items-center justify-center shrink-0 relative overflow-hidden group-hover:bg-copper/10 transition-colors">
-                  <Play size={24} strokeWidth={1.5} className="text-stone-400 group-hover:text-copper transition-colors" />
-                  <div className="absolute bottom-1 right-1 bg-stone-800/80 text-white text-[9px] px-1 rounded">YT</div>
+      {(ledger.error || error) && (
+        <p
+          role="alert"
+          className="rounded-xl bg-rose-light p-4 text-caption text-rose-dark"
+        >
+          {ledger.error || error}
+        </p>
+      )}
+      {message && (
+        <p role="status" className="text-caption text-sage-dark">
+          {message}
+          {removed && (
+            <button
+              className="underline ml-2"
+              onClick={() =>
+                act(() => {
+                  ledger.save(removed);
+                  setRemoved(null);
+                }, "Session restored.")
+              }
+            >
+              Undo removal
+            </button>
+          )}
+        </p>
+      )}
+      {draft && (
+        <Card accent>
+          <form
+            className="space-y-4"
+            onSubmit={(event) => {
+              event.preventDefault();
+              act(() => {
+                ledger.save({ ...draft, at: inputInstant(at) });
+                setDraft(null);
+                setRemoved(null);
+              }, "Session saved; activity summaries updated.");
+            }}
+          >
+            <h3 className="font-serif text-title">Session details</h3>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              <Field label="Session name">
+                <input
+                  required
+                  className={fieldClass}
+                  value={draft.name}
+                  onChange={(event) =>
+                    setDraft({ ...draft, name: event.target.value })
+                  }
+                />
+              </Field>
+              <Field label="Session date and time">
+                <input
+                  required
+                  type="datetime-local"
+                  className={fieldClass}
+                  value={at}
+                  onChange={(event) => setAt(event.target.value)}
+                />
+              </Field>
+              <Field label="Duration (minutes)">
+                <input
+                  required
+                  type="number"
+                  step="any"
+                  min="0.1"
+                  max="1440"
+                  className={fieldClass}
+                  value={
+                    Number.isFinite(draft.durationMin) ? draft.durationMin : ""
+                  }
+                  onChange={(event) =>
+                    setDraft({
+                      ...draft,
+                      durationMin: event.target.valueAsNumber,
+                    })
+                  }
+                />
+              </Field>
+              <Field label="Session type">
+                <select
+                  className={fieldClass}
+                  value={draft.type}
+                  onChange={(event) =>
+                    setDraft({
+                      ...draft,
+                      type: event.target.value as Workout["type"],
+                    })
+                  }
+                >
+                  {["Resistance", "Cardio", "Mobility", "Other"].map((type) => (
+                    <option key={type}>{type}</option>
+                  ))}
+                </select>
+              </Field>
+              <Field label="Session status">
+                <select
+                  className={fieldClass}
+                  value={draft.status}
+                  onChange={(event) =>
+                    setDraft({
+                      ...draft,
+                      status: event.target.value as Workout["status"],
+                    })
+                  }
+                >
+                  <option value="completed">Completed</option>
+                  <option value="planned">Planned</option>
+                </select>
+              </Field>
+            </div>
+            <p className="text-caption text-stone-500">
+              Each row below is one performed or planned set. External-load
+              volume uses repetitions × recorded external load. Bodyweight sets
+              remain in the log and do not assume a body mass.
+            </p>
+            {draft.sets.map((set, index) => (
+              <fieldset
+                className="p-4 rounded-xl bg-cream-100 border border-cream-300"
+                key={index}
+              >
+                <legend className="px-1 text-caption text-stone-600">
+                  Set {index + 1}
+                </legend>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-3">
+                  <Field label="Exercise">
+                    <input
+                      required
+                      className={fieldClass}
+                      value={set.exercise}
+                      onChange={(event) =>
+                        setChange(index, { exercise: event.target.value })
+                      }
+                    />
+                  </Field>
+                  <Field label="Repetitions">
+                    <input
+                      required
+                      type="number"
+                      min="1"
+                      step="1"
+                      className={fieldClass}
+                      value={Number.isFinite(set.reps) ? set.reps : ""}
+                      onChange={(event) =>
+                        setChange(index, { reps: event.target.valueAsNumber })
+                      }
+                    />
+                  </Field>
+                  <Field label="Load kind">
+                    <select
+                      className={fieldClass}
+                      value={set.loadKind}
+                      onChange={(event) =>
+                        setChange(index, {
+                          loadKind: event.target.value as typeof set.loadKind,
+                          load:
+                            event.target.value === "bodyweight" ? 0 : set.load,
+                        })
+                      }
+                    >
+                      <option value="external">External load</option>
+                      <option value="bodyweight">Bodyweight</option>
+                    </select>
+                  </Field>
+                  <Field label="Recorded external load">
+                    <input
+                      type="number"
+                      required
+                      min="0"
+                      step="any"
+                      className={fieldClass}
+                      disabled={set.loadKind === "bodyweight"}
+                      value={Number.isFinite(set.load) ? set.load : ""}
+                      onChange={(event) =>
+                        setChange(index, { load: event.target.valueAsNumber })
+                      }
+                    />
+                  </Field>
+                  <Field label="Load unit">
+                    <select
+                      className={fieldClass}
+                      value={set.unit}
+                      onChange={(event) =>
+                        setChange(index, {
+                          unit: event.target.value as typeof set.unit,
+                        })
+                      }
+                    >
+                      <option>kg</option>
+                      <option>lb</option>
+                    </select>
+                  </Field>
                 </div>
-                <div className="flex-1">
-                  <div className="text-body font-medium text-stone-800 group-hover:text-copper transition-colors">{d.exercise}</div>
-                  <div className="text-caption text-stone-500 mt-0.5">{d.description}</div>
-                  <div className="flex items-center gap-2 mt-2">
-                    <Badge variant="info">{d.category}</Badge>
-                    <span className="text-micro text-stone-400">{d.channel}</span>
-                    <ExternalLink size={11} className="text-stone-300" />
-                  </div>
-                </div>
-              </div>
-            </a>
-          ))}
-        </div>
-      </Card>
-
-      {/* Glucose Monitor + Health Data (Future Integration) */}
-      <div className="grid grid-cols-2 gap-6">
-        <Card>
-          <SectionTitle icon={Activity} title="Continuous Glucose Monitor" subtitle="Connect your CGM device for real-time data" />
-          <div className="mb-4 p-3 bg-amber-light rounded-xl border border-amber/15 flex items-center gap-2">
-            <Smartphone size={15} strokeWidth={1.5} className="text-amber" />
-            <span className="text-caption text-amber-dark">Preview mode — connect Dexcom, Libre, or microneedle CGM to see live data</span>
-          </div>
-          <ResponsiveContainer width="100%" height={180}>
-            <AreaChart data={GLUCOSE_DATA}>
-              <defs>
-                <linearGradient id="glucGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#B8906F" stopOpacity={0.15} />
-                  <stop offset="95%" stopColor="#B8906F" stopOpacity={0.02} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#E8E0D4" />
-              <XAxis dataKey="time" tick={{ fill: "#9B958E", fontSize: 10 }} axisLine={false} tickLine={false} />
-              <YAxis domain={[70, 150]} tick={{ fill: "#9B958E", fontSize: 10 }} axisLine={false} tickLine={false} />
-              <Tooltip contentStyle={tooltipStyle} formatter={(v: number) => [`${v} mg/dL`, "Glucose"]} />
-              {/* Target range band */}
-              <Area isAnimationActive={false} type="monotone" dataKey="value" stroke="#B8906F" fill="url(#glucGrad)" strokeWidth={2}
-                dot={{ fill: "#B8906F", r: 2, strokeWidth: 1.5, stroke: "white" }} />
-            </AreaChart>
-          </ResponsiveContainer>
-          <div className="flex items-center justify-center gap-5 mt-3 text-micro text-stone-400">
-            <span>Avg: 101 mg/dL</span>
-            <span>Time in range: 94%</span>
-            <span>Variability: Low</span>
-          </div>
-        </Card>
-
-        <Card>
-          <SectionTitle icon={Smartphone} title="Apple Health Integration" subtitle="Connect iPhone health data sources" />
-          <div className="space-y-3">
-            {[
-              { name: "Heart Rate", icon: "❤️", status: "ready", value: "Connect Apple Watch" },
-              { name: "Steps & Distance", icon: "👣", status: "ready", value: "Connect iPhone Motion" },
-              { name: "Sleep Analysis", icon: "🌙", status: "ready", value: "Connect Apple Watch" },
-              { name: "Blood Oxygen", icon: "🫁", status: "ready", value: "Connect Apple Watch" },
-              { name: "Respiratory Rate", icon: "💨", status: "ready", value: "Connect Apple Watch" },
-              { name: "HRV", icon: "📊", status: "ready", value: "Connect Apple Watch" },
-            ].map((source, i) => (
-              <div key={i} className="flex items-center gap-3 p-3 bg-cream-100 rounded-xl border border-cream-300">
-                <span className="text-lg">{source.icon}</span>
-                <div className="flex-1">
-                  <div className="text-body font-medium text-stone-700">{source.name}</div>
-                  <div className="text-micro text-stone-400">{source.value}</div>
-                </div>
-                <button className="px-3 py-1.5 rounded-lg bg-copper text-white text-micro font-medium hover:bg-copper-dark transition-colors">
-                  Connect
+                <button
+                  type="button"
+                  className="text-caption text-rose-dark underline mt-3"
+                  onClick={() =>
+                    setDraft({
+                      ...draft,
+                      sets: draft.sets.filter((_, i) => i !== index),
+                    })
+                  }
+                >
+                  Remove set {index + 1}
                 </button>
-              </div>
+              </fieldset>
             ))}
+            <button
+              type="button"
+              className={actionClass}
+              onClick={() =>
+                setDraft({
+                  ...draft,
+                  sets: [
+                    ...draft.sets,
+                    {
+                      exercise: draft.sets.at(-1)?.exercise || "",
+                      reps: NaN,
+                      load: 0,
+                      unit: "kg",
+                      loadKind: "external",
+                    },
+                  ],
+                })
+              }
+            >
+              <Plus size={12} />
+              Add set
+            </button>
+            <Field label="Session notes">
+              <textarea
+                className={fieldClass}
+                rows={2}
+                value={draft.notes}
+                onChange={(event) =>
+                  setDraft({ ...draft, notes: event.target.value })
+                }
+              />
+            </Field>
+            <div className="flex gap-2">
+              <button type="submit" className={primaryClass}>
+                Save session
+              </button>
+              <button
+                type="button"
+                className={actionClass}
+                onClick={() => setDraft(null)}
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </Card>
+      )}
+      <div className="flex flex-wrap gap-3">
+        <Field label="Find a session or exercise">
+          <input
+            className={fieldClass}
+            placeholder="Search recorded sessions…"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+          />
+        </Field>
+        <Field label="Session filter">
+          <select
+            className={fieldClass}
+            value={status}
+            onChange={(event) => setStatus(event.target.value)}
+          >
+            <option>All sessions</option>
+            <option value="completed">Completed</option>
+            <option value="planned">Planned</option>
+          </select>
+        </Field>
+      </div>
+      {!visible.length && (
+        <Card>
+          <Dumbbell size={24} className="text-copper mb-3" />
+          <h3 className="font-serif text-title">
+            {ledger.entries.length
+              ? "No matching sessions"
+              : "Start with a completed session or a plan"}
+          </h3>
+          <p className="text-body text-stone-500 mt-2">
+            Log its date, duration and exercise sets. Your records drive the
+            charts and exports.
+          </p>
+        </Card>
+      )}
+      {visible.map((workout) => (
+        <Card key={workout.id}>
+          <div className="flex flex-wrap justify-between gap-3">
+            <div>
+              <p className="text-micro text-stone-400">
+                {new Date(workout.at).toLocaleString()} · {workout.type} ·{" "}
+                {workout.status}
+              </p>
+              <h3 className="font-serif text-[22px]">{workout.name}</h3>
+            </div>
+            <span className="text-caption text-copper-700">
+              {workout.durationMin} min
+              {workout.status === "completed"
+                ? ` · ${workoutVolume(workout).toFixed(1)} kg·reps external-load volume`
+                : " · excluded from completed totals"}
+            </span>
+          </div>
+          {workout.sets.length > 0 && (
+            <div className="overflow-x-auto mt-4">
+              <table className="w-full text-left text-caption">
+                <thead>
+                  <tr>
+                    {["Set", "Exercise", "Reps", "Recorded load"].map(
+                      (label) => (
+                        <th
+                          key={label}
+                          className="p-2 text-stone-400 font-medium"
+                        >
+                          {label}
+                        </th>
+                      ),
+                    )}
+                  </tr>
+                </thead>
+                <tbody>
+                  {workout.sets.map((set, index) => (
+                    <tr key={index} className="border-t border-cream-300">
+                      <td className="p-2">{index + 1}</td>
+                      <td className="p-2">{set.exercise}</td>
+                      <td className="p-2">{set.reps}</td>
+                      <td className="p-2">
+                        {set.loadKind === "bodyweight"
+                          ? "Bodyweight (not converted)"
+                          : `${set.load} ${set.unit}`}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+          {workout.notes && (
+            <p className="text-caption text-stone-500 mt-3 whitespace-pre-wrap">
+              {workout.notes}
+            </p>
+          )}
+          <div className="flex flex-wrap gap-2 mt-4">
+            <button
+              className={actionClass}
+              onClick={() => edit(workout)}
+              aria-label={`Edit ${workout.name}`}
+            >
+              <Pencil size={12} />
+              Edit
+            </button>
+            {workout.status === "planned" && (
+              <button
+                className={actionClass}
+                onClick={() => edit({ ...workout, status: "completed" })}
+                aria-label={`Review completion of ${workout.name}`}
+              >
+                <CheckCircle2 size={12} />
+                Review as completed
+              </button>
+            )}
+            <button
+              className={actionClass}
+              aria-label={`Remove ${workout.name}`}
+              onClick={() =>
+                act(
+                  () => setRemoved(ledger.remove(workout.id) || null),
+                  "Session removed; summaries updated.",
+                )
+              }
+            >
+              <Trash2 size={12} />
+              Remove
+            </button>
           </div>
         </Card>
-      </div>
-
-      {/* Weekly Burn Distribution */}
+      ))}
+      {daily.length > 0 && (
+        <Card>
+          <h3 className="font-serif text-title mb-4">
+            Recorded completed minutes by day
+          </h3>
+          <div className="h-[230px]">
+            <ResponsiveContainer>
+              <BarChart data={daily}>
+                <CartesianGrid
+                  stroke="#E8E0D4"
+                  vertical={false}
+                  strokeDasharray="3 3"
+                />
+                <XAxis dataKey="day" tick={{ fontSize: 10 }} />
+                <YAxis tick={{ fontSize: 10 }} />
+                <Tooltip
+                  formatter={(value: number) => [
+                    value + " min",
+                    "Recorded duration",
+                  ]}
+                />
+                <Bar
+                  isAnimationActive={false}
+                  dataKey="duration"
+                  fill="#6B8F71"
+                  radius={[5, 5, 0, 0]}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+          <p className="text-micro text-stone-500 mt-3">
+            Days without a record are missing, not rest days. Compare load
+            volumes within the same exercise and technique; different exercises
+            are not equivalent work.
+          </p>
+        </Card>
+      )}
       <Card>
-        <SectionTitle icon={TrendingUp} title="Weekly Burn Distribution" />
-        <ResponsiveContainer width="100%" height={200}>
-          <BarChart data={workouts}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#E8E0D4" />
-            <XAxis dataKey="day_of_week" tick={{ fill: "#7A756F", fontSize: 11 }} tickFormatter={d => d.slice(0, 3)} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fill: "#9B958E", fontSize: 11 }} axisLine={false} tickLine={false} />
-            <Tooltip contentStyle={tooltipStyle} />
-            <Bar isAnimationActive={false} dataKey="calories" name="Calories" radius={[6, 6, 0, 0]}>
-              {workouts.map((w, i) => <Cell key={i} fill={w.completed ? "#6B8F71" : "#E8E0D4"} />)}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
+        <h3 className="font-serif text-title mb-3">
+          Your history, in a portable format
+        </h3>
+        <p className="text-caption text-stone-500 mb-4">
+          The data model follows the separation of planned sessions and
+          performed logs used by{" "}
+          <a
+            className="underline text-copper-700"
+            target="_blank"
+            rel="noreferrer"
+            href="https://github.com/wger-project/wger"
+          >
+            wger
+          </a>
+          . No training program or calorie-burn estimate is generated from your
+          genome.
+        </p>
+        <LedgerTools
+          kind="workouts"
+          storageKey={KEYS.workouts}
+          schema={workoutSchema}
+          stored={ledger.stored}
+          summarize={(row) =>
+            `${new Date(row.at).toLocaleString()} · ${row.status} · ${row.durationMin} min · ${row.sets.length} set(s)`
+          }
+          onRestore={ledger.restore}
+          disabled={!ledger.ready}
+        />
+        <button
+          className={`${actionClass} mt-3`}
+          disabled={!ledger.entries.length}
+          onClick={() =>
+            downloadFile(
+              "symphony-workout-sessions.csv",
+              toCsv([
+                [
+                  "session_id",
+                  "session",
+                  "timestamp",
+                  "type",
+                  "status",
+                  "duration_min",
+                  "external_volume_kg_reps",
+                  "recorded_sets",
+                  "notes",
+                ],
+                ...ledger.entries.map((row) => [
+                  row.id,
+                  row.name,
+                  row.at,
+                  row.type,
+                  row.status,
+                  row.durationMin,
+                  workoutVolume(row),
+                  JSON.stringify(row.sets),
+                  row.notes,
+                ]),
+              ]),
+              "text/csv",
+            )
+          }
+        >
+          <Download size={13} />
+          Export sessions CSV
+        </button>
       </Card>
     </div>
   );

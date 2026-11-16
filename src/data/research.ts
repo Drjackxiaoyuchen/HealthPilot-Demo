@@ -196,13 +196,63 @@ export const RESEARCH_SOURCES: ResearchSource[] = [
     boundary:
       "Public product positioning and company-reported funding; proprietary analysis methods were not disclosed.",
   },
+  {
+    id: "dsld",
+    title: "NIH Dietary Supplement Label Database API",
+    kind: "Documentation",
+    url: "https://dsldapi.od.nih.gov/",
+    learning:
+      "Separate product label identity, servings and ingredient amounts from efficacy claims.",
+    boundary:
+      "Label data is a source for recorded contents; no live label lookup or efficacy scoring is installed.",
+  },
+  {
+    id: "vitamin-d",
+    title: "NIH Vitamin D fact sheet",
+    kind: "Documentation",
+    url: "https://ods.od.nih.gov/factsheets/VitaminD-HealthProfessional/",
+    learning:
+      "Vitamin D has a specific conversion of 40 IU to 1 mcg; IU is not a generic mass unit.",
+    boundary:
+      "The app uses this conversion only for active vitamin D label amounts, without assigning a recommended dose.",
+  },
+  {
+    id: "usda-fdc",
+    title: "USDA FoodData Central API guide",
+    kind: "Documentation",
+    url: "https://fdc.nal.usda.gov/api-guide/",
+    learning:
+      "Keep food identity, nutrient units and a reference record with the portion calculation.",
+    boundary:
+      "Users enter reviewed per-100g values; there is no automatic database lookup or assumed volume-to-mass conversion.",
+  },
+  {
+    id: "meal-variability",
+    title:
+      "Predicting Postprandial Glycemic Responses With Limited Data (2025)",
+    kind: "Paper",
+    url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC11883769/",
+    learning:
+      "Keep meal timing, personal observations and within-person variability visible in glucose analysis.",
+    boundary:
+      "Our fixed-window observed summaries and quality gates are an exploratory implementation, not a reproduction of the paper's predictive model.",
+  },
 ];
 
 export type SectionGuide = {
   path: string;
   title: string;
   group: "Overview" | "Daily health" | "Genetics" | "Clinical & family";
-  mode: "demo" | "cgm" | "genome" | "bloodwork" | "import";
+  mode:
+    | "demo"
+    | "cgm"
+    | "genome"
+    | "bloodwork"
+    | "import"
+    | "dashboard"
+    | "supplements"
+    | "meals"
+    | "workouts";
   inputs: string;
   pipeline: [string, string, string];
   output: string;
@@ -215,7 +265,7 @@ export const SECTION_GUIDES: SectionGuide[] = [
     path: "/dashboard",
     title: "Dashboard",
     group: "Overview",
-    mode: "demo",
+    mode: "dashboard",
     inputs: "Dated observations from each connected domain",
     pipeline: [
       "Identify the source",
@@ -224,8 +274,8 @@ export const SECTION_GUIDES: SectionGuide[] = [
     ],
     output: "Domain summaries with data dates and completeness",
     current:
-      "The health score, wellness radar and activity tiles remain illustrative demo metrics.",
-    next: "Build a measured-signal overview with a visible window for each domain, before adding any composite score.",
+      "Personal overview of imported measurements and saved meals, products and completed sessions. Missing records stay missing; there is no composite health score.",
+    next: "Add explicit daily observations and device-specific adapters, retaining coverage and timestamps.",
     sources: ["omh", "function"],
   },
   {
@@ -259,15 +309,15 @@ export const SECTION_GUIDES: SectionGuide[] = [
     output:
       "Date-selectable trace, daily range summaries, hourly AGP-style profile and CSV/JSON report",
     current:
-      "Personal traces, summaries and coverage recompute locally; demo meals are kept out of personal traces.",
-    next: "Add dated personal meal logs and examine repeat-meal responses with coverage requirements.",
-    sources: ["nightscout", "iglu", "cgm-consensus"],
+      "Imported traces and quality metrics recompute locally. Dated personal meals appear only on personal traces, with observation quality gates.",
+    next: "Add explicit sensor cadence and repeated-meal comparisons with activity and medication context.",
+    sources: ["nightscout", "iglu", "cgm-consensus", "meal-variability"],
   },
   {
     path: "/supplements",
     title: "Supplements",
     group: "Daily health",
-    mode: "demo",
+    mode: "supplements",
     inputs: "Ingredient, product, dose, schedule and medication context",
     pipeline: [
       "Normalize ingredient names",
@@ -276,15 +326,15 @@ export const SECTION_GUIDES: SectionGuide[] = [
     ],
     output: "Ingredient ledger with evidence and review status",
     current:
-      "Protocols and interactions are demo examples, not generated from your uploads.",
-    next: "Add a local ingredient log with source-specific evidence; keep genotype associations separate from dose suggestions.",
-    sources: ["ods", "cpic"],
+      "Persistent product and ingredient ledger with label sources, pause/resume, compatible-unit totals, overlap review, undo removal and reviewed JSON restore.",
+    next: "Add versioned label lookups and ingredient-form resolution; medication interactions require a separately validated source.",
+    sources: ["dsld", "vitamin-d", "ods"],
   },
   {
     path: "/diet",
     title: "Diet & Nutrition",
     group: "Daily health",
-    mode: "demo",
+    mode: "meals",
     inputs: "Food identity, portion mass and nutrient source",
     pipeline: [
       "Resolve a food record",
@@ -292,15 +342,16 @@ export const SECTION_GUIDES: SectionGuide[] = [
       "Aggregate recorded meals by day",
     ],
     output: "Dated meal diary with serving-based macro totals",
-    current: "Meal and nutrition records are demo data.",
-    next: "Add portion-aware manual food logging and local CSV export before a photo estimator.",
-    sources: ["off", "wger"],
+    current:
+      "Persistent portion-based meal diary with nutrient sources, planned/eaten separation, dated totals, CSV/JSON outputs and quality-gated observed CGM context.",
+    next: "Add reviewed food-database lookups and reusable food templates; evaluate extraction against field-level reference values.",
+    sources: ["off", "wger", "usda-fdc", "meal-variability"],
   },
   {
     path: "/fitness",
     title: "Fitness",
     group: "Daily health",
-    mode: "demo",
+    mode: "workouts",
     inputs: "Exercise definitions and completed sessions",
     pipeline: [
       "Separate plan and completion",
@@ -308,8 +359,9 @@ export const SECTION_GUIDES: SectionGuide[] = [
       "Summarize comparable sessions",
     ],
     output: "Session history, volume trend and exercise details",
-    current: "Workouts and progress are illustrative.",
-    next: "Persist completed sessions and derive volume from actual sets.",
+    current:
+      "Persistent planned/completed sessions, editable exercise sets, kg/lb normalization, bodyweight separation, dated activity summaries and portable exports.",
+    next: "Add exercise identifiers and activity-file import, preserving sensor provenance and recorded-versus-estimated measures.",
     sources: ["wger", "omh"],
   },
   {

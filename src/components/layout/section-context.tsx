@@ -8,6 +8,12 @@ import { type CgmStored } from "@/lib/cgm";
 import { type BloodworkStored } from "@/lib/bloodwork";
 import { useLocalData } from "@/lib/use-local-data";
 import { downloadFile } from "@/lib/download";
+import { useLedger } from "@/lib/use-ledger";
+import {
+  supplementSchema,
+  mealSchema,
+  workoutSchema,
+} from "@/lib/personal-ledgers";
 
 export default function SectionContext() {
   const path = usePathname();
@@ -15,7 +21,25 @@ export default function SectionContext() {
   const cgm = useLocalData<CgmStored>(KEYS.cgm),
     genome = useLocalData<GenomeStored>(KEYS.genome),
     labs = useLocalData<BloodworkStored>(KEYS.bloodwork);
+  const supplements = useLedger(
+    KEYS.supplements,
+    "supplements",
+    supplementSchema,
+  );
+  const meals = useLedger(KEYS.meals, "meals", mealSchema);
+  const workouts = useLedger(KEYS.workouts, "workouts", workoutSchema);
   if (!guide) return null;
+  const saved =
+    guide.mode === "supplements"
+      ? supplements.entries.length
+      : guide.mode === "meals"
+        ? meals.entries.length
+        : guide.mode === "workouts"
+          ? workouts.entries.length
+          : 0;
+  const workingLedger = ["supplements", "meals", "workouts"].includes(
+    guide.mode,
+  );
   const personal =
     guide.mode === "cgm"
       ? !!cgm?.readings?.length
@@ -23,15 +47,21 @@ export default function SectionContext() {
         ? !!genome
         : guide.mode === "bloodwork"
           ? !!labs?.observations?.length
-          : false;
+          : saved > 0;
   const status =
-    guide.mode === "import"
-      ? "Local workspace"
-      : personal
-        ? guide.mode === "genome"
-          ? "Imported calls + demo explorer"
-          : "Your imported data"
-        : "Illustrative demo data";
+    guide.mode === "dashboard"
+      ? "Your personal overview"
+      : workingLedger
+        ? personal
+          ? "Your saved records"
+          : "Ready for your records"
+        : guide.mode === "import"
+          ? "Local workspace"
+          : personal
+            ? guide.mode === "genome"
+              ? "Imported calls + demo explorer"
+              : "Your imported data"
+            : "Illustrative demo data";
   return (
     <section
       aria-label="Section data and methods"
@@ -49,11 +79,13 @@ export default function SectionContext() {
         <span className="text-micro text-stone-500 flex-1 min-w-[180px]">
           {guide.mode === "demo"
             ? guide.current
-            : guide.mode === "genome"
-              ? "Uploaded genotypes appear as calls; illustrative risk and pathway views remain below."
-              : guide.mode === "import"
-                ? "Preview → review → save on this browser"
-                : "Source, date window and methods travel with your report."}
+            : workingLedger || guide.mode === "dashboard"
+              ? "Saved records and imported measurements; missing values stay missing."
+              : guide.mode === "genome"
+                ? "Uploaded genotypes appear as calls; illustrative risk and pathway views remain below."
+                : guide.mode === "import"
+                  ? "Preview → review → save on this browser"
+                  : "Source, date window and methods travel with your report."}
         </span>
         <Link
           href="/reports"

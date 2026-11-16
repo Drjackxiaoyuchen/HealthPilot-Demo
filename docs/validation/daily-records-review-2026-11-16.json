@@ -1,0 +1,161 @@
+{
+  "checkedAt": "2026-11-16T07:49:06.132Z",
+  "workspace": "isolated synthetic-data test origin on port 3108",
+  "routes": [
+    {
+      "path": "/dashboard",
+      "title": "Dashboard",
+      "methodsVisible": true
+    },
+    {
+      "path": "/genomics",
+      "title": "Genomics",
+      "methodsVisible": true
+    },
+    {
+      "path": "/glucose",
+      "title": "Glucose & Diet",
+      "methodsVisible": true
+    },
+    {
+      "path": "/supplements",
+      "title": "Supplements",
+      "methodsVisible": true
+    },
+    {
+      "path": "/diet",
+      "title": "Diet & Nutrition",
+      "methodsVisible": true
+    },
+    {
+      "path": "/fitness",
+      "title": "Fitness",
+      "methodsVisible": true
+    },
+    {
+      "path": "/records",
+      "title": "Medical Records",
+      "methodsVisible": true
+    },
+    {
+      "path": "/annotations",
+      "title": "Genome Tracker",
+      "methodsVisible": true
+    },
+    {
+      "path": "/medicine",
+      "title": "Medicine Checker",
+      "methodsVisible": true
+    },
+    {
+      "path": "/bloodwork",
+      "title": "Blood Work",
+      "methodsVisible": true
+    },
+    {
+      "path": "/family",
+      "title": "Family Hub",
+      "methodsVisible": true
+    },
+    {
+      "path": "/offspring",
+      "title": "Offspring Risk",
+      "methodsVisible": true
+    },
+    {
+      "path": "/enrichment",
+      "title": "Pathway Enrichment",
+      "methodsVisible": true
+    },
+    {
+      "path": "/gwas",
+      "title": "GWAS & Disease",
+      "methodsVisible": true
+    },
+    {
+      "path": "/comparison",
+      "title": "Family Comparison",
+      "methodsVisible": true
+    },
+    {
+      "path": "/prs",
+      "title": "Polygenic Risk",
+      "methodsVisible": true
+    },
+    {
+      "path": "/pharmacogenomics",
+      "title": "Pharmacogenomics",
+      "methodsVisible": true
+    },
+    {
+      "path": "/import",
+      "title": "Import Data",
+      "methodsVisible": true
+    },
+    {
+      "path": "/reports",
+      "title": "Reports & Export",
+      "methodsVisible": false
+    },
+    {
+      "path": "/research",
+      "title": "Research Library",
+      "methodsVisible": false
+    }
+  ],
+  "mobileViews": [
+    {
+      "path": "/supplements",
+      "content": 385,
+      "viewport": 390
+    },
+    {
+      "path": "/diet",
+      "content": 385,
+      "viewport": 390
+    },
+    {
+      "path": "/fitness",
+      "content": 385,
+      "viewport": 390
+    },
+    {
+      "path": "/dashboard",
+      "content": 385,
+      "viewport": 390
+    },
+    {
+      "path": "/reports",
+      "content": 385,
+      "viewport": 390
+    }
+  ],
+  "mobileForms": [
+    {
+      "path": "/supplements",
+      "content": 385,
+      "viewport": 390
+    },
+    {
+      "path": "/diet",
+      "content": 385,
+      "viewport": 390
+    },
+    {
+      "path": "/fitness",
+      "content": 385,
+      "viewport": 390
+    }
+  ],
+  "verifiedFlows": [
+    "Manual product creation, Vitamin D IU conversion, edit, pause/resume, removal/undo and reload persistence",
+    "Wrong-module backup rejected without changing existing records",
+    "Reviewed supplement, meal and workout backup replacement with record previews",
+    "Portion edit recomputed meal energy; planned meals excluded; unknown fiber retained",
+    "Reviewing completion did not change saved status until save; completed minutes changed to 90 and reverted to 30 when returned to planned",
+    "Dated eaten meal marker and observed CGM summary: 5 mmol/L baseline, 8 mmol/L peak, 3 mmol/L difference; planned meal excluded",
+    "Dashboard reflected 300 kcal, 30 completed minutes, 2 active products and imported CGM window",
+    "Downloaded v2 JSON verified against all three ledgers and observed meal context"
+  ],
+  "newBrowserErrors": []
+}

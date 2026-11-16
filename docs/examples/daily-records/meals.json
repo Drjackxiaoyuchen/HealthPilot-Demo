@@ -1,0 +1,49 @@
+{
+  "format": "symphony-ledger-v1",
+  "updatedAt": "2026-11-16T00:00:00Z",
+  "kind": "meals",
+  "entries": [
+    {
+      "id": "synthetic-m1",
+      "name": "Synthetic lunch",
+      "at": "2026-11-15T12:00:00+08:00",
+      "status": "eaten",
+      "foods": [
+        {
+          "name": "Synthetic food",
+          "grams": 150,
+          "portionBasis": "weighed",
+          "kcal100": 200,
+          "protein100": 10,
+          "carbs100": 20,
+          "fat100": 8,
+          "fiber100": null,
+          "source": "Synthetic nutrient label",
+          "sourceUrl": ""
+        }
+      ],
+      "notes": "Synthetic format example."
+    },
+    {
+      "id": "synthetic-m2",
+      "name": "Synthetic planned snack",
+      "at": "2026-11-15T13:00:00+08:00",
+      "status": "planned",
+      "foods": [
+        {
+          "name": "Synthetic food",
+          "grams": 150,
+          "portionBasis": "weighed",
+          "kcal100": 200,
+          "protein100": 10,
+          "carbs100": 20,
+          "fat100": 8,
+          "fiber100": null,
+          "source": "Synthetic nutrient label",
+          "sourceUrl": ""
+        }
+      ],
+      "notes": "Synthetic format example."
+    }
+  ]
+}

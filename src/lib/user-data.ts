@@ -5,6 +5,9 @@ export const KEYS = {
   cgm: "hp:cgm:v1",
   genome: "hp:genome:v1",
   bloodwork: "hp:bloodwork:v1",
+  supplements: "symphony:supplements:v1",
+  meals: "symphony:meals:v1",
+  workouts: "symphony:workouts:v1",
 } as const;
 
 export {

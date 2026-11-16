@@ -8,12 +8,22 @@ import {
 import { labSeries, labStatus, type BloodworkStored } from "./bloodwork";
 import type { GenomeStored } from "./user-data";
 import {
+  supplementTotals,
+  nutritionDays,
+  fitnessDays,
+  type Ledger,
+  type Supplement,
+  type Meal,
+  type Workout,
+} from "./personal-ledgers";
+import { createMealContextAnalyzer, MEAL_CONTEXT_METHOD } from "./meal-context";
+import {
   SECTION_GUIDES,
   RESEARCH_SOURCES,
   RESEARCH_DATE,
 } from "../data/research";
 
-export const REPORT_VERSION = "symphony-report-v1";
+export const REPORT_VERSION = "symphony-report-v2";
 export function labCsvRows(stored: BloodworkStored): unknown[][] {
   return [
     [
@@ -49,6 +59,9 @@ export function createReport(
     cgm: CgmStored | null;
     genome: GenomeStored | null;
     bloodwork: BloodworkStored | null;
+    supplements?: Ledger<Supplement> | null;
+    meals?: Ledger<Meal> | null;
+    workouts?: Ledger<Workout> | null;
   },
   generatedAt = new Date().toISOString(),
 ) {
@@ -57,6 +70,7 @@ export function createReport(
     ? data.bloodwork
     : null;
   const genome = data.genome;
+  const analyzeMeal = createMealContextAnalyzer(cgm?.readings || []);
   return {
     schemaVersion: REPORT_VERSION,
     product: "Symphony AI",
@@ -116,19 +130,67 @@ export function createReport(
             "No implicit unit conversion or analyte-name harmonization. Missing ranges remain unclassified. Reference intervals are not health scores.",
         }
       : null,
+    supplements: data.supplements
+      ? {
+          ...data.supplements,
+          method: "symphony-label-totals-v1",
+          plannedDailyTotals: supplementTotals(data.supplements.entries),
+          limitations:
+            "Self-entered label amounts, not measured intake. Compatible mass units are normalized; vitamin D alone uses 40 IU = 1 mcg. Compound/unspecified amounts remain product-specific. No efficacy, upper-limit or medication-interaction assessment.",
+        }
+      : null,
+    nutrition: data.meals
+      ? {
+          ...data.meals,
+          method: "symphony-portion-nutrients-v1",
+          dailyLoggedIntake: nutritionDays(data.meals.entries),
+          mealContextMethod: MEAL_CONTEXT_METHOD,
+          observedMealContexts: cgm
+            ? data.meals.entries.map((meal) => ({
+                mealId: meal.id,
+                ...analyzeMeal(meal, data.meals!.entries),
+              }))
+            : [],
+          limitations:
+            "Label/database values scaled by entered grams. Planned meals are excluded from intake. Unknown fiber remains null. CGM summaries are quality-gated observed context, not food-effect estimates or predictions.",
+        }
+      : null,
+    fitness: data.workouts
+      ? {
+          ...data.workouts,
+          method: "symphony-training-log-v1",
+          completedDays: fitnessDays(data.workouts.entries),
+          limitations:
+            "Only completed sessions enter activity totals. External-load volume is reps × external load in kg; bodyweight mass is not inferred. No calorie-burn or readiness estimate.",
+        }
+      : null,
     sections: SECTION_GUIDES.map((section) => ({
       path: section.path,
       title: section.title,
       status:
-        section.mode === "import"
-          ? "local import workspace"
-          : section.mode === "cgm" && cgm
-            ? "imported observations"
-            : section.mode === "bloodwork" && bloodwork
-              ? "imported observations"
-              : section.mode === "genome" && genome
-                ? "imported calls; demo explorer separate"
-                : "illustrative demo; values omitted",
+        section.mode === "dashboard"
+          ? "personal overview; missing values remain missing"
+          : section.mode === "supplements"
+            ? data.supplements?.entries.length
+              ? "saved label records; planned totals"
+              : "working ledger; no personal records"
+            : section.mode === "meals"
+              ? data.meals?.entries.length
+                ? "saved meal records; portion-derived nutrients"
+                : "working diary; no personal records"
+              : section.mode === "workouts"
+                ? data.workouts?.entries.length
+                  ? "saved session records; completed activity totals"
+                  : "working training log; no personal records"
+                : section.mode === "import"
+                  ? "local import workspace"
+                  : section.mode === "cgm" && cgm
+                    ? "imported observations"
+                    : section.mode === "bloodwork" && bloodwork
+                      ? "imported observations"
+                      : section.mode === "genome" && genome
+                        ? "imported calls; demo explorer separate"
+                        : "illustrative demo; values omitted",
     })),
     evidence: {
       reviewedAt: RESEARCH_DATE,
