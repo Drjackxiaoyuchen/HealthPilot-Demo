@@ -2,7 +2,7 @@
 
 **Your health signals, together.**
 
-Symphony AI is a local personal health workspace for glucose, laboratory results, genomic calls, nutrition, activity and family context. It combines an exploratory demo with reviewed imports and source-linked methods. The repository URL retains its original `HealthPilot-Demo` name for link compatibility.
+Symphony AI is a local personal health workspace for glucose, laboratory results, genomic calls, nutrition, activity and family context. It combines an exploratory demo with reviewed imports and source-linked methods.
 
 Personal measurements and illustrative results have distinct labels. The daily-record modules work with saved personal data. Remaining research sections are labeled demonstrations; their scores, risk estimates and recommendations are not validated personal results.
 
@@ -11,8 +11,8 @@ Personal measurements and illustrative results have distinct labels. The daily-r
 ## Run locally
 
 ```bash
-git clone https://github.com/Drjackxiaoyuchen/HealthPilot-Demo.git
-cd HealthPilot-Demo
+git clone https://github.com/Drjackxiaoyuchen/Symphony-AI.git
+cd Symphony-AI
 npm ci
 npm run dev
 ```
