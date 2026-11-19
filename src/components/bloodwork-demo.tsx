@@ -38,7 +38,7 @@ export default function BloodworkPage() {
     <div className="flex flex-col gap-7">
       {/* Summary panel — all key metrics at a glance */}
       <Card className="p-7">
-        <div className="flex items-start justify-between mb-6">
+        <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
           <div>
             <div className="text-micro text-stone-400 uppercase tracking-[0.12em] font-medium mb-1">
               Biomarker Dashboard
@@ -50,7 +50,7 @@ export default function BloodworkPage() {
               Last tested: April 1, 2026 — Sample Medical Center
             </p>
           </div>
-          <div className="flex gap-4 text-center">
+          <div className="flex flex-wrap gap-2 text-center">
             <div className="px-4 py-3 bg-cream-100 rounded-xl border border-cream-300">
               <div className="text-[24px] font-serif font-semibold text-stone-800">
                 {markers.length}

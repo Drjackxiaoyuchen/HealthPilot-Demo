@@ -1,0 +1,281 @@
+{
+  "reviewedAt": "2026-11-19T03:35:14.270Z",
+  "fixture": "docs/examples/cgm-quality-synthetic.csv",
+  "fixtureKind": "deterministic synthetic; no personal records",
+  "uiAcceptance": "pending user review",
+  "desktop": [
+    {
+      "document": 1275,
+      "errorPage": false,
+      "path": "/dashboard",
+      "viewport": 1280
+    },
+    {
+      "document": 1275,
+      "errorPage": false,
+      "path": "/glucose",
+      "viewport": 1280
+    },
+    {
+      "document": 1275,
+      "errorPage": false,
+      "path": "/supplements",
+      "viewport": 1280
+    },
+    {
+      "document": 1275,
+      "errorPage": false,
+      "path": "/diet",
+      "viewport": 1280
+    },
+    {
+      "document": 1275,
+      "errorPage": false,
+      "path": "/fitness",
+      "viewport": 1280
+    },
+    {
+      "document": 1275,
+      "errorPage": false,
+      "path": "/records",
+      "viewport": 1280
+    },
+    {
+      "document": 1275,
+      "errorPage": false,
+      "path": "/annotations",
+      "viewport": 1280
+    },
+    {
+      "document": 1275,
+      "errorPage": false,
+      "path": "/medicine",
+      "viewport": 1280
+    },
+    {
+      "document": 1275,
+      "errorPage": false,
+      "path": "/bloodwork",
+      "viewport": 1280
+    },
+    {
+      "document": 1275,
+      "errorPage": false,
+      "path": "/genomics",
+      "viewport": 1280
+    },
+    {
+      "document": 1275,
+      "errorPage": false,
+      "path": "/family",
+      "viewport": 1280
+    },
+    {
+      "document": 1275,
+      "errorPage": false,
+      "path": "/offspring",
+      "viewport": 1280
+    },
+    {
+      "document": 1275,
+      "errorPage": false,
+      "path": "/enrichment",
+      "viewport": 1280
+    },
+    {
+      "document": 1275,
+      "errorPage": false,
+      "path": "/gwas",
+      "viewport": 1280
+    },
+    {
+      "document": 1275,
+      "errorPage": false,
+      "path": "/comparison",
+      "viewport": 1280
+    },
+    {
+      "document": 1275,
+      "errorPage": false,
+      "path": "/prs",
+      "viewport": 1280
+    },
+    {
+      "document": 1275,
+      "errorPage": false,
+      "path": "/pharmacogenomics",
+      "viewport": 1280
+    },
+    {
+      "document": 1275,
+      "errorPage": false,
+      "path": "/import",
+      "viewport": 1280
+    },
+    {
+      "document": 1275,
+      "errorPage": false,
+      "path": "/reports",
+      "viewport": 1280
+    },
+    {
+      "document": 1275,
+      "errorPage": false,
+      "path": "/research",
+      "viewport": 1280
+    }
+  ],
+  "mobile": [
+    {
+      "document": 385,
+      "errorPage": false,
+      "path": "/dashboard",
+      "viewport": 390
+    },
+    {
+      "document": 385,
+      "errorPage": false,
+      "path": "/glucose",
+      "viewport": 390
+    },
+    {
+      "document": 385,
+      "errorPage": false,
+      "path": "/supplements",
+      "viewport": 390
+    },
+    {
+      "document": 385,
+      "errorPage": false,
+      "path": "/diet",
+      "viewport": 390
+    },
+    {
+      "document": 385,
+      "errorPage": false,
+      "path": "/fitness",
+      "viewport": 390
+    },
+    {
+      "document": 385,
+      "errorPage": false,
+      "path": "/records",
+      "viewport": 390
+    },
+    {
+      "document": 385,
+      "errorPage": false,
+      "path": "/annotations",
+      "viewport": 390
+    },
+    {
+      "document": 385,
+      "errorPage": false,
+      "path": "/medicine",
+      "viewport": 390
+    },
+    {
+      "document": 385,
+      "errorPage": false,
+      "path": "/bloodwork",
+      "viewport": 390
+    },
+    {
+      "document": 385,
+      "errorPage": false,
+      "path": "/genomics",
+      "viewport": 390
+    },
+    {
+      "document": 385,
+      "errorPage": false,
+      "path": "/family",
+      "viewport": 390
+    },
+    {
+      "document": 385,
+      "errorPage": false,
+      "path": "/offspring",
+      "viewport": 390
+    },
+    {
+      "document": 385,
+      "errorPage": false,
+      "path": "/enrichment",
+      "viewport": 390
+    },
+    {
+      "document": 385,
+      "errorPage": false,
+      "path": "/gwas",
+      "viewport": 390
+    },
+    {
+      "document": 385,
+      "errorPage": false,
+      "path": "/comparison",
+      "viewport": 390
+    },
+    {
+      "document": 385,
+      "errorPage": false,
+      "path": "/prs",
+      "viewport": 390
+    },
+    {
+      "document": 385,
+      "errorPage": false,
+      "path": "/pharmacogenomics",
+      "viewport": 390
+    },
+    {
+      "document": 385,
+      "errorPage": false,
+      "path": "/import",
+      "viewport": 390
+    },
+    {
+      "document": 385,
+      "errorPage": false,
+      "path": "/reports",
+      "viewport": 390
+    },
+    {
+      "document": 385,
+      "errorPage": false,
+      "path": "/research",
+      "viewport": 390
+    }
+  ],
+  "browserErrors": [],
+  "logWindowStart": "2026-11-19T03:34:22.053Z",
+  "interactions": [
+    "review-before-save CGM import: 3624 readings, 13 observed days",
+    "14-day audit includes entirely missing 2026-11-06",
+    "coverage/mean/TIR metric controls",
+    "hour selection updates trace date and inspector",
+    "keyboard Enter selects 2026-11-09 13:00",
+    "missing day retains zero support and null mean/TIR",
+    "mobile navigation open/close",
+    "hourly CSV download: 336 rows, source and timezone, nulls retained",
+    "personal JSON report includes quality method, full-window bounds and hourly support"
+  ],
+  "screenshots": [
+    "docs/screenshots/symphony-glucose-overview-2026-11-19.jpg",
+    "docs/screenshots/symphony-glucose-audit-2026-11-19.jpg",
+    "docs/screenshots/symphony-glucose-mobile-2026-11-19.jpg"
+  ],
+  "fixtureSha256": "5c3d63e9889b344c80243d88c141a55d77779feacba70733eef380f444516714",
+  "fixtureLineEnding": "LF; parsed values verified identical to imported CRLF fixture",
+  "exportChecks": {
+    "csvRows": 336,
+    "windowMinutes": 20160,
+    "observedMinutes": 18120,
+    "missingMinutes": 2040,
+    "tirBoundsPct": [
+      86.78075396825396,
+      96.89980158730158
+    ],
+    "meanAndTirNullOnMissingDay": true
+  }
+}

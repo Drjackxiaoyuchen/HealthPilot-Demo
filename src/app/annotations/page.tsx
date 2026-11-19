@@ -161,9 +161,9 @@ export default function AnnotationsPage() {
 
       {/* Research feed */}
       <Card>
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-wrap justify-between items-center gap-3 mb-6">
           <SectionTitle icon={BookOpen} title="Latest Research Annotations" subtitle="2025-2026 literature relevant to your genotype" />
-          <div className="flex gap-1.5 -mt-4">
+          <div className="flex flex-wrap gap-1.5">
             {["all","positive","actionable","monitor"].map(f => (
               <button key={f} onClick={() => setFilter(f)}
                 className={`px-3 py-1.5 rounded-lg text-micro font-medium uppercase tracking-wide transition-all ${
@@ -183,7 +183,7 @@ export default function AnnotationsPage() {
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1.5">
+                    <div className="flex flex-wrap items-center gap-2 mb-1.5">
                       <span className="text-micro font-mono text-stone-400">{u.date}</span>
                       <Badge variant={u.impact === "positive" ? "success" : u.impact === "actionable" ? "default" : "warning"}>
                         {u.impact}

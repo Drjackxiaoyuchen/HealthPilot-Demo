@@ -271,7 +271,7 @@ export default function FamilyPage() {
                        <CheckCircle size={14} strokeWidth={1.5} className="text-sage" />}
                       <span className="text-body font-medium text-stone-800">{trait.title}</span>
                     </div>
-                    <div className="flex gap-1.5 ml-[22px]">
+                    <div className="flex flex-wrap gap-1.5 ml-[22px]">
                       {trait.members.map(m => <Badge key={m} variant="info">{m}</Badge>)}
                       <Badge variant={trait.type === "couple" ? "danger" : trait.type === "shared" ? "purple" : trait.type === "paternal" ? "default" : trait.type === "maternal" ? "success" : "info"}>
                         {trait.type}

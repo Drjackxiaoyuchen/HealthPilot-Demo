@@ -17,6 +17,7 @@ import {
   type Workout,
 } from "./personal-ledgers";
 import { createMealContextAnalyzer, MEAL_CONTEXT_METHOD } from "./meal-context";
+import { buildCgmQuality } from "./cgm-quality";
 import {
   SECTION_GUIDES,
   RESEARCH_SOURCES,
@@ -92,10 +93,13 @@ export function createReport(
             "Coverage denominator: first reading to last reading plus one sensor interval; longer gaps are missing.",
             "Ranges (mmol/L): <3; 3–<3.9; 3.9–10; >10–13.9; >13.9.",
             "GMI reported only with ≥14 elapsed days and ≥70% observed coverage; not a laboratory HbA1c result.",
-            "Hourly profile: unweighted sample percentiles in the exporting device's time zone; no interpolation.",
+            "Hourly profile: unweighted sample percentiles in the report's device time zone; no interpolation.",
+            "Quality audit: actual civil-day/hour durations, including missing days and daylight-saving transitions; hourly detail limited to the latest 366 calendar days.",
+            "Missing-time TIR bounds: [I/W, (I+W-O)/W] × 100, conditional on declared sensor support; not confidence intervals or bias correction.",
           ],
           summary: computeStats(cgm.readings),
           hourlyProfile: buildAgp(cgm.readings),
+          qualityAudit: buildCgmQuality(cgm.readings),
           warnings: cgm.warnings || [],
           readings: validReadings(cgm.readings),
         }
@@ -198,6 +202,7 @@ export function createReport(
         title: source.title,
         type: source.kind,
         url: source.url,
+        reviewedAt: source.reviewedAt || "2026-11-16",
       })),
     },
   };

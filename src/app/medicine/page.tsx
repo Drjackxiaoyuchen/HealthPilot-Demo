@@ -177,8 +177,8 @@ export default function MedicinePage() {
               d.severity === "pharmacogenomic" ? "bg-plum-light border-plum/15" :
               "bg-amber-light border-amber/15"
             }`}>
-              <div className="flex justify-between items-center mb-2">
-                <div className="flex items-center gap-2">
+              <div className="flex flex-wrap justify-between items-center gap-3 mb-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <span className="font-medium text-stone-700 text-body">{d.drug1}</span>
                   <span className="text-stone-300 text-body">x</span>
                   <span className="font-medium text-stone-700 text-body">{d.drug2}</span>
