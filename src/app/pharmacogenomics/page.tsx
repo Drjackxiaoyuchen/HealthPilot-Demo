@@ -631,7 +631,7 @@ function ClinicalActionCards() {
           onClick={() => setExpanded(!expanded)}
         >
           <div>
-            <div className="font-serif font-semibold text-stone-800 flex items-center gap-2">
+            <div className="font-serif font-semibold text-stone-800 flex flex-wrap items-center gap-2">
               {profile.gene}
               {profile.affected_drugs.slice(0, 2).map((drug, i) => (
                 <span key={i} className="text-caption font-medium text-stone-600">
@@ -816,7 +816,7 @@ function PharmacogenomicIDCard() {
 
 export default function PharmacogenomicsPage() {
   return (
-    <div className="min-h-screen bg-cream-50 p-8">
+    <div className="space-y-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
           <h1 className="text-display font-serif text-stone-900 mb-2">Pharmacogenomics</h1>

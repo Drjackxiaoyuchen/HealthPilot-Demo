@@ -180,7 +180,8 @@ export function buildDailyTrace(
   });
 }
 
-export function computeStats(input: CgmReading[]) {
+// Shared support model for summary statistics and the calendar coverage audit.
+export function cgmExposure(input: CgmReading[]) {
   const readings = validReadings(input);
   if (!readings.length) return null;
   const intervals = readings
@@ -200,6 +201,13 @@ export function computeStats(input: CgmReading[]) {
         )
       : cadence,
   );
+  return { readings, cadence, weights, cadenceInferred: intervals.length > 0 };
+}
+
+export function computeStats(input: CgmReading[]) {
+  const exposure = cgmExposure(input);
+  if (!exposure) return null;
+  const { readings, cadence, weights } = exposure;
   const observedMinutes = weights.reduce((a, b) => a + b, 0);
   const elapsedMinutes =
     (Date.parse(readings.at(-1)!.t) - Date.parse(readings[0].t)) / 60000 +

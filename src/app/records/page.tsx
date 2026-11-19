@@ -126,7 +126,7 @@ export default function RecordsPage() {
             <div key={i}
               className="p-4 bg-cream-100 rounded-xl border border-cream-300 hover:shadow-elevated transition-all cursor-pointer"
               onClick={() => setExpandedHospital(expandedHospital === i ? null : i)}>
-              <div className="flex items-start justify-between">
+              <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-body font-medium text-stone-800">{h.name}</span>
@@ -135,7 +135,7 @@ export default function RecordsPage() {
                       <span className="text-micro font-medium">{h.rating}</span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 text-caption text-stone-400">
+                  <div className="flex flex-wrap items-center gap-3 text-caption text-stone-400">
                     <span>{h.type}</span>
                     <span className="text-cream-400">|</span>
                     <span className="flex items-center gap-1"><MapPin size={11} />{h.distance}</span>

@@ -97,7 +97,7 @@ function RiskCard({ risk, expanded, onToggle }: { risk: typeof OFFSPRING_RISK_AN
     <div className={`p-5 rounded-xl border cursor-pointer transition-all hover:shadow-elevated ${bgClass}`} onClick={onToggle}>
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <div className="flex items-center gap-2 mb-1.5">
+          <div className="flex flex-wrap items-center gap-2 mb-1.5">
             {risk.risk_level === "high" ? <AlertTriangle size={14} strokeWidth={1.5} className="text-rose" /> :
              risk.risk_level === "moderate" ? <Icon size={14} strokeWidth={1.5} className="text-amber" /> :
              <CheckCircle size={14} strokeWidth={1.5} className="text-sage" />}
@@ -110,7 +110,7 @@ function RiskCard({ risk, expanded, onToggle }: { risk: typeof OFFSPRING_RISK_AN
           <div className="text-caption text-stone-500 mb-2">{risk.category} · {risk.rsid}</div>
 
           {/* Parent genotypes side by side */}
-          <div className="flex gap-4 mb-2">
+          <div className="flex flex-wrap gap-4 mb-2">
             <div className="flex items-center gap-1.5">
               <span className="text-micro font-medium text-slate uppercase tracking-wide">Alex</span>
               <span className="font-mono text-body text-stone-700 bg-white/60 px-2 py-0.5 rounded">{risk.self_genotype}</span>

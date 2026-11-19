@@ -40,7 +40,7 @@ export default function ResearchPage() {
         <div className="flex flex-wrap gap-6 text-caption text-stone-500 mt-5">
           <span>{SECTION_GUIDES.length} sections reviewed</span>
           <span>{RESEARCH_SOURCES.length} public sources</span>
-          <span>Reviewed {RESEARCH_DATE}</span>
+          <span>Library updated {RESEARCH_DATE}</span>
         </div>
       </Card>
       <div className="flex flex-wrap gap-3 items-center">
@@ -165,6 +165,9 @@ export default function ResearchPage() {
                     </p>
                     <p className="text-micro text-stone-400 mt-1">
                       {source.boundary}
+                    </p>
+                    <p className="text-micro text-stone-500 mt-1">
+                      Reviewed {source.reviewedAt || "2026-11-16"}
                     </p>
                   </div>
                 ))}

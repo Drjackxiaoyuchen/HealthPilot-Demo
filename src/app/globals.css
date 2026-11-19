@@ -7,11 +7,11 @@
   --surface: #ffffff;
   --border: #e8e0d4;
   --border-light: #f0e9df;
-  --copper: #b8906f;
+  --copper: #8a644b;
   --copper-light: #d4b896;
   --text-primary: #2d2a26;
   --text-secondary: #5e5a55;
-  --text-muted: #9b958e;
+  --text-muted: #716c66;
 }
 
 * {
@@ -34,7 +34,7 @@ body {
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.6;
 }
 
@@ -75,6 +75,18 @@ body {
 }
 
 @layer components {
+  .symphony-button-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-cream-300 bg-white px-3 py-2 text-caption font-medium text-copper-700 hover:bg-cream-100;
+  }
+  .audit-missing {
+    background: repeating-linear-gradient(
+      135deg,
+      #f3ede3,
+      #f3ede3 3px,
+      #ffffff 3px,
+      #ffffff 6px
+    );
+  }
   /* Refined card style — minimal shadow, warm border */
   .card-base {
     background: white;
@@ -124,6 +136,10 @@ main {
   min-width: 0;
 }
 main > * {
+  min-width: 0;
+}
+main .flex-1:not([class*="min-w-"]),
+main .grid > * {
   min-width: 0;
 }
 @media (max-width: 767px) {

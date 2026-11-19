@@ -1,6 +1,6 @@
 # Symphony AI: research-informed development
 
-Public-source review: **2026-11-16**.
+Library updated: **2026-11-19**. Individual source review dates are retained below.
 
 This pass reviews all 18 original sections. It adopts interface and data-quality patterns while keeping unimplemented integrations and clinical interpretation explicitly separate from imported observations. The catalog behind the app and this document is `src/data/research.ts`; regenerate this document with `npm run docs:research`.
 
@@ -16,6 +16,7 @@ This pass reviews all 18 original sections. It adopts interface and data-quality
 
 - Working supplement, meal and training ledgers with validated persistence, editing, removal/undo, reviewed backup restoration and CSV outputs. Ingredient totals preserve label basis and unsupported units; planned meals/sessions stay out of completed totals.
 - A personal dashboard replaces fixed health scores. Personal meals appear on CGM traces with explicit baseline, coverage and overlapping-meal gates. Report v2 includes entered ledgers and derived summaries.
+- 2026-11-19: shared visual refinements within one proposed copper/ivory theme, pending user acceptance; interactive day/hour observation audit, missing-duration TIR bounds and hourly CSV/JSON provenance. See [design baseline](design-system.md) and [versioned CGM method](methods/cgm-quality-v1.md).
 
 ## Evidence and implementation boundaries
 
@@ -73,15 +74,15 @@ Route: `/glucose`.
 
 **Inputs:** Timestamped CGM CSV / Excel with declared units
 
-**Method:** Validate and normalize readings → Measure coverage and duration-weighted ranges → Explore daily traces and hourly percentiles
+**Method:** Validate and normalize readings → Measure coverage and duration-weighted ranges → Audit hourly support, missing-time bounds and daily traces
 
-**Output:** Date-selectable trace, daily range summaries, hourly AGP-style profile and CSV/JSON report
+**Output:** Date-selectable trace, interactive hourly coverage audit, missing-duration TIR bounds, exploratory hourly profile and CSV/JSON reports
 
-**Current:** Imported traces and quality metrics recompute locally. Dated personal meals appear only on personal traces, with observation quality gates.
+**Current:** Local duration-weighted metrics, missing-calendar-day/hour audit including DST, algebraic TIR sensitivity bounds and reproducible hourly exports. Personal meal summaries retain observation quality gates.
 
-**Next:** Add explicit sensor cadence and repeated-meal comparisons with activity and medication context.
+**Next:** Add user-confirmed sensor cadence and report time zone, then reference-validation against an independent CGM package. Medical Records remains the next unfinished personal-data module.
 
-**References:** [Nightscout](https://github.com/nightscout/cgm-remote-monitor), [iglu AGP documentation](https://irinagain.github.io/iglu/reference/agp.html), [International Consensus on Time in Range (2019)](https://pmc.ncbi.nlm.nih.gov/articles/PMC6973648/), [Predicting Postprandial Glycemic Responses With Limited Data (2025)](https://pmc.ncbi.nlm.nih.gov/articles/PMC11883769/).
+**References:** [Nightscout](https://github.com/nightscout/cgm-remote-monitor), [iglu AGP documentation](https://irinagain.github.io/iglu/reference/agp.html), [International Consensus on Time in Range (2019)](https://pmc.ncbi.nlm.nih.gov/articles/PMC6973648/), [Yu et al. — TIR with incompletely observed trajectories (arXiv v1)](https://arxiv.org/abs/2410.03091v1), [iglu day-by-time plots](https://irinagain.github.io/iglu/articles/lasagna_plots.html), [Predicting Postprandial Glycemic Responses With Limited Data (2025)](https://pmc.ncbi.nlm.nih.gov/articles/PMC11883769/).
 
 ### Supplements
 
@@ -357,6 +358,22 @@ Pattern: Display collection duration, active coverage, variability and explicit 
 
 Boundary: The 3.9–10.0 mmol/L range is a diabetes reporting convention; individual goals depend on clinical context.
 
+### Yu et al. — TIR with incompletely observed trajectories (arXiv v1)
+
+[Paper](https://arxiv.org/abs/2410.03091v1) · reviewed 2026-11-19.
+
+Pattern: Define the full time window and show the effect of missingness before interpreting observed-only TIR.
+
+Boundary: Preprint about population-level inpatient inference. Our individual-record missing-duration bounds are a separate algebraic sensitivity analysis; its IPW estimator is not implemented.
+
+### iglu day-by-time plots
+
+[Documentation](https://irinagain.github.io/iglu/articles/lasagna_plots.html) · reviewed 2026-11-19.
+
+Pattern: Use calendar-day rows and time-of-day columns to reveal missing intervals and sampling structure.
+
+Boundary: Design reference only; no GPL source copied. Our tiles show duration-based hourly coverage or summaries without iglu's interpolation.
+
 ### apriha/snps
 
 [Repository](https://github.com/apriha/snps) · reviewed 2026-11-16.
@@ -511,10 +528,10 @@ Boundary: Our fixed-window observed summaries and quality gates are an explorato
 
 ## Next development sequence
 
-1. Add format-specific CGM fixtures, an explicit sensor-cadence option and recorded sensor provenance.
-2. Add reviewed analyte mappings and unit conversions while preserving original values.
-3. Introduce isolated personal/family profiles before sharing or family analyses.
-4. Add source-document review and evaluate local extraction on de-identified, field-level reference datasets.
+1. Collect user feedback on the proposed UI baseline and refine the same theme; visual acceptance remains pending.
+2. Turn Medical Records into a reviewed local record/observation workflow; then expand Genome Tracker with explicit provenance and validated annotation boundaries.
+3. Add user-confirmed CGM cadence/time zone and independent package reference comparisons, then reviewed analyte mappings and unit conversions preserving original values.
+4. Introduce isolated personal/family profiles and source-document review before sharing or family analyses; evaluate extraction on de-identified field-level references.
 5. Add versioned genomic annotation and validated external pipeline reports with explicit coverage, build, allele and cohort context.
 
 A normal app session does not perform background research or refresh external evidence. These are documented next steps, not completed capabilities.

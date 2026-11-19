@@ -144,7 +144,7 @@ export default function SectionContext() {
               className="text-copper-700 inline-flex items-center gap-1"
             >
               <BookOpen size={12} />
-              Research notes · reviewed {RESEARCH_DATE}
+              Research library · updated {RESEARCH_DATE}
             </Link>
             <button
               className="underline"

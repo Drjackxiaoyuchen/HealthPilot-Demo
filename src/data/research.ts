@@ -1,5 +1,5 @@
 // Reviewed public references. These are design/method references, not live integrations.
-export const RESEARCH_DATE = "2026-11-16";
+export const RESEARCH_DATE = "2026-11-19";
 export type ResearchSource = {
   id: string;
   title: string;
@@ -7,6 +7,7 @@ export type ResearchSource = {
   url: string;
   learning: string;
   boundary: string;
+  reviewedAt?: string; // Original sources: 2026-11-16; newer reviews override this.
 };
 export const RESEARCH_SOURCES: ResearchSource[] = [
   {
@@ -47,6 +48,28 @@ export const RESEARCH_SOURCES: ResearchSource[] = [
       "Display collection duration, active coverage, variability and explicit glucose ranges.",
     boundary:
       "The 3.9–10.0 mmol/L range is a diabetes reporting convention; individual goals depend on clinical context.",
+  },
+  {
+    id: "cgm-missingness",
+    reviewedAt: "2026-11-19",
+    title: "Yu et al. — TIR with incompletely observed trajectories (arXiv v1)",
+    kind: "Paper",
+    url: "https://arxiv.org/abs/2410.03091v1",
+    learning:
+      "Define the full time window and show the effect of missingness before interpreting observed-only TIR.",
+    boundary:
+      "Preprint about population-level inpatient inference. Our individual-record missing-duration bounds are a separate algebraic sensitivity analysis; its IPW estimator is not implemented.",
+  },
+  {
+    id: "iglu-lasagna",
+    reviewedAt: "2026-11-19",
+    title: "iglu day-by-time plots",
+    kind: "Documentation",
+    url: "https://irinagain.github.io/iglu/articles/lasagna_plots.html",
+    learning:
+      "Use calendar-day rows and time-of-day columns to reveal missing intervals and sampling structure.",
+    boundary:
+      "Design reference only; no GPL source copied. Our tiles show duration-based hourly coverage or summaries without iglu's interpolation.",
   },
   {
     id: "snps",
@@ -304,14 +327,21 @@ export const SECTION_GUIDES: SectionGuide[] = [
     pipeline: [
       "Validate and normalize readings",
       "Measure coverage and duration-weighted ranges",
-      "Explore daily traces and hourly percentiles",
+      "Audit hourly support, missing-time bounds and daily traces",
     ],
     output:
-      "Date-selectable trace, daily range summaries, hourly AGP-style profile and CSV/JSON report",
+      "Date-selectable trace, interactive hourly coverage audit, missing-duration TIR bounds, exploratory hourly profile and CSV/JSON reports",
     current:
-      "Imported traces and quality metrics recompute locally. Dated personal meals appear only on personal traces, with observation quality gates.",
-    next: "Add explicit sensor cadence and repeated-meal comparisons with activity and medication context.",
-    sources: ["nightscout", "iglu", "cgm-consensus", "meal-variability"],
+      "Local duration-weighted metrics, missing-calendar-day/hour audit including DST, algebraic TIR sensitivity bounds and reproducible hourly exports. Personal meal summaries retain observation quality gates.",
+    next: "Add user-confirmed sensor cadence and report time zone, then reference-validation against an independent CGM package. Medical Records remains the next unfinished personal-data module.",
+    sources: [
+      "nightscout",
+      "iglu",
+      "cgm-consensus",
+      "iglu-lasagna",
+      "cgm-missingness",
+      "meal-variability",
+    ],
   },
   {
     path: "/supplements",

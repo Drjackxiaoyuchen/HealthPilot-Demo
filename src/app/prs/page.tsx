@@ -427,7 +427,7 @@ export default function PRSPage() {
       {/* Z-Score Distribution Plot */}
       <Card>
         <SectionTitle icon={Activity} title="Z-Score Distribution" subtitle="Positive = elevated, Negative = protective" />
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={300} className="overflow-hidden">
           <BarChart
             data={distributionData}
             layout="vertical"

@@ -6,7 +6,15 @@ Symphony AI is a local personal health workspace for glucose, laboratory results
 
 Personal measurements and illustrative results have distinct labels. The daily-record modules work with saved personal data. Remaining research sections are labeled demonstrations; their scores, risk estimates and recommendations are not validated personal results.
 
-![Symphony AI personal dashboard — synthetic test records](docs/screenshots/symphony-daily-dashboard.jpg)
+![Symphony AI glucose workspace — proposed UI with synthetic data](docs/screenshots/symphony-glucose-overview-2026-11-19.jpg)
+
+## Latest revision for UI review — 2026-11-19
+
+One shared copper/ivory visual scheme, with larger text and clearer controls. The glucose workspace now includes an interactive day-by-hour coverage audit, missing-calendar-day inspection, actual daylight-saving durations, and explicit missing-time TIR sensitivity bounds. **UI acceptance remains with the user; this revision is a proposal.**
+
+![Symphony AI glucose audit — proposed UI with synthetic data](docs/screenshots/symphony-glucose-audit-2026-11-19.jpg)
+
+See the [visual baseline](docs/design-system.md), [scientific method and assumptions](docs/methods/cgm-quality-v1.md), and [synthetic CGM example](docs/examples/cgm-quality-synthetic.csv). Import the synthetic CSV through **Import Data**, then open **Glucose & Diet → Data quality** to try the audit. The file contains no personal measurements.
 
 ## Run locally
 
@@ -24,7 +32,7 @@ Open [localhost:3000](http://localhost:3000). Node.js 20 or newer is recommended
 | Section | Current behavior |
 | --- | --- |
 | Import Data | Preview CGM, raw genotype and laboratory files; review notes before replacing the saved dataset |
-| Glucose & Diet | Date-selectable trace, observed-duration range statistics, elapsed-window coverage, CV, daily summaries and exploratory hourly percentile bands |
+| Glucose & Diet | Date-selectable trace, duration-weighted metrics, hourly coverage audit, missing-time TIR bounds, calendar completeness and exploratory hourly bands |
 | Blood Work | CSV import, searchable marker/unit/lab series, source reference intervals and dated histories |
 | Genomics | Display uploaded calls that match a small 22-record rsID panel; keep the original demo explorer visibly separate |
 | Supplements | Saved products and ingredients, declared label amounts, planned daily totals, overlap review, pause/resume and portable backups |
@@ -59,6 +67,8 @@ Statistics use all valid imported readings. Each reading is held for at most one
 
 The default reporting range is 3.9–10.0 mmol/L, following a common diabetes convention, without assigning a universal personal target. GMI is withheld until at least 14 elapsed days and 70% estimated coverage. It is a CGM-derived estimate, not a laboratory HbA1c. Hourly bands are unweighted sample percentiles without interpolation; they are exploratory and are not validated as an equivalent to a clinical AGP report. Personal traces do not include demo meal overlays or inferred food/genome advice.
 
+The day/hour audit splits the same capped observation support across local calendar boundaries. Whole missing days remain visible, repeated/skipped daylight-saving hours use their true duration, and incomplete first/last days have distinct calendar-day and upload-window denominators. The exact IANA time zone, method, durations and null values travel with the hourly CSV and report JSON. Detail is capped at the latest 366 calendar days and disclosed; summary bounds always use the full upload. Missing-duration bounds quantify full-window TIR if all unobserved time were outside or inside range. They are identification bounds conditional on the support model, not confidence intervals or a correction for informative missingness. See the [full derivation and validation scope](docs/methods/cgm-quality-v1.md).
+
 ### Laboratory results
 
 ```csv
@@ -92,9 +102,9 @@ The full personal report is now `symphony-report-v2` and includes these ledgers,
 
 ## Research-informed development
 
-The [Research Library](http://localhost:3000/research) maps 23 public references to all 18 original sections. [Development notes](docs/research-informed-development.md) record the adopted patterns, remaining work and evidence boundaries. References include Nightscout, iglu, Open mHealth, Open Food Facts, wger, Medplum, ClinVar, GWAS Catalog, PGS Catalog Calculator, PharmCAT, CPIC, a Hugging Face MedGemma model card and Function's public product announcement.
+The [Research Library](http://localhost:3000/research) maps 25 public references to all 18 original sections. [Development notes](docs/research-informed-development.md) record the adopted patterns, remaining work and evidence boundaries. References include Nightscout, iglu, Open mHealth, Open Food Facts, wger, Medplum, ClinVar, GWAS Catalog, PGS Catalog Calculator, PharmCAT, CPIC, a Hugging Face MedGemma model card and Function's public product announcement.
 
-Sources inform design and method choices; their code, models, databases and proprietary algorithms are not installed or reproduced. Links open source websites without attaching uploaded datasets. References were reviewed on **2026-11-16**; there is no automatic literature refresh or background research job.
+Sources inform design and method choices; their code, models, databases and proprietary algorithms are not installed or reproduced. Links open source websites without attaching uploaded datasets. The initial references were reviewed on **2026-11-16**, with glucose-audit references added on **2026-11-19** and individual review dates retained. A separate local Codex task is scheduled daily at 09:00 Asia/Shanghai for incremental research and implementation; normal app sessions do not refresh evidence in the background.
 
 ## Storage and exports
 
