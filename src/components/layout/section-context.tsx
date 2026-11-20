@@ -9,6 +9,7 @@ import { type BloodworkStored } from "@/lib/bloodwork";
 import { useLocalData } from "@/lib/use-local-data";
 import { downloadFile } from "@/lib/download";
 import { useLedger } from "@/lib/use-ledger";
+import { medicalRecordSchema, validateRecordSet } from "@/lib/medical-records";
 import {
   supplementSchema,
   mealSchema,
@@ -28,18 +29,29 @@ export default function SectionContext() {
   );
   const meals = useLedger(KEYS.meals, "meals", mealSchema);
   const workouts = useLedger(KEYS.workouts, "workouts", workoutSchema);
+  const records = useLedger(
+    KEYS.records,
+    "medical-records",
+    medicalRecordSchema,
+    validateRecordSet,
+  );
   if (!guide) return null;
   const saved =
-    guide.mode === "supplements"
-      ? supplements.entries.length
-      : guide.mode === "meals"
-        ? meals.entries.length
-        : guide.mode === "workouts"
-          ? workouts.entries.length
-          : 0;
-  const workingLedger = ["supplements", "meals", "workouts"].includes(
-    guide.mode,
-  );
+    guide.mode === "records"
+      ? records.entries.length
+      : guide.mode === "supplements"
+        ? supplements.entries.length
+        : guide.mode === "meals"
+          ? meals.entries.length
+          : guide.mode === "workouts"
+            ? workouts.entries.length
+            : 0;
+  const workingLedger = [
+    "supplements",
+    "meals",
+    "workouts",
+    "records",
+  ].includes(guide.mode);
   const personal =
     guide.mode === "cgm"
       ? !!cgm?.readings?.length

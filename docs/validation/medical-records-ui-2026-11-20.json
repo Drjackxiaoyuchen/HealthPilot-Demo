@@ -1,0 +1,273 @@
+{
+  "reviewedAt": "2026-11-20T01:55:21.955Z",
+  "fixture": "docs/examples/medical-report-synthetic.fhir.json",
+  "dataKind": "synthetic only; no personal health data",
+  "uiAcceptance": "pending user review",
+  "desktop": [
+    {
+      "errorPage": false,
+      "path": "/dashboard",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/glucose",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/supplements",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/diet",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/fitness",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/records",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/annotations",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/medicine",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/bloodwork",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/genomics",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/family",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/offspring",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/enrichment",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/gwas",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/comparison",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/prs",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/pharmacogenomics",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/import",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/reports",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/research",
+      "viewport": 1280,
+      "width": 1275
+    }
+  ],
+  "mobile": [
+    {
+      "errorPage": false,
+      "path": "/dashboard",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/glucose",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/supplements",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/diet",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/fitness",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/records",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/annotations",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/medicine",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/bloodwork",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/genomics",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/family",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/offspring",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/enrichment",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/gwas",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/comparison",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/prs",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/pharmacogenomics",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/import",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/reports",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/research",
+      "viewport": 390,
+      "width": 385
+    }
+  ],
+  "browserErrors": [],
+  "checks": [
+    "Manual create/edit and native date-event persistence",
+    "Editing metadata clears previous source-check flag",
+    "Removal with undo in Chrome; remove/restore in isolated browser",
+    "File SHA-256 and supported FHIR preview; save blocked until confirmation",
+    "Zero, inequality, absent result and preliminary status rendered without conversion",
+    "Duplicate report import blocked; existing record retained",
+    "Observation and type filters",
+    "Read-only imported collection time and numeric source fields",
+    "JSON backup replacement requires review; reload preserves records",
+    "Mixed-patient backup replacement rejected without overwriting records",
+    "Metadata CSV and full personal JSON downloaded and compared to backup",
+    "20 routes fit 1280px and 390px without page-wide overflow"
+  ],
+  "notes": [
+    "Chrome could not set files without extension file-URL permission. No setting was changed. File workflows were fully exercised in the isolated in-app browser."
+  ],
+  "screenshots": [
+    "docs/screenshots/symphony-medical-records-2026-11-20.jpg",
+    "docs/screenshots/symphony-medical-records-mobile-2026-11-20.jpg",
+    "docs/screenshots/symphony-medical-timeline-2026-11-20.jpg"
+  ]
+}

@@ -8,6 +8,7 @@ export const KEYS = {
   supplements: "symphony:supplements:v1",
   meals: "symphony:meals:v1",
   workouts: "symphony:workouts:v1",
+  records: "symphony:medical-records:v1",
 } as const;
 
 export {

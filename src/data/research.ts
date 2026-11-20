@@ -1,5 +1,5 @@
 // Reviewed public references. These are design/method references, not live integrations.
-export const RESEARCH_DATE = "2026-11-19";
+export const RESEARCH_DATE = "2026-11-20";
 export type ResearchSource = {
   id: string;
   title: string;
@@ -10,6 +10,17 @@ export type ResearchSource = {
   reviewedAt?: string; // Original sources: 2026-11-16; newer reviews override this.
 };
 export const RESEARCH_SOURCES: ResearchSource[] = [
+  {
+    id: "fhir-report",
+    title: "HL7 FHIR R4 DiagnosticReport and Observation",
+    kind: "Documentation",
+    url: "https://hl7.org/fhir/R4/diagnosticreport.html",
+    reviewedAt: "2026-11-20",
+    learning:
+      "Keep report context, referenced observations, statuses, exact units, date precision and subject identity separate.",
+    boundary:
+      "Symphony implements a narrow validated projection, not a general FHIR validator, clinical decision system or EHR connector.",
+  },
   {
     id: "omh",
     title: "Open mHealth schemas",
@@ -122,6 +133,7 @@ export const RESEARCH_SOURCES: ResearchSource[] = [
   },
   {
     id: "medplum",
+    reviewedAt: "2026-11-20",
     title: "Medplum results and review",
     kind: "Documentation",
     url: "https://www.medplum.com/docs/labs-imaging/results-and-review",
@@ -201,6 +213,7 @@ export const RESEARCH_SOURCES: ResearchSource[] = [
   },
   {
     id: "medgemma",
+    reviewedAt: "2026-11-20",
     title: "MedGemma 1.5 4B model card",
     kind: "Model card",
     url: "https://huggingface.co/google/medgemma-1.5-4b-it",
@@ -275,7 +288,9 @@ export type SectionGuide = {
     | "dashboard"
     | "supplements"
     | "meals"
-    | "workouts";
+    | "workouts"
+    | "records";
+  // Medical records are a local register, independent from the illustrative clinical pages.
   inputs: string;
   pipeline: [string, string, string];
   output: string;
@@ -333,7 +348,7 @@ export const SECTION_GUIDES: SectionGuide[] = [
       "Date-selectable trace, interactive hourly coverage audit, missing-duration TIR bounds, exploratory hourly profile and CSV/JSON reports",
     current:
       "Local duration-weighted metrics, missing-calendar-day/hour audit including DST, algebraic TIR sensitivity bounds and reproducible hourly exports. Personal meal summaries retain observation quality gates.",
-    next: "Add user-confirmed sensor cadence and report time zone, then reference-validation against an independent CGM package. Medical Records remains the next unfinished personal-data module.",
+    next: "Add user-confirmed sensor cadence and report time zone, then reference-validation against an independent CGM package. Medical Records now has a local register; Genome Tracker is the next unfinished personal-data module.",
     sources: [
       "nightscout",
       "iglu",
@@ -398,18 +413,20 @@ export const SECTION_GUIDES: SectionGuide[] = [
     path: "/records",
     title: "Medical Records",
     group: "Clinical & family",
-    mode: "demo",
-    inputs: "Original documents and reviewed extracted fields",
+    mode: "records",
+    inputs:
+      "Manual source metadata or a local single-report FHIR R4 JSON Bundle",
     pipeline: [
-      "Retain original source",
-      "Review extracted fields",
-      "Link observations to the report",
+      "Validate references and subject consistency",
+      "Review source fields, units and statuses",
+      "Save a traceable local report projection",
     ],
-    output: "Clinical timeline with source-linked observations",
+    output:
+      "Searchable timeline, linked observations, source hash, metadata CSV and reviewed JSON backups",
     current:
-      "The record timeline remains fictional; blood-work CSVs are handled in Blood Work.",
-    next: "Add a source-document vault and human-reviewed extraction; evaluate MedGemma on de-identified fixtures first.",
-    sources: ["medplum", "medgemma"],
+      "Working local register with editing, remove/undo, source checks, strict single-report FHIR subset import, source fingerprints and personal report export. No fictional testing advice or hospital rankings are added.",
+    next: "Add isolated person/provider profiles and evaluate source-document storage/extraction on de-identified field-level references. Genome Tracker is the next demo module.",
+    sources: ["fhir-report", "medplum", "medgemma"],
   },
   {
     path: "/annotations",

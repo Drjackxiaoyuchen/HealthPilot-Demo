@@ -1,6 +1,6 @@
 # Symphony AI: research-informed development
 
-Library updated: **2026-11-19**. Individual source review dates are retained below.
+Library updated: **2026-11-20**. Individual source review dates are retained below.
 
 This pass reviews all 18 original sections. It adopts interface and data-quality patterns while keeping unimplemented integrations and clinical interpretation explicitly separate from imported observations. The catalog behind the app and this document is `src/data/research.ts`; regenerate this document with `npm run docs:research`.
 
@@ -17,6 +17,8 @@ This pass reviews all 18 original sections. It adopts interface and data-quality
 - Working supplement, meal and training ledgers with validated persistence, editing, removal/undo, reviewed backup restoration and CSV outputs. Ingredient totals preserve label basis and unsupported units; planned meals/sessions stay out of completed totals.
 - A personal dashboard replaces fixed health scores. Personal meals appear on CGM traces with explicit baseline, coverage and overlapping-meal gates. Report v2 includes entered ledgers and derived summaries.
 - 2026-11-19: shared visual refinements within one proposed copper/ivory theme, pending user acceptance; interactive day/hour observation audit, missing-duration TIR bounds and hourly CSV/JSON provenance. See [design baseline](design-system.md) and [versioned CGM method](methods/cgm-quality-v1.md).
+
+- 2026-11-20: Medical Records is a working local source register with reviewed single-report FHIR projection, patient/reference consistency gates, exact quantities/absence, provenance, backups and exports. See [method and subset limits](methods/medical-records-v1.md).
 
 ## Evidence and implementation boundaries
 
@@ -80,7 +82,7 @@ Route: `/glucose`.
 
 **Current:** Local duration-weighted metrics, missing-calendar-day/hour audit including DST, algebraic TIR sensitivity bounds and reproducible hourly exports. Personal meal summaries retain observation quality gates.
 
-**Next:** Add user-confirmed sensor cadence and report time zone, then reference-validation against an independent CGM package. Medical Records remains the next unfinished personal-data module.
+**Next:** Add user-confirmed sensor cadence and report time zone, then reference-validation against an independent CGM package. Medical Records now has a local register; Genome Tracker is the next unfinished personal-data module.
 
 **References:** [Nightscout](https://github.com/nightscout/cgm-remote-monitor), [iglu AGP documentation](https://irinagain.github.io/iglu/reference/agp.html), [International Consensus on Time in Range (2019)](https://pmc.ncbi.nlm.nih.gov/articles/PMC6973648/), [Yu et al. — TIR with incompletely observed trajectories (arXiv v1)](https://arxiv.org/abs/2410.03091v1), [iglu day-by-time plots](https://irinagain.github.io/iglu/articles/lasagna_plots.html), [Predicting Postprandial Glycemic Responses With Limited Data (2025)](https://pmc.ncbi.nlm.nih.gov/articles/PMC11883769/).
 
@@ -136,17 +138,17 @@ Route: `/fitness`.
 
 Route: `/records`.
 
-**Inputs:** Original documents and reviewed extracted fields
+**Inputs:** Manual source metadata or a local single-report FHIR R4 JSON Bundle
 
-**Method:** Retain original source → Review extracted fields → Link observations to the report
+**Method:** Validate references and subject consistency → Review source fields, units and statuses → Save a traceable local report projection
 
-**Output:** Clinical timeline with source-linked observations
+**Output:** Searchable timeline, linked observations, source hash, metadata CSV and reviewed JSON backups
 
-**Current:** The record timeline remains fictional; blood-work CSVs are handled in Blood Work.
+**Current:** Working local register with editing, remove/undo, source checks, strict single-report FHIR subset import, source fingerprints and personal report export. No fictional testing advice or hospital rankings are added.
 
-**Next:** Add a source-document vault and human-reviewed extraction; evaluate MedGemma on de-identified fixtures first.
+**Next:** Add isolated person/provider profiles and evaluate source-document storage/extraction on de-identified field-level references. Genome Tracker is the next demo module.
 
-**References:** [Medplum results and review](https://www.medplum.com/docs/labs-imaging/results-and-review), [MedGemma 1.5 4B model card](https://huggingface.co/google/medgemma-1.5-4b-it).
+**References:** [HL7 FHIR R4 DiagnosticReport and Observation](https://hl7.org/fhir/R4/diagnosticreport.html), [Medplum results and review](https://www.medplum.com/docs/labs-imaging/results-and-review), [MedGemma 1.5 4B model card](https://huggingface.co/google/medgemma-1.5-4b-it).
 
 ### Genome Tracker
 
@@ -326,6 +328,14 @@ Route: `/import`.
 
 ## Source register
 
+### HL7 FHIR R4 DiagnosticReport and Observation
+
+[Documentation](https://hl7.org/fhir/R4/diagnosticreport.html) · reviewed 2026-11-20.
+
+Pattern: Keep report context, referenced observations, statuses, exact units, date precision and subject identity separate.
+
+Boundary: Symphony implements a narrow validated projection, not a general FHIR validator, clinical decision system or EHR connector.
+
 ### Open mHealth schemas
 
 [Repository](https://github.com/openmhealth/schemas) · reviewed 2026-11-16.
@@ -416,7 +426,7 @@ Boundary: AGPL-3.0-or-later project; design reference only, no code or exercise 
 
 ### Medplum results and review
 
-[Documentation](https://www.medplum.com/docs/labs-imaging/results-and-review) · reviewed 2026-11-16.
+[Documentation](https://www.medplum.com/docs/labs-imaging/results-and-review) · reviewed 2026-11-20.
 
 Pattern: Model reports as linked observations with collection time, units and reference intervals.
 
@@ -480,7 +490,7 @@ Boundary: Drug and dosing decisions require an appropriate clinical assessment.
 
 ### MedGemma 1.5 4B model card
 
-[Model card](https://huggingface.co/google/medgemma-1.5-4b-it) · reviewed 2026-11-16.
+[Model card](https://huggingface.co/google/medgemma-1.5-4b-it) · reviewed 2026-11-20.
 
 Pattern: Evaluate document extraction against reviewed values before considering a local model.
 
@@ -529,7 +539,7 @@ Boundary: Our fixed-window observed summaries and quality gates are an explorato
 ## Next development sequence
 
 1. Collect user feedback on the proposed UI baseline and refine the same theme; visual acceptance remains pending.
-2. Turn Medical Records into a reviewed local record/observation workflow; then expand Genome Tracker with explicit provenance and validated annotation boundaries.
+2. Expand Genome Tracker with a personal evidence ledger and validated annotation boundaries; Medical Records now supports its documented source register/FHIR subset.
 3. Add user-confirmed CGM cadence/time zone and independent package reference comparisons, then reviewed analyte mappings and unit conversions preserving original values.
 4. Introduce isolated personal/family profiles and source-document review before sharing or family analyses; evaluate extraction on de-identified field-level references.
 5. Add versioned genomic annotation and validated external pipeline reports with explicit coverage, build, allele and cohort context.
