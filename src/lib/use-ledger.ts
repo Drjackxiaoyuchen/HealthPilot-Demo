@@ -8,13 +8,16 @@ export function useLedger<T extends { id: string }>(
   key: string,
   kind: string,
   schema: z.ZodType<T>,
+  validateEntries?: (entries: T[]) => void,
 ) {
   const [stored, setStored] = useState<Ledger<T> | null>(null),
     [ready, setReady] = useState(false),
     [error, setError] = useState("");
   function load() {
     const raw = window.localStorage.getItem(key);
-    return raw ? parseLedger(JSON.parse(raw), kind, schema) : null;
+    const next = raw ? parseLedger(JSON.parse(raw), kind, schema) : null;
+    if (next) validateEntries?.(next.entries);
+    return next;
   }
   useEffect(() => {
     const update = () => {
@@ -36,7 +39,7 @@ export function useLedger<T extends { id: string }>(
       window.removeEventListener("storage", update);
       window.removeEventListener("symphony:data", update);
     };
-  }, [key, kind, schema]);
+  }, [key, kind, schema, validateEntries]);
   function commit(entries: T[]) {
     const next = parseLedger(
       {
@@ -48,6 +51,7 @@ export function useLedger<T extends { id: string }>(
       kind,
       schema,
     );
+    validateEntries?.(next.entries);
     writeJSON(key, next);
   }
   function save(entry: T) {

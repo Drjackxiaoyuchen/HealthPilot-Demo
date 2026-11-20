@@ -18,6 +18,7 @@ import { downloadFile } from "@/lib/download";
 import { toCsv } from "@/lib/tabular";
 import { createReport, labCsvRows, REPORT_VERSION } from "@/lib/report";
 import { useLedger } from "@/lib/use-ledger";
+import { medicalRecordSchema, validateRecordSet } from "@/lib/medical-records";
 import {
   supplementSchema,
   mealSchema,
@@ -29,6 +30,12 @@ export default function ReportsPage() {
     genome = useLocalData<GenomeStored>(KEYS.genome),
     bloodwork = useLocalData<BloodworkStored>(KEYS.bloodwork);
   const [generatedAt, setGeneratedAt] = useState("");
+  const records = useLedger(
+    KEYS.records,
+    "medical-records",
+    medicalRecordSchema,
+    validateRecordSet,
+  );
   const supplements = useLedger(
       KEYS.supplements,
       "supplements",
@@ -45,6 +52,7 @@ export default function ReportsPage() {
       supplements: supplements.stored,
       meals: meals.stored,
       workouts: workouts.stored,
+      records: records.error ? null : records.stored,
     },
     generatedAt,
   );
@@ -78,6 +86,7 @@ export default function ReportsPage() {
         <div className="no-print mt-5 flex flex-wrap gap-3">
           <button
             className={`${button} !bg-copper !text-white`}
+            disabled={!records.ready || !!records.error}
             onClick={() =>
               downloadFile(
                 "symphony-personal-report.json",
@@ -346,7 +355,22 @@ export default function ReportsPage() {
           and derived summaries. Use each module's JSON backup for reviewed
           restoration. Missing records are not filled with examples.
         </p>
-        {[supplements.error, meals.error, workouts.error]
+        <div className="mt-5 pt-4 border-t border-cream-300 text-caption text-stone-600">
+          <strong>Medical records</strong>
+          <p>
+            {report.medicalRecords?.entries.length || 0} saved source records ·{" "}
+            {report.medicalRecords?.entries.reduce(
+              (n, r) => n + r.observations.length,
+              0,
+            ) || 0}{" "}
+            linked observations. Included in the full JSON; original documents
+            are not stored.
+          </p>
+          <Link href="/records" className="text-copper-700 underline no-print">
+            Open medical records
+          </Link>
+        </div>
+        {[supplements.error, meals.error, workouts.error, records.error]
           .filter(Boolean)
           .map((error, i) => (
             <p

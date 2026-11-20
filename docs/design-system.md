@@ -28,4 +28,6 @@ Use copper for interactive emphasis and continuous audit scales. Muted sage/rose
 - Glucose workspace has section links, grouped controls, a day-by-hour audit with selectable cells and a detailed inspector, consistent export controls, and quieter method disclosure.
 - UI acceptance: **pending user review**. Scientific methods and limitations are documented separately in [the CGM audit method](methods/cgm-quality-v1.md).
 
-Next: apply feedback to the shared tokens and glucose detail before expanding the same components into Medical Records. Keep scientific validation independent from visual acceptance.
+2026-11-20: Medical Records extends the same cards, fields, controls, typography and colors into a personal source register. No theme or global token change was made. UI acceptance remains pending.
+
+Next: collect visual feedback and continue the same scheme in Genome Tracker. Keep scientific validation independent from visual acceptance.

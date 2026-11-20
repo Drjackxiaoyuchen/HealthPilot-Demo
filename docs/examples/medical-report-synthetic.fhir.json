@@ -1,0 +1,136 @@
+{
+  "resourceType": "Bundle",
+  "type": "collection",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:11111111-1111-4111-8111-111111111111",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "synthetic-person"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "id": "synthetic-panel",
+        "meta": {
+          "versionId": "1"
+        },
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v2-0074",
+                "code": "LAB"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "text": "Synthetic chemistry panel"
+        },
+        "subject": {
+          "reference": "urn:uuid:11111111-1111-4111-8111-111111111111"
+        },
+        "effectiveDateTime": "2026-11-18T09:30:00+08:00",
+        "performer": [
+          {
+            "display": "Example Laboratory"
+          }
+        ],
+        "result": [
+          {
+            "reference": "Observation/zero"
+          },
+          {
+            "reference": "Observation/below-limit"
+          },
+          {
+            "reference": "Observation/not-measured"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "zero",
+        "status": "final",
+        "code": {
+          "text": "Synthetic marker A",
+          "coding": [
+            {
+              "system": "https://example.org/synthetic-codes",
+              "code": "A"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/synthetic-person"
+        },
+        "effectiveDateTime": "2026-11-18T09:30:00+08:00",
+        "valueQuantity": {
+          "value": 0,
+          "unit": "mg/L",
+          "system": "http://unitsofmeasure.org",
+          "code": "mg/L"
+        },
+        "referenceRange": [
+          {
+            "low": {
+              "value": 0,
+              "unit": "mg/L"
+            },
+            "high": {
+              "value": 5,
+              "unit": "mg/L"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "below-limit",
+        "status": "preliminary",
+        "code": {
+          "text": "Synthetic marker B"
+        },
+        "subject": {
+          "reference": "urn:uuid:11111111-1111-4111-8111-111111111111"
+        },
+        "valueQuantity": {
+          "value": 0.2,
+          "comparator": "<",
+          "unit": "mg/L",
+          "system": "http://unitsofmeasure.org",
+          "code": "mg/L"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "not-measured",
+        "status": "final",
+        "code": {
+          "text": "Synthetic marker C"
+        },
+        "subject": {
+          "reference": "urn:uuid:11111111-1111-4111-8111-111111111111"
+        },
+        "dataAbsentReason": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/data-absent-reason",
+              "code": "not-performed",
+              "display": "Not performed"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
