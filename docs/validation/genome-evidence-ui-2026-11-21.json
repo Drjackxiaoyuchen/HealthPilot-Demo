@@ -1,0 +1,371 @@
+{
+  "date": "2026-11-21",
+  "data": "Synthetic invented SNVs/conditions/accessions only",
+  "method": "symphony-genome-evidence-v1",
+  "productionBuild": true,
+  "tests": 73,
+  "typecheck": true,
+  "previewBeforeRestore": true,
+  "restored": {
+    "articles": 4,
+    "flags": 2,
+    "sameVersion": true,
+    "source": true,
+    "viewport": 1280,
+    "width": 1275
+  },
+  "reloadContexts": 4,
+  "filterContexts": 2,
+  "searchContexts": 1,
+  "removeUndo": true,
+  "duplicateSaveAlerts": [
+    "An unchanged snapshot for RCV999999991.10 is already saved. Keep a new version or changed source fields; notes alone are not new source evidence."
+  ],
+  "manualFollowUpSaved": true,
+  "invalidRestoreAlerts": [
+    "An unchanged snapshot for RCV999999991.2 is already saved. Keep a new version or changed source fields; notes alone are not new source evidence."
+  ],
+  "invalidRestorePreserved": true,
+  "paginationCounts": [
+    20,
+    5
+  ],
+  "exports": {
+    "csvSnapshots": 7,
+    "jsonBackupSnapshots": 7,
+    "personalReportSnapshots": 6,
+    "personalReportContexts": 4,
+    "unrelatedPersonalMeasurements": null
+  },
+  "checks": [
+    {
+      "errorPage": false,
+      "path": "/dashboard",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/genomics",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/glucose",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/supplements",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/diet",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/fitness",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/records",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/annotations",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/medicine",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/bloodwork",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/family",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/offspring",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/enrichment",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/gwas",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/comparison",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/prs",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/pharmacogenomics",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/import",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/reports",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/research",
+      "viewport": 1280,
+      "width": 1275
+    },
+    {
+      "errorPage": false,
+      "path": "/dashboard",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/genomics",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/glucose",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/supplements",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/diet",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/fitness",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/records",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/annotations",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/medicine",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/bloodwork",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/family",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/offspring",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/enrichment",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/gwas",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/comparison",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/prs",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/pharmacogenomics",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/import",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/reports",
+      "viewport": 390,
+      "width": 385
+    },
+    {
+      "errorPage": false,
+      "path": "/research",
+      "viewport": 390,
+      "width": 385
+    }
+  ],
+  "mobileForm": {
+    "controls": [
+      {
+        "label": "Record label / gene",
+        "right": 344,
+        "width": 303
+      },
+      {
+        "label": "Assembly",
+        "right": 344,
+        "width": 303
+      },
+      {
+        "label": "Chromosome (1–22, X, Y, MT)",
+        "right": 344,
+        "width": 303
+      },
+      {
+        "label": "Position (1-based)",
+        "right": 344,
+        "width": 303
+      },
+      {
+        "label": "Reference allele (A/C/G/T)",
+        "right": 344,
+        "width": 303
+      },
+      {
+        "label": "Alternate allele (A/C/G/T)",
+        "right": 344,
+        "width": 303
+      },
+      {
+        "label": "rsID (optional; not used for matching)",
+        "right": 344,
+        "width": 303
+      },
+      {
+        "label": "Condition name",
+        "right": 344,
+        "width": 303
+      },
+      {
+        "label": "Condition identifier (MedGen:C…)",
+        "right": 344,
+        "width": 303
+      },
+      {
+        "label": "RCV accession.version",
+        "right": 344,
+        "width": 303
+      },
+      {
+        "label": "Germline classification (copy exact text)",
+        "right": 344,
+        "width": 303
+      },
+      {
+        "label": "Source review status",
+        "right": 344,
+        "width": 303
+      },
+      {
+        "label": "Last evaluated (optional source date)",
+        "right": 344,
+        "width": 303
+      },
+      {
+        "label": "PubMed IDs (optional, comma separated)",
+        "right": 344,
+        "width": 303
+      },
+      {
+        "label": "Review notes",
+        "right": 344,
+        "width": 303
+      },
+      {
+        "label": "I checked the assembly, forward alleles, condition and version against my source. This records my transcription, not a clinical validation.",
+        "right": 57,
+        "width": 16
+      }
+    ],
+    "viewport": 390,
+    "width": 385
+  },
+  "browserErrors": [],
+  "uiAcceptance": "pending user review",
+  "limits": "Synthetic bookkeeping/reference validation only; no independent ClinVar, identity or clinical validation."
+}

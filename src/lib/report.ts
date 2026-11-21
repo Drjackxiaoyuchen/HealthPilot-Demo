@@ -18,6 +18,11 @@ import {
 } from "./personal-ledgers";
 import { createMealContextAnalyzer, MEAL_CONTEXT_METHOD } from "./meal-context";
 import { buildCgmQuality } from "./cgm-quality";
+import {
+  GENOME_EVIDENCE_METHOD,
+  buildEvidenceHistory,
+  type GenomeEvidence,
+} from "./genome-evidence";
 import { RECORD_METHOD, type MedicalRecord } from "./medical-records";
 import {
   SECTION_GUIDES,
@@ -65,6 +70,7 @@ export function createReport(
     meals?: Ledger<Meal> | null;
     workouts?: Ledger<Workout> | null;
     records?: Ledger<MedicalRecord> | null;
+    evidence?: Ledger<GenomeEvidence> | null;
   },
   generatedAt = new Date().toISOString(),
 ) {
@@ -178,37 +184,50 @@ export function createReport(
             "User-entered metadata and a supported FHIR R4 projection. Original files, narrative conclusions and attachments are not stored. No diagnosis, unit conversion, range classification, or extraction model is applied. Checked status means user source review, not clinical validation.",
         }
       : null,
+    genomeEvidence: data.evidence
+      ? {
+          ...data.evidence,
+          method: GENOME_EVIDENCE_METHOD,
+          histories: buildEvidenceHistory(data.evidence.entries),
+          limitations:
+            "Manual condition-specific germline SNV transcriptions, not authenticated ClinVar records or personal genotype matches. Highest saved version is not necessarily current online. Identity/reference alleles and source content are not independently verified; changes and discrepancies are descriptive, not clinical reclassification or risk estimates. Review stars are not probabilities. No model inference or automatic refresh.",
+        }
+      : null,
     sections: SECTION_GUIDES.map((section) => ({
       path: section.path,
       title: section.title,
       status:
         section.mode === "dashboard"
           ? "personal overview; missing values remain missing"
-          : section.mode === "records"
-            ? data.records?.entries.length
-              ? "saved personal source records; no clinical inference"
-              : "working register; no personal records"
-            : section.mode === "supplements"
-              ? data.supplements?.entries.length
-                ? "saved label records; planned totals"
-                : "working ledger; no personal records"
-              : section.mode === "meals"
-                ? data.meals?.entries.length
-                  ? "saved meal records; portion-derived nutrients"
-                  : "working diary; no personal records"
-                : section.mode === "workouts"
-                  ? data.workouts?.entries.length
-                    ? "saved session records; completed activity totals"
-                    : "working training log; no personal records"
-                  : section.mode === "import"
-                    ? "local import workspace"
-                    : section.mode === "cgm" && cgm
-                      ? "imported observations"
-                      : section.mode === "bloodwork" && bloodwork
+          : section.mode === "evidence"
+            ? data.evidence?.entries.length
+              ? "saved source transcriptions; no personal clinical inference"
+              : "working evidence ledger; no personal records"
+            : section.mode === "records"
+              ? data.records?.entries.length
+                ? "saved personal source records; no clinical inference"
+                : "working register; no personal records"
+              : section.mode === "supplements"
+                ? data.supplements?.entries.length
+                  ? "saved label records; planned totals"
+                  : "working ledger; no personal records"
+                : section.mode === "meals"
+                  ? data.meals?.entries.length
+                    ? "saved meal records; portion-derived nutrients"
+                    : "working diary; no personal records"
+                  : section.mode === "workouts"
+                    ? data.workouts?.entries.length
+                      ? "saved session records; completed activity totals"
+                      : "working training log; no personal records"
+                    : section.mode === "import"
+                      ? "local import workspace"
+                      : section.mode === "cgm" && cgm
                         ? "imported observations"
-                        : section.mode === "genome" && genome
-                          ? "imported calls; demo explorer separate"
-                          : "illustrative demo; values omitted",
+                        : section.mode === "bloodwork" && bloodwork
+                          ? "imported observations"
+                          : section.mode === "genome" && genome
+                            ? "imported calls; demo explorer separate"
+                            : "illustrative demo; values omitted",
     })),
     evidence: {
       reviewedAt: RESEARCH_DATE,

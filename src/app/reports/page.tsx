@@ -18,6 +18,10 @@ import { downloadFile } from "@/lib/download";
 import { toCsv } from "@/lib/tabular";
 import { createReport, labCsvRows, REPORT_VERSION } from "@/lib/report";
 import { useLedger } from "@/lib/use-ledger";
+import {
+  genomeEvidenceSchema,
+  validateEvidenceSet,
+} from "@/lib/genome-evidence";
 import { medicalRecordSchema, validateRecordSet } from "@/lib/medical-records";
 import {
   supplementSchema,
@@ -36,6 +40,12 @@ export default function ReportsPage() {
     medicalRecordSchema,
     validateRecordSet,
   );
+  const evidence = useLedger(
+    KEYS.evidence,
+    "genome-evidence",
+    genomeEvidenceSchema,
+    validateEvidenceSet,
+  );
   const supplements = useLedger(
       KEYS.supplements,
       "supplements",
@@ -53,6 +63,7 @@ export default function ReportsPage() {
       meals: meals.stored,
       workouts: workouts.stored,
       records: records.error ? null : records.stored,
+      evidence: evidence.error ? null : evidence.stored,
     },
     generatedAt,
   );
@@ -86,7 +97,12 @@ export default function ReportsPage() {
         <div className="no-print mt-5 flex flex-wrap gap-3">
           <button
             className={`${button} !bg-copper !text-white`}
-            disabled={!records.ready || !!records.error}
+            disabled={
+              !records.ready ||
+              !!records.error ||
+              !evidence.ready ||
+              !!evidence.error
+            }
             onClick={() =>
               downloadFile(
                 "symphony-personal-report.json",
@@ -370,7 +386,28 @@ export default function ReportsPage() {
             Open medical records
           </Link>
         </div>
-        {[supplements.error, meals.error, workouts.error, records.error]
+        <div className="mt-5 pt-4 border-t border-cream-300 text-caption text-stone-600">
+          <strong>Genome evidence</strong>
+          <p>
+            {report.genomeEvidence?.entries.length || 0} saved snapshots ·{" "}
+            {report.genomeEvidence?.histories.length || 0} source contexts.
+            Source transcriptions and descriptive change histories are included
+            in the full JSON. No genotype matching or clinical inference.
+          </p>
+          <Link
+            href="/annotations"
+            className="text-copper-700 underline no-print"
+          >
+            Open Genome Tracker
+          </Link>
+        </div>
+        {[
+          supplements.error,
+          meals.error,
+          workouts.error,
+          records.error,
+          evidence.error,
+        ]
           .filter(Boolean)
           .map((error, i) => (
             <p
