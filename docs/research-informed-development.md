@@ -1,6 +1,6 @@
 # Symphony AI: research-informed development
 
-Library updated: **2026-11-20**. Individual source review dates are retained below.
+Library updated: **2026-11-21**. Individual source review dates are retained below.
 
 This pass reviews all 18 original sections. It adopts interface and data-quality patterns while keeping unimplemented integrations and clinical interpretation explicitly separate from imported observations. The catalog behind the app and this document is `src/data/research.ts`; regenerate this document with `npm run docs:research`.
 
@@ -19,6 +19,8 @@ This pass reviews all 18 original sections. It adopts interface and data-quality
 - 2026-11-19: shared visual refinements within one proposed copper/ivory theme, pending user acceptance; interactive day/hour observation audit, missing-duration TIR bounds and hourly CSV/JSON provenance. See [design baseline](design-system.md) and [versioned CGM method](methods/cgm-quality-v1.md).
 
 - 2026-11-20: Medical Records is a working local source register with reviewed single-report FHIR projection, patient/reference consistency gates, exact quantities/absence, provenance, backups and exports. See [method and subset limits](methods/medical-records-v1.md).
+
+- 2026-11-21: Genome Tracker now has a personal condition-specific germline SNV evidence register, version-aware field comparisons, source/saved discrepancy flags, bounded histories and reproducible CSV/JSON/report outputs. See [method, sources and validation scope](methods/genome-evidence-v1.md). Source transcriptions are not independently verified ClinVar records or personal risk results.
 
 ## Evidence and implementation boundaries
 
@@ -146,7 +148,7 @@ Route: `/records`.
 
 **Current:** Working local register with editing, remove/undo, source checks, strict single-report FHIR subset import, source fingerprints and personal report export. No fictional testing advice or hospital rankings are added.
 
-**Next:** Add isolated person/provider profiles and evaluate source-document storage/extraction on de-identified field-level references. Genome Tracker is the next demo module.
+**Next:** Add isolated person/provider profiles and evaluate source-document storage/extraction on de-identified field-level references. Genome Tracker now has a separate source evidence register.
 
 **References:** [HL7 FHIR R4 DiagnosticReport and Observation](https://hl7.org/fhir/R4/diagnosticreport.html), [Medplum results and review](https://www.medplum.com/docs/labs-imaging/results-and-review), [MedGemma 1.5 4B model card](https://huggingface.co/google/medgemma-1.5-4b-it).
 
@@ -154,17 +156,17 @@ Route: `/records`.
 
 Route: `/annotations`.
 
-**Inputs:** Versioned variant and publication identifiers
+**Inputs:** Manually reviewed germline SNV identity, one MedGen condition and versioned ClinVar RCV source fields
 
-**Method:** Resolve variant identity → Capture accession and review date → Track interpretation changes
+**Method:** Gate explicit assembly and forward SNV alleles → Save condition-specific source versions → Compare source fields without clinical inference
 
-**Output:** Evidence ledger with dated changes and conflicts
+**Output:** Local evidence register, version transitions, source/conflict flags, CSV and reviewed JSON backups
 
-**Current:** Research annotations are a fixed demo; there is no live literature refresh.
+**Current:** Working personal evidence ledger with numeric version ordering, same-version discrepancy checks, exact-context comparisons and report provenance. Manual source transcriptions are not independently verified, matched to uploaded genotypes or refreshed online.
 
-**Next:** Add a refreshable, versioned evidence cache with publication links and conflict flags.
+**Next:** Validate a pinned ClinVar release adapter against independently checked reference records, including merged accessions, condition aliases and reference-allele checks. Medicine Checker is the next remaining demo module.
 
-**References:** [ClinVar documentation](https://www.ncbi.nlm.nih.gov/clinvar/docs/), [GWAS Catalog data format](https://www.ebi.ac.uk/gwas/docs/summary-statistics-format/).
+**References:** [NCBI ClinVar public prototypes](https://github.com/ncbi/clinvar), [DNABERT-2 model, implementation and ICLR 2024 paper](https://huggingface.co/zhihan1996/DNABERT-2-117M), [ClinVar documentation](https://www.ncbi.nlm.nih.gov/clinvar/docs/).
 
 ### Medicine Checker
 
@@ -328,6 +330,22 @@ Route: `/import`.
 
 ## Source register
 
+### NCBI ClinVar public prototypes
+
+[Repository](https://github.com/ncbi/clinvar) · reviewed 2026-11-21.
+
+Pattern: Keep functional evidence, germline classification and somatic assertions separate; prototypes are not a production data contract.
+
+Boundary: Reviewed at 2935a3a4e7fa359be4f69863d78f616a7136e37c. No root license was located; no code or data copied. Production identifier/review semantics follow NCBI documentation instead.
+
+### DNABERT-2 model, implementation and ICLR 2024 paper
+
+[Model card](https://huggingface.co/zhihan1996/DNABERT-2-117M) · reviewed 2026-11-21.
+
+Pattern: Separate sequence embeddings and GUE task benchmarks from condition-specific clinical evidence; require endpoint-matched evaluation before integrating a genome model.
+
+Boundary: Apache-2.0 model/code; paper arXiv:2306.15006v2, accepted ICLR 2024. Card and methods/evaluations reviewed; weights not downloaded, benchmark not reproduced, model not installed. GUE results do not validate personal pathogenicity or clinical risk.
+
 ### HL7 FHIR R4 DiagnosticReport and Observation
 
 [Documentation](https://hl7.org/fhir/R4/diagnosticreport.html) · reviewed 2026-11-20.
@@ -394,7 +412,7 @@ Boundary: Our raw-file matching is not a build/strand-harmonized clinical annota
 
 ### ClinVar documentation
 
-[Documentation](https://www.ncbi.nlm.nih.gov/clinvar/docs/) · reviewed 2026-11-16.
+[Documentation](https://www.ncbi.nlm.nih.gov/clinvar/docs/) · reviewed 2026-11-21.
 
 Pattern: Keep accession, review status, condition and conflicting submissions with an interpretation.
 
@@ -539,9 +557,9 @@ Boundary: Our fixed-window observed summaries and quality gates are an explorato
 ## Next development sequence
 
 1. Collect user feedback on the proposed UI baseline and refine the same theme; visual acceptance remains pending.
-2. Expand Genome Tracker with a personal evidence ledger and validated annotation boundaries; Medical Records now supports its documented source register/FHIR subset.
+2. Turn Medicine Checker into a working source-linked medication inventory and reviewed exposure workflow; establish curated interaction/reference coverage before any interaction claim. Genome Tracker now supports its documented manual evidence ledger.
 3. Add user-confirmed CGM cadence/time zone and independent package reference comparisons, then reviewed analyte mappings and unit conversions preserving original values.
 4. Introduce isolated personal/family profiles and source-document review before sharing or family analyses; evaluate extraction on de-identified field-level references.
-5. Add versioned genomic annotation and validated external pipeline reports with explicit coverage, build, allele and cohort context.
+5. Validate a pinned ClinVar release adapter with merged accession, condition-alias and reference-allele checks; then evaluate external pipeline reports with explicit build, allele and cohort context.
 
 A normal app session does not perform background research or refresh external evidence. These are documented next steps, not completed capabilities.

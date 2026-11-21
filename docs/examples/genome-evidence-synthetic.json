@@ -1,0 +1,145 @@
+{
+  "format": "symphony-ledger-v1",
+  "kind": "genome-evidence",
+  "updatedAt": "2026-11-21T01:00:00Z",
+  "entries": [
+    {
+      "id": "synthetic-a-2",
+      "name": "Synthetic variant A",
+      "variant": {
+        "assembly": "GRCh38",
+        "chromosome": "1",
+        "position": 101,
+        "ref": "A",
+        "alt": "G"
+      },
+      "rsid": "",
+      "conditionId": "MedGen:C0000001",
+      "condition": "Synthetic condition A",
+      "accession": "RCV999999991.2",
+      "classification": "Uncertain significance",
+      "reviewStatus": "criteria provided, single submitter",
+      "evaluatedOn": null,
+      "capturedAt": "2026-11-18T00:00:00Z",
+      "citationPmids": [],
+      "notes": "SYNTHETIC QA ONLY: invented accession, coordinates and condition; not a ClinVar record or person.",
+      "origin": "manual source transcription",
+      "assertionType": "germline"
+    },
+    {
+      "id": "synthetic-a-10-first",
+      "name": "Synthetic variant A",
+      "variant": {
+        "assembly": "GRCh38",
+        "chromosome": "1",
+        "position": 101,
+        "ref": "A",
+        "alt": "G"
+      },
+      "rsid": "",
+      "conditionId": "MedGen:C0000001",
+      "condition": "Synthetic condition A",
+      "accession": "RCV999999991.10",
+      "classification": "Likely pathogenic",
+      "reviewStatus": "reviewed by expert panel",
+      "evaluatedOn": "2026-11-19",
+      "capturedAt": "2026-11-20T01:00:00Z",
+      "citationPmids": [],
+      "notes": "SYNTHETIC QA ONLY: invented accession, coordinates and condition; not a ClinVar record or person.",
+      "origin": "manual source transcription",
+      "assertionType": "germline"
+    },
+    {
+      "id": "synthetic-a-10-second",
+      "name": "Synthetic variant A",
+      "variant": {
+        "assembly": "GRCh38",
+        "chromosome": "1",
+        "position": 101,
+        "ref": "A",
+        "alt": "G"
+      },
+      "rsid": "",
+      "conditionId": "MedGen:C0000001",
+      "condition": "Synthetic condition A",
+      "accession": "RCV999999991.10",
+      "classification": "Conflicting classifications of pathogenicity",
+      "reviewStatus": "criteria provided, conflicting classifications",
+      "evaluatedOn": "2026-11-19",
+      "capturedAt": "2026-11-21T01:00:00Z",
+      "citationPmids": [],
+      "notes": "SYNTHETIC QA ONLY: invented accession, coordinates and condition; not a ClinVar record or person.",
+      "origin": "manual source transcription",
+      "assertionType": "germline"
+    },
+    {
+      "id": "synthetic-b",
+      "name": "Synthetic separate RCV",
+      "variant": {
+        "assembly": "GRCh38",
+        "chromosome": "1",
+        "position": 101,
+        "ref": "A",
+        "alt": "G"
+      },
+      "rsid": "",
+      "conditionId": "MedGen:C0000001",
+      "condition": "Synthetic condition A",
+      "accession": "RCV999999992.1",
+      "classification": "Benign",
+      "reviewStatus": "criteria provided, single submitter",
+      "evaluatedOn": null,
+      "capturedAt": "2026-11-21T00:00:00Z",
+      "citationPmids": [],
+      "notes": "SYNTHETIC QA ONLY: invented accession, coordinates and condition; not a ClinVar record or person.",
+      "origin": "manual source transcription",
+      "assertionType": "germline"
+    },
+    {
+      "id": "synthetic-build",
+      "name": "Synthetic other assembly",
+      "variant": {
+        "assembly": "GRCh37",
+        "chromosome": "1",
+        "position": 101,
+        "ref": "A",
+        "alt": "G"
+      },
+      "rsid": "",
+      "conditionId": "MedGen:C0000001",
+      "condition": "Synthetic condition A",
+      "accession": "RCV999999991.2",
+      "classification": "Uncertain significance",
+      "reviewStatus": "criteria provided, single submitter",
+      "evaluatedOn": null,
+      "capturedAt": "2026-11-18T00:00:00Z",
+      "citationPmids": [],
+      "notes": "SYNTHETIC QA ONLY: invented accession, coordinates and condition; not a ClinVar record or person.",
+      "origin": "manual source transcription",
+      "assertionType": "germline"
+    },
+    {
+      "id": "synthetic-condition",
+      "name": "Synthetic other condition",
+      "variant": {
+        "assembly": "GRCh38",
+        "chromosome": "1",
+        "position": 101,
+        "ref": "A",
+        "alt": "G"
+      },
+      "rsid": "",
+      "conditionId": "MedGen:C0000002",
+      "condition": "Synthetic condition B",
+      "accession": "RCV999999991.2",
+      "classification": "Uncertain significance",
+      "reviewStatus": "criteria provided, single submitter",
+      "evaluatedOn": null,
+      "capturedAt": "2026-11-18T00:00:00Z",
+      "citationPmids": [],
+      "notes": "SYNTHETIC QA ONLY: invented accession, coordinates and condition; not a ClinVar record or person.",
+      "origin": "manual source transcription",
+      "assertionType": "germline"
+    }
+  ]
+}

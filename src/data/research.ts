@@ -1,5 +1,5 @@
 // Reviewed public references. These are design/method references, not live integrations.
-export const RESEARCH_DATE = "2026-11-20";
+export const RESEARCH_DATE = "2026-11-21";
 export type ResearchSource = {
   id: string;
   title: string;
@@ -10,6 +10,28 @@ export type ResearchSource = {
   reviewedAt?: string; // Original sources: 2026-11-16; newer reviews override this.
 };
 export const RESEARCH_SOURCES: ResearchSource[] = [
+  {
+    id: "clinvar-prototypes",
+    title: "NCBI ClinVar public prototypes",
+    kind: "Repository",
+    url: "https://github.com/ncbi/clinvar",
+    reviewedAt: "2026-11-21",
+    learning:
+      "Keep functional evidence, germline classification and somatic assertions separate; prototypes are not a production data contract.",
+    boundary:
+      "Reviewed at 2935a3a4e7fa359be4f69863d78f616a7136e37c. No root license was located; no code or data copied. Production identifier/review semantics follow NCBI documentation instead.",
+  },
+  {
+    id: "dnabert2-screen",
+    title: "DNABERT-2 model, implementation and ICLR 2024 paper",
+    kind: "Model card",
+    url: "https://huggingface.co/zhihan1996/DNABERT-2-117M",
+    reviewedAt: "2026-11-21",
+    learning:
+      "Separate sequence embeddings and GUE task benchmarks from condition-specific clinical evidence; require endpoint-matched evaluation before integrating a genome model.",
+    boundary:
+      "Apache-2.0 model/code; paper arXiv:2306.15006v2, accepted ICLR 2024. Card and methods/evaluations reviewed; weights not downloaded, benchmark not reproduced, model not installed. GUE results do not validate personal pathogenicity or clinical risk.",
+  },
   {
     id: "fhir-report",
     title: "HL7 FHIR R4 DiagnosticReport and Observation",
@@ -94,6 +116,7 @@ export const RESEARCH_SOURCES: ResearchSource[] = [
   },
   {
     id: "clinvar",
+    reviewedAt: "2026-11-21",
     title: "ClinVar documentation",
     kind: "Documentation",
     url: "https://www.ncbi.nlm.nih.gov/clinvar/docs/",
@@ -289,6 +312,7 @@ export type SectionGuide = {
     | "supplements"
     | "meals"
     | "workouts"
+    | "evidence"
     | "records";
   // Medical records are a local register, independent from the illustrative clinical pages.
   inputs: string;
@@ -425,25 +449,27 @@ export const SECTION_GUIDES: SectionGuide[] = [
       "Searchable timeline, linked observations, source hash, metadata CSV and reviewed JSON backups",
     current:
       "Working local register with editing, remove/undo, source checks, strict single-report FHIR subset import, source fingerprints and personal report export. No fictional testing advice or hospital rankings are added.",
-    next: "Add isolated person/provider profiles and evaluate source-document storage/extraction on de-identified field-level references. Genome Tracker is the next demo module.",
+    next: "Add isolated person/provider profiles and evaluate source-document storage/extraction on de-identified field-level references. Genome Tracker now has a separate source evidence register.",
     sources: ["fhir-report", "medplum", "medgemma"],
   },
   {
     path: "/annotations",
     title: "Genome Tracker",
     group: "Genetics",
-    mode: "demo",
-    inputs: "Versioned variant and publication identifiers",
+    mode: "evidence",
+    inputs:
+      "Manually reviewed germline SNV identity, one MedGen condition and versioned ClinVar RCV source fields",
     pipeline: [
-      "Resolve variant identity",
-      "Capture accession and review date",
-      "Track interpretation changes",
+      "Gate explicit assembly and forward SNV alleles",
+      "Save condition-specific source versions",
+      "Compare source fields without clinical inference",
     ],
-    output: "Evidence ledger with dated changes and conflicts",
+    output:
+      "Local evidence register, version transitions, source/conflict flags, CSV and reviewed JSON backups",
     current:
-      "Research annotations are a fixed demo; there is no live literature refresh.",
-    next: "Add a refreshable, versioned evidence cache with publication links and conflict flags.",
-    sources: ["clinvar", "gwas"],
+      "Working personal evidence ledger with numeric version ordering, same-version discrepancy checks, exact-context comparisons and report provenance. Manual source transcriptions are not independently verified, matched to uploaded genotypes or refreshed online.",
+    next: "Validate a pinned ClinVar release adapter against independently checked reference records, including merged accessions, condition aliases and reference-allele checks. Medicine Checker is the next remaining demo module.",
+    sources: ["clinvar", "clinvar-prototypes", "dnabert2-screen"],
   },
   {
     path: "/medicine",

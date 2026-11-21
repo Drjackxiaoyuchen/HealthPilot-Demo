@@ -30,4 +30,6 @@ Use copper for interactive emphasis and continuous audit scales. Muted sage/rose
 
 2026-11-20: Medical Records extends the same cards, fields, controls, typography and colors into a personal source register. No theme or global token change was made. UI acceptance remains pending.
 
-Next: collect visual feedback and continue the same scheme in Genome Tracker. Keep scientific validation independent from visual acceptance.
+2026-11-21: Genome Tracker uses the same scheme for a source register, neutral classification text, inspection flags, source chronology, responsive identity/source fields and portable evidence tools. No theme tokens changed; UI acceptance remains pending.
+
+Next: collect visual feedback and continue the same scheme in Medicine Checker. Keep scientific validation independent from visual acceptance.
